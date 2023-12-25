@@ -52,37 +52,37 @@ def load_user(user_id):
 
 
 # fileAssociate = {
-#     "Form PF": "dataSources\\WSR\\FormPF.xlsx",
-#     "OCP Tech": "dataSources\\WSR\\OneTracker.xlsx",
-#     "Onetracker": "dataSources\\WSR\\OneTracker.xlsx",
-#     "SICAV": "dataSources\\WSR\\OneTracker.xlsx",
-#     "Treena": "dataSources\\WSR\\FormPF.xlsx",
-#     "Beeqom": "dataSources\\WSR\\Beqom.xlsx",
-#     "Corporate Actions": "dataSources\\WSR\\Corporate Action.xlsx",
-#     "HRIS": "dataSources\\WSR\\HRIS.xlsx",
-#     "ICS": "dataSources\\WSR\\ICS.xlsx",
-#     "vEMS": "dataSources\\WSR\\vEMS.xlsx",
-#     "Workday": "dataSources\\WSR\\workday.xlsx",
-#     "FX Central": "dataSources\\WSR\\OneTracker.xlsx",
-#     "Mercatus": "dataSources\\WSR\\OneTracker.xlsx",
-#     "QA Smoke Test": "dataSources\\WSR\\OneTracker.xlsx",
+#     "Form PF": "dataSources/WSR/FormPF.xlsx",
+#     "OCP Tech": "dataSources/WSR/OneTracker.xlsx",
+#     "Onetracker": "dataSources/WSR/OneTracker.xlsx",
+#     "SICAV": "dataSources/WSR/OneTracker.xlsx",
+#     "Treena": "dataSources/WSR/FormPF.xlsx",
+#     "Beeqom": "dataSources/WSR/Beqom.xlsx",
+#     "Corporate Actions": "dataSources/WSR/Corporate Action.xlsx",
+#     "HRIS": "dataSources/WSR/HRIS.xlsx",
+#     "ICS": "dataSources/WSR/ICS.xlsx",
+#     "vEMS": "dataSources/WSR/vEMS.xlsx",
+#     "Workday": "dataSources/WSR/workday.xlsx",
+#     "FX Central": "dataSources/WSR/OneTracker.xlsx",
+#     "Mercatus": "dataSources/WSR/OneTracker.xlsx",
+#     "QA Smoke Test": "dataSources/WSR/OneTracker.xlsx",
 # }
 
 fileAssociate = {
-    "Form PF": "dataSources\\WSR\\OneTracker.xlsx",
-    "OCP Tech": "dataSources\\WSR\\OneTracker.xlsx",
-    "Onetracker": "dataSources\\WSR\\OneTracker.xlsx",
-    "SICAV": "dataSources\\WSR\\OneTracker.xlsx",
-    "Treena": "dataSources\\WSR\\OneTracker.xlsx",
-    "Beeqom": "dataSources\\WSR\\OneTracker.xlsx",
-    "Corporate Actions": "dataSources\\WSR\\OneTracker.xlsx",
-    "HRIS": "dataSources\\WSR\\OneTracker.xlsx",
-    "ICS": "dataSources\\WSR\\OneTracker.xlsx",
-    "vEMS": "dataSources\\WSR\\OneTracker.xlsx",
-    "Workday": "dataSources\\WSR\\OneTracker.xlsx",
-    "FX Central": "dataSources\\WSR\\OneTracker.xlsx",
-    "Mercatus": "dataSources\\WSR\\OneTracker.xlsx",
-    "QA Smoke Test": "dataSources\\WSR\\OneTracker.xlsx",
+    "Form PF": "dataSources/WSR/OneTracker.xlsx",
+    "OCP Tech": "dataSources/WSR/OneTracker.xlsx",
+    "Onetracker": "dataSources/WSR/OneTracker.xlsx",
+    "SICAV": "dataSources/WSR/OneTracker.xlsx",
+    "Treena": "dataSources/WSR/OneTracker.xlsx",
+    "Beeqom": "dataSources/WSR/OneTracker.xlsx",
+    "Corporate Actions": "dataSources/WSR/OneTracker.xlsx",
+    "HRIS": "dataSources/WSR/OneTracker.xlsx",
+    "ICS": "dataSources/WSR/OneTracker.xlsx",
+    "vEMS": "dataSources/WSR/OneTracker.xlsx",
+    "Workday": "dataSources/WSR/OneTracker.xlsx",
+    "FX Central": "dataSources/WSR/OneTracker.xlsx",
+    "Mercatus": "dataSources/WSR/OneTracker.xlsx",
+    "QA Smoke Test": "dataSources/WSR/OneTracker.xlsx",
 }
 
 
@@ -174,15 +174,15 @@ def index():
 @login_required
 def Dashboard():
     summary_efforts_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Efforts", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, dat.now().month
     )
 
     summary_cost_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Cost", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, dat.now().month
     )
 
     summary_resource_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Resource", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, dat.now().month
     )
     decimal_places = 2
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
@@ -328,13 +328,13 @@ def Dashboard():
 @login_required
 def depdash():
     efforts_chart_data = getChartData(
-        "dataSources\\monthData\\dashSummary.xlsx", "Efforts", "Project"
+        "dataSources/monthData/dashSummary.xlsx", "Efforts", "Project"
     )
     cost_chart_data = getChartData(
-        "dataSources\\monthData\\dashSummary.xlsx", "Cost", "Project"
+        "dataSources/monthData/dashSummary.xlsx", "Cost", "Project"
     )
     resource_chart_data = getChartData(
-        "dataSources\\monthData\\dashSummary.xlsx", "Resource", "Project"
+        "dataSources/monthData/dashSummary.xlsx", "Resource", "Project"
     )
 
     options_project = [entry["name"] for entry in efforts_chart_data]
@@ -354,7 +354,7 @@ def depdash():
     filtered_resource_cost = filterDataSummary(resource_chart_data, selected_option_project)
 
     return render_template(
-        "pages/depDash.html",
+        "pages/depdash.html",
         dropdown_project=options_project,
         selected_project=selected_option_project,
         userName=current_user.username,
@@ -426,15 +426,15 @@ def depdash():
 @login_required
 def mdash():
     summary_efforts_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Efforts", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, dat.now().month
     )
 
     summary_cost_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Cost", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, dat.now().month
     )
 
     summary_resource_fromsheet = load_data(
-        "dataSources\\monthData\\dashSummary.xlsx", "Resource", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, dat.now().month
     )
     decimal_places = 2
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
