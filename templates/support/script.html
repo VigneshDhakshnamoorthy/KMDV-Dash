@@ -1,0 +1,65 @@
+<script type="text/javascript">
+  $(document).ready(function () {
+    //jquery for toggle sub menus
+    $(".sub-btn").click(function () {
+      $(this).next(".sub-menu").slideToggle();
+      $(this).find(".dropdown").toggleClass("rotate");
+    });
+
+    //jquery for expand and collapse the sidebar
+    $(".menu-btn").click(function () {
+      $(".side-bar").addClass("active");
+      $(".menu-btn").css("visibility", "hidden");
+    });
+
+    $(".close-btn").click(function () {
+      $(".side-bar").removeClass("active");
+      $(".menu-btn").css("visibility", "visible");
+    });
+  });
+
+  $(document).ready(function () {
+    $(".menu-btn").click(function () {
+      $(".side-bar").toggleClass("expanded");
+      $(".Page").toggleClass("expanded");
+    });
+
+    $(".close-btn").click(function () {
+      $(".side-bar").removeClass("expanded");
+      $(".Page").removeClass("expanded");
+    });
+  });
+
+  $(document).ready(function () {
+    $("#dropdown_week").on("change", function () {
+      $(this).closest("form").submit();
+    });
+  });
+
+  $(document).ready(function () {
+    $("#dropdown_project").on("change", function () {
+      $(this).closest("form").submit();
+    });
+  });
+
+  $(document).ready(function () {
+    $("#dropdown_cost").on("change", function () {
+      $(this).closest("form").submit();
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the scroll position from sessionStorage
+    var scrollPosition = sessionStorage.getItem("scrollPosition");
+
+    // If scrollPosition is set, scroll to that position
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+    }
+
+    // Listen for scroll events and store the scroll position in sessionStorage
+    window.addEventListener("scroll", function () {
+      sessionStorage.setItem("scrollPosition", window.scrollY);
+    });
+  });
+</script>

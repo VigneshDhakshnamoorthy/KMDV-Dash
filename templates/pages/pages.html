@@ -1,0 +1,18 @@
+{% extends 'layout/base.html' %} 
+
+{% block title %}QA-Dash : {{pageName}}{% endblock %}
+
+{% block baseBody %} {% include
+'layout/header.html' %}
+
+<br />
+
+<div class="col text-center">
+  <h3>{{weekdays}}</h3>
+</div>
+{% include 'tables/projectSummary.html' %} {% include
+'tables/utilizationSummary.html' %}
+<br />
+
+{% include 'tables/taskSummary.html' %} {% include 'tables/defectSummary.html'
+%} {% endblock %}

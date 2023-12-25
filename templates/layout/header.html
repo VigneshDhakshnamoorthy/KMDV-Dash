@@ -1,0 +1,33 @@
+<div class="row border-bottom">
+
+    <div class="col logoImag rounded-pill">
+        <a href="/home"><img src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+                alt="oaktreecapital Logo" width="150" height="50"></a>
+
+    </div>
+    <div class="col">
+        <div class="pageHeader">
+            <h1 class="">{{pageName}}</h1>
+        </div>
+
+    </div>
+
+    <div class="col">
+        <div class="dropdownWeek rounded-pill">
+            <form method="POST" action="#">
+                <label for="dropdown_week"></label>
+                <select id="dropdown_week" name="selected_option">
+                    {% for option in dropdown_week %}
+                    {% if option == selected_dropdown %}
+                    <option value="{{ option }}" selected>{{ option }}</option>
+                    {% else %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </form>
+            <span class="material-symbols-outlined">
+            </span>
+        </div>
+    </div>
+</div>

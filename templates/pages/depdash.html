@@ -1,0 +1,68 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}QA-Dash : Board{% endblock %}
+
+{% block baseBody %}
+
+
+<div class="grey-bg container-fluid">
+  <div class="row border-bottom">
+    <div class="col logoImag mb-2">
+      <a href="/home"><img src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+          alt="oaktreecapital Logo" width="150" height="50" /></a>
+    </div>
+
+    <div class="col">
+      <div class="pageHeader">
+        <h1 class="">Dashboard</h1>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="pageHeader mt-3">
+        <h6 class="">Logged In : <span style="color: maroon;">{{userName}}</span></h6>
+      </div>
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div class="col">
+      <div class="dropdownMonth rounded-pill">
+        <form method="POST" action="#">
+          <label for="dropdown_project"><b>Select Project</b></label><span class="mr-2 ml-2"> : </span>
+          <select id="dropdown_project" name="selected_project">
+            {% for option in dropdown_project %} {% if option ==
+            selected_project %}
+            <option value="{{ option }}" selected>{{ option }}</option>
+            {% else %}
+            <option value="{{ option }}">{{ option }}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+  <br />
+
+  <div class="row">
+    <br />
+    <div class="col">{{getColumnChart1 | safe}}</div>
+    <div class="col">{{getSplineChart1 | safe}}</div>
+
+  </div>
+  <br />
+  <div class="row">
+    <div class="col">{{getColumnChart2 | safe}}</div>
+
+  </div>
+  <br />
+  <br />
+  <br />
+
+
+</div>
+
+
+{% endblock %}

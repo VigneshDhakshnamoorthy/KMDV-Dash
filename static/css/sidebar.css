@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.side-bar {
+
+  backdrop-filter: blur(0px) saturate(200%);
+  -webkit-backdrop-filter: blur(0px) saturate(200%);
+  background-color: rgba(17, 25, 40, 0.45);
+  border-radius: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+
+  width: 335px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  overflow-y: auto;
+  transition: 0.6s ease;
+  transition-property: left;
+
+
+}
+
+tr th {
+  text-align: left !important;
+}
+
+.side-bar.active {
+  left: 0;
+}
+
+.side-bar .menu {
+  width: 100%;
+  margin-top: 80px;
+}
+
+.side-bar .menu .item {
+  position: relative;
+  cursor: pointer;
+}
+
+.side-bar .menu .item a {
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  padding: 5px 30px;
+  line-height: 60px;
+  color: whitesmoke !important;
+}
+
+.side-bar .menu img {
+  position: relative;
+  text-decoration: none;
+  display: block;
+  margin-left: 3rem;
+  margin-bottom: 3rem;
+
+}
+
+.side-bar .menu .item a:hover {
+  color: white !important;
+  background: #198754;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+
+.side-bar .menu .item i {
+  margin-right: 15px;
+}
+
+
+.poweredBy{
+  display: flex !important;
+  position: relative;
+
+}
+
+.poweredBy span{
+  color: aliceblue !important;
+  padding-left: 15%;
+}
+
+.poweredBy img{
+  margin-right: 12% !important;
+  padding-left: 0% !important;
+}
+
+.side-bar .menu .item a .dropdown {
+  position: absolute;
+  right: 0;
+  margin: 20px;
+  transition: 0.3s ease;
+}
+
+.side-bar .menu .item .sub-menu {
+  display: none;
+}
+
+.side-bar .menu .item .sub-menu a {
+  padding-left: 80px;
+}
+
+
+.rotate {
+  transform: rotate(90deg);
+}
+
+.close-btn {
+  position: absolute;
+  font-size: 20px;
+  right: 0;
+  margin: 25px;
+  cursor: pointer;
+  color: whitesmoke !important;
+}
+
+.menu-btn {
+  position: absolute;
+  font-size: 20px;
+  margin: 25px;
+  cursor: pointer;
+}
+
+.side-bar.expanded {
+  left: 0;
+}
+
+.side-bar.expanded+.Page {
+  margin-left: 335px;
+}
+
+
+
+.sub2{
+  padding-left: 2rem;
+}

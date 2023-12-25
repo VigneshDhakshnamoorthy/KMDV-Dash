@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flask Auth Example{% endblock %}</title>
+    {% include 'layout/headTag.html' %}
+    <style>
+        .footer {
+            margin-left: 45% !important;
+            margin-top: 50% !important;
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="col logoImag rounded-pill">
+
+    </div>
+
+
+    <div class="container">
+
+
+        <div class="form-group position-absolute top-50 start-50 translate-middle ml-5">
+            <div class="row">
+
+                <div class="col content_title">
+
+                    <h1>{% block content_title %}{% endblock %}</h1>
+                </div>
+                <div class="col">
+                    <a href="/home"><img
+                            src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
+                            alt="oaktreecapital Logo" width="150" height="45"></a>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="colspan-2">
+
+                    {% block content %}{% endblock %}
+
+                    <div class="flash-message">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {{ messages[-1] }}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+        </div>
+        <footer class=" footer d-flex pt-3">
+            <p class="pl-3 ">Powered By CES &copy; 2023</p>
+            <a href="https://cesltd.com/"><img class="ml-1 mb-1"
+                src="https://cesltd.com/wp-content/themes/ces/assets/images/ces-logo-blue.png" alt="oaktreecapital Logo" width="40"
+                height="25"></a>
+          </footer>
+    </div>
+
+</body>
+
+</html>
