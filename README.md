@@ -1,7 +1,6 @@
 # KMDV-Dash
 Python, Flask, HighCharts, Html, CSS
 
-
 # Packages
 ansi2html==1.9.1
 blinker==1.7.0
