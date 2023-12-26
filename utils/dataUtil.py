@@ -107,7 +107,7 @@ def month_index_no(dictf, month):
 
 def sum_columns_resource(dictf, month):
     df = pd.DataFrame(dictf)
-    df = df.iloc[1:-1, :]
+    df = df.iloc[1:-2, :]
     month_index = month_index_no(df, month)
     df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
     return df[["Project", "Total"]]
@@ -115,7 +115,7 @@ def sum_columns_resource(dictf, month):
 
 def sum_columns_cost(dictf, month):
     df = pd.DataFrame(dictf)
-    df = df.iloc[:-2, :]
+    df = df.iloc[1:-2, :]
     month_index = month_index_no(df, month)
     df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
     return df[["Project", "Total"]]
