@@ -11,9 +11,7 @@ AuthenticationPage = Blueprint(
 )
 
 
-@AuthenticationPage.errorhandler(404)
-def not_found(e):
-    return render_template("accounts/404.html")
+
 
 
 @AuthenticationPage.route("/login", methods=["GET", "POST"])
