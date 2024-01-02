@@ -37,12 +37,20 @@ def getSheetNames(excel_file_path):
         print(f"Error loading Excel file '{excel_file_path}': {str(e)}")
         return []
 
+load_data_dfs ={}
 
+def get_or_append(key, new_value):
+    if key in load_data_dfs:
+        return load_data_dfs[key]
+    else:
+        load_data_dfs[key] = new_value
+        return new_value
+    
 def load_data(excel_file_path, sheet_name, start, end):
     df = pd.read_excel(excel_file_path, sheet_name, usecols=range(start, end)).dropna(
         how="all"
     )
-    return df
+    return get_or_append(f"{excel_file_path}_{sheet_name}_{start}_{end}",df)
 
 
 def load_tables(excel_file_path, sheet_name):
