@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Windows Username</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>Get Windows Username</h1>
+    <p id="windows-username"></p>
+
+    <script>
+        $(document).ready(function () {
+            // Send an AJAX request to a Flask route to get the Windows username
+            $.ajax({
+                type: "GET",
+                url: "/get_windows_username",
+                success: function (data) {
+                    $("#windows-username").text("Windows Username: " + data.username);
+                },
+                error: function () {
+                    $("#windows-username").text("Error retrieving Windows username.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -140,3 +140,8 @@ def getRowResource(dictf, projects_to_extract, month):
         columns = dictf.columns[1:month_index].tolist()
         result[project] = {"keys": columns, "values": values}
     return result
+
+def getMonth():
+    #month = dat.now().month
+    month = 12
+    return month

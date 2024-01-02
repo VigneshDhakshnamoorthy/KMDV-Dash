@@ -1,7 +1,7 @@
 from datetime import datetime as dat
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
-from utils.dataUtil import filterDataSummary, getChartData, getRowResource, load_data, sum_columns_cost, sum_columns_resource
+from utils.dataUtil import filterDataSummary, getChartData, getMonth, getRowResource, load_data, sum_columns_cost, sum_columns_resource
 
 from utils.zynaCharts import BarChart, ColumnChart, MultiColumnChart, MultiLineChart, SplineChart
 
@@ -12,15 +12,15 @@ DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates"
 @login_required
 def Dashboard():
     summary_efforts_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth()
     )
 
     summary_cost_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth()
     )
 
     summary_resource_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth()
     )
     decimal_places = 2
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
@@ -264,15 +264,15 @@ def depdash():
 @login_required
 def mdash():
     summary_efforts_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth()
     )
 
     summary_cost_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth()
     )
 
     summary_resource_fromsheet = load_data(
-        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, dat.now().month
+        "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth()
     )
     decimal_places = 2
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
