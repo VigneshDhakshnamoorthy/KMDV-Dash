@@ -4,40 +4,45 @@ from flask_login import current_user, login_required
 from routes.enumLinks import FileAssociate
 
 from utils.dataUtil import getSheetNames, load_tables, weekDays
+from asyncio import to_thread
 
 WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 
 
 @WSRPage.route("/<template>", methods=["GET", "POST"])
 @login_required
-def pages(template):
+async def pages(template):
     if current_user.is_authenticated:
         project_list = current_user.get_projects_list()
         if template in project_list:
             if template != "favicon.ico":
                 if not template in FileAssociate.keys():
-                    return render_template("accounts/404.html")
+                    return await render_template("accounts/404.html")
+
             options_week = (
-                getSheetNames(FileAssociate.get_value(template))
+                await to_thread(getSheetNames, FileAssociate.get_value(template))
                 if template != "favicon.ico"
-                else getSheetNames(FileAssociate.ONETRACKER.value)
+                else await to_thread(getSheetNames, FileAssociate.ONETRACKER.value)
             )
 
             if request.method == "POST":
                 selected_option = request.form.get("selected_option")
                 session["selected_option"] = selected_option
-
             elif request.method == "GET":
                 selected_option = options_week[0]
                 session["selected_option"] = options_week[0]
 
             tables_fromsheet = (
-                load_tables(FileAssociate.get_value(template), selected_option)
+                await to_thread(
+                    load_tables, FileAssociate.get_value(template), selected_option
+                )
                 if template != "favicon.ico"
-                else load_tables(FileAssociate.ONETRACKER.value, selected_option)
+                else await to_thread(
+                    load_tables, FileAssociate.ONETRACKER.value, selected_option
+                )
             )
 
-            return render_template(
+            return await render_template(
                 "pages/pages.html",
                 dropdown_week=options_week,
                 pageName=template,
@@ -68,6 +73,5 @@ def pages(template):
                     classes="table caption-top table-bordered table-hover", index=False
                 ),
             )
-            
         else:
-            return render_template("accounts/wsrAuth.html")
+            return await render_template("accounts/wsrAuth.html")

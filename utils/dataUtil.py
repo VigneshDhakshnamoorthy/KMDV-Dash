@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import openpyxl
 import pandas as pd
 from datetime import datetime as dat
+from asyncio import to_thread
 
 
 
@@ -27,7 +28,7 @@ def getTypeCount(df, typeName):
     return int(df.loc[df["Type"] == typeName, "Count"].values[0])
 
 
-def getSheetNames(excel_file_path):
+async def getSheetNames(excel_file_path):
     try:
         with pd.ExcelFile(excel_file_path) as xls:
             sheet_names = xls.sheet_names
@@ -46,11 +47,10 @@ def get_or_append(key, new_value):
         load_data_dfs[key] = new_value
         return new_value
     
-def load_data(excel_file_path, sheet_name, start, end):
-    df = pd.read_excel(excel_file_path, sheet_name, usecols=range(start, end)).dropna(
-        how="all"
-    )
-    return get_or_append(f"{excel_file_path}_{sheet_name}_{start}_{end}",df)
+async def load_data(excel_file_path, sheet_name, start, end):
+    df = await to_thread(pd.read_excel, excel_file_path, sheet_name, usecols=range(start, end))
+    df = df.dropna(how="all")
+    return get_or_append(f"{excel_file_path}_{sheet_name}_{start}_{end}", df)
 
 
 def load_tables(excel_file_path, sheet_name):
