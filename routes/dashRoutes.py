@@ -30,8 +30,11 @@ async def Dashboard():
         )
     )
     decimal_places = 2
+    summary_efforts_fromsheet = await summary_efforts_fromsheet
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
+    summary_cost_fromsheet = await summary_cost_fromsheet
     summary_cost_fromsheet = summary_cost_fromsheet.round(decimal_places)
+    summary_resource_fromsheet = await summary_resource_fromsheet
     summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
 
     summary_efforts_fromsheet = summary_efforts_fromsheet.set_index("Project")
@@ -81,7 +84,7 @@ async def Dashboard():
         if entry["name"] == selected_option_project
     ]
 
-    return await render_template(
+    return render_template(
         "pages/dashboard.html",
         dropdown_project=options_project,
         dropdown_cost=options_cost,
@@ -187,6 +190,9 @@ async def depdash():
             "dataSources/monthData/dashSummary.xlsx", "Resource", "Project"
         )
     )
+    efforts_chart_data = await efforts_chart_data
+    cost_chart_data = await cost_chart_data
+    resource_chart_data = await resource_chart_data
 
     options_project = [entry["name"] for entry in efforts_chart_data]
 
@@ -208,7 +214,7 @@ async def depdash():
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
     
-    return await render_template(
+    return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
         selected_project=selected_option_project,
@@ -298,8 +304,11 @@ async def mdash():
         )
     )
     decimal_places = 2
+    summary_efforts_fromsheet = await summary_efforts_fromsheet
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
+    summary_cost_fromsheet = await summary_cost_fromsheet
     summary_cost_fromsheet = summary_cost_fromsheet.round(decimal_places)
+    summary_resource_fromsheet = await summary_resource_fromsheet
     summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
 
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
@@ -365,7 +374,7 @@ async def mdash():
             selected_option_month,
         )
     )
-    return await render_template(
+    return render_template(
         "pages/mdash.html",
         dropdown_project=options_project,
         dropdown_cost=options_cost,

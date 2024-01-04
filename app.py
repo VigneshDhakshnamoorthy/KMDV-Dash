@@ -39,7 +39,7 @@ def not_found(e):
 async def index():
     if current_user.is_authenticated:
         project_list = await asyncio.to_thread(current_user.get_projects_list)
-        return await render_template("pages/index.html", userName=current_user.username, projects=project_list)
+        return render_template("pages/index.html", userName=current_user.username, projects=project_list)
 
 
 if __name__ == "__main__":

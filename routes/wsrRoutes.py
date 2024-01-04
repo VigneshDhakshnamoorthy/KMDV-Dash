@@ -17,14 +17,14 @@ async def pages(template):
         if template in project_list:
             if template != "favicon.ico":
                 if not template in FileAssociate.keys():
-                    return await render_template("accounts/404.html")
+                    return render_template("accounts/404.html")
 
             options_week = (
                 await to_thread(getSheetNames, FileAssociate.get_value(template))
                 if template != "favicon.ico"
                 else await to_thread(getSheetNames, FileAssociate.ONETRACKER.value)
             )
-
+            options_week = await options_week
             if request.method == "POST":
                 selected_option = request.form.get("selected_option")
                 session["selected_option"] = selected_option
@@ -41,8 +41,8 @@ async def pages(template):
                     load_tables, FileAssociate.ONETRACKER.value, selected_option
                 )
             )
-
-            return await render_template(
+            tables_fromsheet = await tables_fromsheet
+            return render_template(
                 "pages/pages.html",
                 dropdown_week=options_week,
                 pageName=template,
@@ -74,4 +74,4 @@ async def pages(template):
                 ),
             )
         else:
-            return await render_template("accounts/wsrAuth.html")
+            return render_template("accounts/wsrAuth.html")

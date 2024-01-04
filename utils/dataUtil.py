@@ -53,25 +53,25 @@ async def load_data(excel_file_path, sheet_name, start, end):
     return get_or_append(f"{excel_file_path}_{sheet_name}_{start}_{end}", df)
 
 
-def load_tables(excel_file_path, sheet_name):
-    utilization_task_wise = load_data(excel_file_path, sheet_name, 0, 2)
+async def load_tables(excel_file_path, sheet_name):
+    utilization_task_wise = await load_data(excel_file_path, sheet_name, 0, 2)
     utilization_task_wise = utilization_task_wise.astype({"Hours.": "int"})
 
-    utilization_resource_wise = load_data(excel_file_path, sheet_name, 3, 5)
+    utilization_resource_wise = await load_data(excel_file_path, sheet_name, 3, 5)
     utilization_resource_wise = utilization_resource_wise.astype({"Hours..": "int"})
-    task_last_week = load_data(excel_file_path, sheet_name, 6, 10)
+    task_last_week = await load_data(excel_file_path, sheet_name, 6, 10)
     # task_last_week['ETC.'] = task_last_week['ETC.'].dt.strftime('%d-%b-%Y')
-    task_next_week = load_data(excel_file_path, sheet_name, 11, 15)
+    task_next_week = await load_data(excel_file_path, sheet_name, 11, 15)
     # task_next_week['ETC..'] = task_next_week['ETC..'].dt.strftime('%d-%b-%Y')
-    defect = load_data(excel_file_path, sheet_name, 16, 23)
+    defect = await load_data(excel_file_path, sheet_name, 16, 23)
     # defect['ETC'] = defect['ETC'].dt.strftime('%d-%b-%Y')
-    summary = load_data(excel_file_path, sheet_name, 24, 26)
+    summary = await load_data(excel_file_path, sheet_name, 24, 26)
     summary = summary.astype({"Count": "int"})
 
-    weekDatasummary = load_data(excel_file_path, sheet_name, 27, 29)
+    weekDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
     weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
 
-    monthDatasummary = load_data(excel_file_path, sheet_name, 30, 32)
+    monthDatasummary = await load_data(excel_file_path, sheet_name, 30, 32)
     monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
 
     dfs = [
@@ -88,9 +88,10 @@ def load_tables(excel_file_path, sheet_name):
         df.fillna("", inplace=True)
     return dfs
 
-def getChartData(filePath, sheetName, set_index):
-    summary_fromsheet = load_data(filePath, sheetName, 0, dat.now().month)
+async def getChartData(filePath, sheetName, set_index):
+    summary_fromsheet = load_data(filePath, sheetName, 0, getMonth())
     decimal_places = 2
+    summary_fromsheet = await summary_fromsheet
     summary_fromsheet = summary_fromsheet.round(decimal_places)
     summary_fromsheet = summary_fromsheet.set_index(set_index)
     summary_dict = summary_fromsheet.transpose().to_dict()

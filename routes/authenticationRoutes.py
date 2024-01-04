@@ -23,17 +23,16 @@ async def login():
             User.query.filter_by,
             username=form.username.data,
             password=form.password.data,
-        ).first
+        )
+        user = user.first()
         if user:
             login_user(user)
             flash("Login successful!", "success")
             return redirect(url_for("index"))
         else:
-            flash(
-                "Login unsuccessful. Please check your username and password.", "danger"
-            )
+            flash("Login unsuccessful. Please check your username and password.", "danger")
 
-    return await render_template("accounts/login.html", form=form)
+    return render_template("accounts/login.html", form=form)
 
 
 @AuthenticationPage.route("/signup", methods=["GET", "POST"])
@@ -79,7 +78,7 @@ async def signup():
             )
             return redirect(url_for("AuthenticationPage.signup"))
 
-    return await render_template("accounts/signup.html", form=form)
+    return render_template("accounts/signup.html", form=form)
 
 
 @AuthenticationPage.route("/logout")
