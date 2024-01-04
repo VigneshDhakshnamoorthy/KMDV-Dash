@@ -1,13 +1,27 @@
 from datetime import datetime as dat
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
-from utils.dataUtil import filterDataSummary, getChartData, getMonth, getRowResource, load_data, sum_columns_row
+from utils.dataUtil import (
+    filterDataSummary,
+    getChartData,
+    getMonth,
+    getRowResource,
+    load_data,
+    sum_columns_row,
+)
 
-from utils.zynaCharts import BarChart, ColumnChart, MultiColumnChart, MultiLineChart, SplineChart
+from utils.zynaCharts import (
+    BarChart,
+    ColumnChart,
+    MultiColumnChart,
+    MultiLineChart,
+    SplineChart,
+)
 import asyncio
 
 
 DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates")
+
 
 @DashboardPage.route("/dashboard", methods=["GET", "POST"])
 @login_required
@@ -107,7 +121,6 @@ async def Dashboard():
             yAxisData=list(filtered_data_efforts[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_Color="black",
-
         ),
         getColumnChart1=ColumnChart(
             chartName="ColumnChart1",
@@ -170,8 +183,8 @@ async def Dashboard():
             dataLabels_font_size="13px",
         ),
     )
-    
-    
+
+
 @DashboardPage.route("/depdash", methods=["GET", "POST"])
 @login_required
 async def depdash():
@@ -213,7 +226,7 @@ async def depdash():
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
-    
+
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
