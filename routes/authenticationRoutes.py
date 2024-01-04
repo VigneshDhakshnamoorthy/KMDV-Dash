@@ -53,7 +53,8 @@ async def signup():
     if form.validate_on_submit():
         existing_user = await to_thread(
             User.query.filter_by, username=form.username.data
-        ).first
+        )
+        existing_user = existing_user.first()
         if existing_user:
             flash("Username already exists. Please choose a different one.", "danger")
             return redirect(url_for("AuthenticationPage.signup"))

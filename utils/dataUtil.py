@@ -4,18 +4,25 @@ import pandas as pd
 from datetime import datetime as dat
 from asyncio import to_thread
 
-
+load_data_dfs = {}
 
 def getSheetNames(excel_file_path):
+    key = f"sheet_names_{excel_file_path}"
+    
+    if key in load_data_dfs:
+        return load_data_dfs[key]
+    
     try:
         with pd.ExcelFile(excel_file_path) as xls:
             sheet_names = xls.sheet_names
             sheet_names.reverse()
+        load_data_dfs[key] = sheet_names
         return sheet_names
     except Exception as e:
         print(f"Error loading Excel file '{excel_file_path}': {str(e)}")
         return []
-    
+
+
 def weekDays(week):
     date_obj = datetime.strptime(week, "%d %b %Y")
     new_date_obj = date_obj + timedelta(days=4)
@@ -38,19 +45,20 @@ async def getSheetNames(excel_file_path):
         print(f"Error loading Excel file '{excel_file_path}': {str(e)}")
         return []
 
-load_data_dfs ={}
 
-def get_or_append(key, new_value):
+
+async def load_data(excel_file_path, sheet_name, start, end):
+    key = f"{excel_file_path}_{sheet_name}_{start}_{end}"
     if key in load_data_dfs:
         return load_data_dfs[key]
-    else:
-        load_data_dfs[key] = new_value
-        return new_value
-    
-async def load_data(excel_file_path, sheet_name, start, end):
-    df = await to_thread(pd.read_excel, excel_file_path, sheet_name, usecols=range(start, end))
+
+    df = await to_thread(
+        pd.read_excel, excel_file_path, sheet_name, usecols=range(start, end)
+    )
     df = df.dropna(how="all")
-    return get_or_append(f"{excel_file_path}_{sheet_name}_{start}_{end}", df)
+
+    load_data_dfs[key] = df
+    return df
 
 
 async def load_tables(excel_file_path, sheet_name):
@@ -88,10 +96,10 @@ async def load_tables(excel_file_path, sheet_name):
         df.fillna("", inplace=True)
     return dfs
 
+
 async def getChartData(filePath, sheetName, set_index):
-    summary_fromsheet = load_data(filePath, sheetName, 0, getMonth())
+    summary_fromsheet = await load_data(filePath, sheetName, 0, getMonth())
     decimal_places = 2
-    summary_fromsheet = await summary_fromsheet
     summary_fromsheet = summary_fromsheet.round(decimal_places)
     summary_fromsheet = summary_fromsheet.set_index(set_index)
     summary_dict = summary_fromsheet.transpose().to_dict()
@@ -114,21 +122,12 @@ def month_index_no(dictf, month):
     return dictf.columns.get_loc(month)
 
 
-def sum_columns_resource(dictf, month):
+def sum_columns_row(dictf, month):
     df = pd.DataFrame(dictf)
     df = df.iloc[1:-2, :]
     month_index = month_index_no(df, month)
     df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
     return df[["Project", "Total"]]
-
-
-def sum_columns_cost(dictf, month):
-    df = pd.DataFrame(dictf)
-    df = df.iloc[1:-2, :]
-    month_index = month_index_no(df, month)
-    df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
-    return df[["Project", "Total"]]
-
 
 def sum_columns(dictf, month):
     df = pd.DataFrame(dictf)
@@ -150,7 +149,8 @@ def getRowResource(dictf, projects_to_extract, month):
         result[project] = {"keys": columns, "values": values}
     return result
 
+
 def getMonth():
-    #month = dat.now().month
+    # month = dat.now().month
     month = 12
     return month

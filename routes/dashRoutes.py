@@ -1,7 +1,7 @@
 from datetime import datetime as dat
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
-from utils.dataUtil import filterDataSummary, getChartData, getMonth, getRowResource, load_data, sum_columns_cost, sum_columns_resource
+from utils.dataUtil import filterDataSummary, getChartData, getMonth, getRowResource, load_data, sum_columns_row
 
 from utils.zynaCharts import BarChart, ColumnChart, MultiColumnChart, MultiLineChart, SplineChart
 import asyncio
@@ -355,10 +355,10 @@ async def mdash():
     )
 
     cost_per_dict = await asyncio.to_thread(
-        lambda: sum_columns_cost(cost_dict, selected_option_month)
+        lambda: sum_columns_row(cost_dict, selected_option_month)
     )
     resource_per_dict = await asyncio.to_thread(
-        lambda: sum_columns_resource(resource_dict, selected_option_month)
+        lambda: sum_columns_row(resource_dict, selected_option_month)
     )
     cost_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
