@@ -4,6 +4,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from database.forms import LoginForm, SignupForm
 from database.models import User, db
 from routes.enumLinks import FileAssociate
+from asyncio import to_thread
 
 
 AuthenticationPage = Blueprint(
@@ -11,33 +12,31 @@ AuthenticationPage = Blueprint(
 )
 
 
-
-
-
 @AuthenticationPage.route("/login", methods=["GET", "POST"])
-def login():
+async def login():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(
-            username=form.username.data, password=form.password.data
-        ).first()
+        user = await to_thread(
+            User.query.filter_by,
+            username=form.username.data,
+            password=form.password.data,
+        )
+        user = user.first()
         if user:
             login_user(user)
             flash("Login successful!", "success")
             return redirect(url_for("index"))
         else:
-            flash(
-                "Login unsuccessful. Please check your username and password.", "danger"
-            )
+            flash("Login unsuccessful. Please check your username and password.", "danger")
 
     return render_template("accounts/login.html", form=form)
 
 
 @AuthenticationPage.route("/signup", methods=["GET", "POST"])
-def signup():
+async def signup():
     # if current_user.is_authenticated:
     #         return redirect(url_for('index'))
     choices = FileAssociate.keys()
@@ -52,7 +51,10 @@ def signup():
         )
         return redirect(url_for("AuthenticationPage.signup"))
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(username=form.username.data).first()
+        existing_user = await to_thread(
+            User.query.filter_by, username=form.username.data
+        )
+        existing_user = existing_user.first()
         if existing_user:
             flash("Username already exists. Please choose a different one.", "danger")
             return redirect(url_for("AuthenticationPage.signup"))
@@ -82,7 +84,7 @@ def signup():
 
 @AuthenticationPage.route("/logout")
 @login_required
-def logout():
+async def logout():
     logout_user()
     flash("You have been logged out.", "success")
     return redirect(url_for("AuthenticationPage.login"))
