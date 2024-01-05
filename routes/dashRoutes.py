@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from utils.dataUtil import (
     filterDataSummary,
     getChartData,
+    getChartDataTotal,
     getMonth,
     getRowResource,
     load_data,
@@ -188,19 +189,21 @@ async def Dashboard():
 @DashboardPage.route("/depdash", methods=["GET", "POST"])
 @login_required
 async def depdash():
+    project_list = await asyncio.to_thread(current_user.get_projects_list)
+    project_list.append("All")
     efforts_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Efforts", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Efforts", set_index="Project",start=1,projects_list = project_list
         )
     )
     cost_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Cost", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Cost", set_index="Project",start=1,end=-2,projects_list = project_list
         )
     )
     resource_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Resource", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Resource", set_index="Project",start=1,end=-2,projects_list = project_list
         )
     )
     efforts_chart_data = await efforts_chart_data
@@ -226,7 +229,7 @@ async def depdash():
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
-
+    print(filtered_data_cost)
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
