@@ -16,7 +16,7 @@ async def pages(template):
         project_list = current_user.get_projects_list()
         if template in project_list:
             if template != "favicon.ico":
-                if not template in FileAssociate.keys():
+                if not template in FileAssociate.keys() or FileAssociate.get_value(template) is None:
                     return render_template("accounts/404.html")
 
             options_week = (

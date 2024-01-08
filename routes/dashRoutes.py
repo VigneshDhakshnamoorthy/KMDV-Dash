@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from utils.dataUtil import (
     filterDataSummary,
     getChartData,
+    getChartDataTotal,
     getMonth,
     getRowResource,
     load_data,
@@ -105,13 +106,13 @@ async def Dashboard():
         selected_project=selected_option_project,
         selected_month=selected_option_month,
         userName=current_user.username,
-        getSplineChart1=SplineChart(
+        getSplineChart1=await SplineChart(
             chartName="SplineChart1",
             title="Total Efforts (Hrs.)",
             subtitle=f"Project : {selected_option_project}",
-            max_width="624px",
-            min_width="312px",
-            height="600px",
+            max_width="100%",
+            min_width="50%",
+            height="",
             background_color="transparent",
             borderColor="black",
             lineColor="Crimson",
@@ -122,13 +123,13 @@ async def Dashboard():
             dataLabels_enabled="true",
             dataLabels_Color="black",
         ),
-        getColumnChart1=ColumnChart(
+        getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
             subtitle=f"Project : {selected_option_project}",
-            max_width="624px",
-            min_width="312px",
-            height="600px",
+            max_width="100%",
+            min_width="50%",
+            height="",
             background_color="transparent",
             borderColor="black",
             lineColor="darkgreen",
@@ -144,12 +145,12 @@ async def Dashboard():
             dataLabels_align="right",
             dataLabels_padding=8,
         ),
-        getBarChart1=BarChart(
+        getBarChart1=await BarChart(
             chartName="BarChart1",
             title="Cost Summary",
             subtitle=f"Month : {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -163,12 +164,12 @@ async def Dashboard():
             dataLabels_Color="yellow",
             dataLabels_font_size="13px",
         ),
-        getBarChart2=BarChart(
+        getBarChart2=await BarChart(
             chartName="BarChart2",
             title="Resource Summary",
             subtitle=f"Month : {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -188,19 +189,21 @@ async def Dashboard():
 @DashboardPage.route("/depdash", methods=["GET", "POST"])
 @login_required
 async def depdash():
+    project_list = await asyncio.to_thread(current_user.get_projects_list)
+    project_list.append("All")
     efforts_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Efforts", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Efforts", set_index="Project",start=1,projects_list = project_list
         )
     )
     cost_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Cost", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Cost", set_index="Project",start=1,end=-2,projects_list = project_list
         )
     )
     resource_chart_data = await asyncio.to_thread(
-        lambda: getChartData(
-            "dataSources/monthData/dashSummary.xlsx", "Resource", "Project"
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Resource", set_index="Project",start=1,end=-2,projects_list = project_list
         )
     )
     efforts_chart_data = await efforts_chart_data
@@ -226,18 +229,18 @@ async def depdash():
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
-
+    print(filtered_data_cost)
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
         selected_project=selected_option_project,
         userName=current_user.username,
-        getColumnChart1=ColumnChart(
+        getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
             subtitle=f"Project : {selected_option_project}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="",
             background_color="transparent",
             borderColor="black",
@@ -254,12 +257,12 @@ async def depdash():
             dataLabels_align="right",
             dataLabels_padding=8,
         ),
-        getColumnChart2=ColumnChart(
+        getColumnChart2=await ColumnChart(
             chartName="ColumnChart2",
             title="Cost of Labor",
             subtitle=f"Project : {selected_option_project}",
-            max_width="",
-            min_width="",
+            max_width="100%",
+            min_width="50%",
             height="",
             background_color="transparent",
             borderColor="black",
@@ -276,12 +279,12 @@ async def depdash():
             dataLabels_align="right",
             dataLabels_padding=8,
         ),
-        getSplineChart1=SplineChart(
+        getSplineChart1=await SplineChart(
             chartName="SplineChart1",
             title="QA Team Size",
             subtitle=f"Project : {selected_option_project}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="",
             background_color="transparent",
             borderColor="black",
@@ -394,12 +397,12 @@ async def mdash():
         selected_project=selected_option_project,
         selected_month=selected_option_month,
         userName=current_user.username,
-        getColumnChart1=ColumnChart(
+        getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -416,12 +419,12 @@ async def mdash():
             dataLabels_align="right",
             dataLabels_padding=8,
         ),
-        getMultiLineChart1=MultiLineChart(
+        getMultiLineChart1=await MultiLineChart(
             chartName="MultiLineChart1",
             title="QA Team Size",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -437,12 +440,12 @@ async def mdash():
             dataLabels_enabled="true",
             dataLabels_Color="black",
         ),
-        getMultiColumnChart1=MultiColumnChart(
+        getMultiColumnChart1=await MultiColumnChart(
             chartName="MultiColumnChart1",
             title="Cost of Labor (Projected vs Actual)",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -462,12 +465,12 @@ async def mdash():
             dataLabels_align="right",
             dataLabels_padding=8,
         ),
-        getBarChart1=BarChart(
+        getBarChart1=await BarChart(
             chartName="BarChart1",
             title="Project Wise Cost Summary",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",
@@ -481,12 +484,12 @@ async def mdash():
             dataLabels_Color="yellow",
             dataLabels_font_size="13px",
         ),
-        getBarChart2=BarChart(
+        getBarChart2=await BarChart(
             chartName="BarChart2",
             title="Resource Management Summary",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
-            max_width="624px",
-            min_width="312px",
+            max_width="100%",
+            min_width="50%",
             height="600px",
             background_color="transparent",
             borderColor="black",

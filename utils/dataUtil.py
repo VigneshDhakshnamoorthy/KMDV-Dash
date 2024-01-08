@@ -6,12 +6,13 @@ from asyncio import to_thread
 
 load_data_dfs = {}
 
+
 def getSheetNames(excel_file_path):
     key = f"sheet_names_{excel_file_path}"
-    
+
     if key in load_data_dfs:
         return load_data_dfs[key]
-    
+
     try:
         with pd.ExcelFile(excel_file_path) as xls:
             sheet_names = xls.sheet_names
@@ -46,7 +47,6 @@ async def getSheetNames(excel_file_path):
         return []
 
 
-
 async def load_data(excel_file_path, sheet_name, start, end):
     key = f"{excel_file_path}_{sheet_name}_{start}_{end}"
     if key in load_data_dfs:
@@ -74,12 +74,12 @@ async def load_tables(excel_file_path, sheet_name):
     defect = await load_data(excel_file_path, sheet_name, 16, 23)
     # defect['ETC'] = defect['ETC'].dt.strftime('%d-%b-%Y')
     summary = await load_data(excel_file_path, sheet_name, 24, 26)
-    summary = summary.astype({"Count": "int"})
+    # summary = summary.astype({"Count": "int"})
 
-    weekDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
+    weekDatasummary = await load_data(excel_file_path, sheet_name, 24, 26)
     weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
 
-    monthDatasummary = await load_data(excel_file_path, sheet_name, 30, 32)
+    monthDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
     monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
 
     dfs = [
@@ -111,6 +111,34 @@ async def getChartData(filePath, sheetName, set_index):
     return chart_data
 
 
+async def getChartDataTotal(filePath, sheetName, set_index, start, end=None, projects_list=None):
+    summary_fromsheet = await load_data(filePath, sheetName, 0, getMonth())
+    decimal_places = 2
+    summary_fromsheet = summary_fromsheet.set_index(set_index)
+    if end is None:
+        end = len(summary_fromsheet) + 1
+    summary_fromsheet = summary_fromsheet.iloc[start:end]
+    summary_fromsheet = summary_fromsheet.loc[summary_fromsheet.index.isin(projects_list)]
+    total_row = summary_fromsheet.sum(axis=0)
+    total_row.name = "All"
+
+    summary_fromsheet = summary_fromsheet._append(total_row)
+
+    summary_fromsheet = summary_fromsheet.round(decimal_places)
+
+    summary_dict = summary_fromsheet.transpose().to_dict()
+    sorted_chart_data = sorted(summary_dict.items(), key=lambda x: x[0])
+
+    total_entry = next(entry for entry in sorted_chart_data if entry[0] == total_row.name)
+    sorted_chart_data.remove(total_entry)
+    sorted_chart_data.insert(0, total_entry)
+    chart_data = [
+        {"name": month, "data": values} for month, values in sorted_chart_data
+    ]
+
+    return chart_data
+
+
 def filterDataSummary(chart_data, selected_option_project):
     filtered_data_efforts = [
         entry for entry in chart_data if entry["name"] == selected_option_project
@@ -128,6 +156,7 @@ def sum_columns_row(dictf, month):
     month_index = month_index_no(df, month)
     df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
     return df[["Project", "Total"]]
+
 
 def sum_columns(dictf, month):
     df = pd.DataFrame(dictf)

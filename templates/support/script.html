@@ -49,17 +49,14 @@
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Get the scroll position from sessionStorage
-    var scrollPosition = sessionStorage.getItem("scrollPosition");
+    var scrollPosition = localStorage.getItem("scrollPosition");
 
-    // If scrollPosition is set, scroll to that position
     if (scrollPosition) {
       window.scrollTo(0, scrollPosition);
     }
 
-    // Listen for scroll events and store the scroll position in sessionStorage
     window.addEventListener("scroll", function () {
-      sessionStorage.setItem("scrollPosition", window.scrollY);
+      localStorage.setItem("scrollPosition", window.scrollY);
     });
   });
 </script>

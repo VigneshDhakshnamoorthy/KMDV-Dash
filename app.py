@@ -11,6 +11,7 @@ from database.database import init_db
 from database.models import User
 from routes.authenticationRoutes import AuthenticationPage
 from routes.dashRoutes import DashboardPage
+from routes.enumLinks import FileAssociate
 from routes.wsrRoutes import WSRPage
 
 
@@ -29,18 +30,30 @@ login_manager.login_view = "AuthenticationPage.login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("accounts/404.html")
 
-@app.route("/home", methods=["GET", "POST"])
-@app.route("/", methods=["GET", "POST"])
+
+@app.route("/home", methods=["GET"])
+@app.route("/", methods=["GET"])
 @login_required
 async def index():
     if current_user.is_authenticated:
-        project_list = await asyncio.to_thread(current_user.get_projects_list)
-        return render_template("pages/index.html", userName=current_user.username, projects=project_list)
+        project_list = sorted(await asyncio.to_thread(current_user.get_projects_list))
+        filtered_projects = [
+            project
+            for project in project_list
+            if FileAssociate.get_value(project) is not None
+        ]
+        return render_template(
+            "pages/index.html",
+            userName=current_user.username,
+            projects=project_list,
+            filtered_project=filtered_projects,
+        )
 
 
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0', port=6963, threaded=True)
+    app.run(debug=True, host="0.0.0.0", port=6963, threaded=True)
