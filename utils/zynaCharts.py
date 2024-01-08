@@ -1,7 +1,7 @@
 import re
 
 
-def LineChart(
+async def LineChart(
     chartName,
     title,
     subtitle,
@@ -59,8 +59,8 @@ def LineChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: false 
+            legend: {{
+                enabled: false
             }},
             plotOptions: {{
                 line: {{
@@ -86,7 +86,8 @@ def LineChart(
 
     return template
 
-def SplineChart(
+
+async def SplineChart(
     chartName,
     title,
     subtitle,
@@ -144,8 +145,8 @@ def SplineChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: false 
+            legend: {{
+                enabled: false
             }},
             plotOptions: {{
                 line: {{
@@ -171,7 +172,8 @@ def SplineChart(
 
     return template
 
-def MultiLineChart(
+
+async def MultiLineChart(
     chartName,
     title,
     subtitle,
@@ -233,8 +235,8 @@ def MultiLineChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: true 
+            legend: {{
+                enabled: true
             }},
             plotOptions: {{
                 line: {{
@@ -270,7 +272,8 @@ def MultiLineChart(
 
     return template
 
-def BarChart(
+
+async def BarChart(
     chartName,
     title,
     subtitle,
@@ -330,8 +333,8 @@ def BarChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: false 
+            legend: {{
+                enabled: false
             }},
             plotOptions: {{
                 line: {{
@@ -345,6 +348,7 @@ def BarChart(
                 colorByPoint: {colorByPoint},
                 dataLabels: {{
                     enabled: {dataLabels_enabled},
+                    animation: {{defer: 6000}},
                     format: '{{point.y:.1f}}',
                     style: {{
                             color: '{dataLabels_Color}',
@@ -361,7 +365,7 @@ def BarChart(
     return template
 
 
-def ColumnChart(
+async def ColumnChart(
     chartName,
     title,
     subtitle,
@@ -423,8 +427,8 @@ def ColumnChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: false 
+            legend: {{
+                enabled: false
             }},
             plotOptions: {{
                 line: {{
@@ -457,7 +461,7 @@ def ColumnChart(
     return template
 
 
-def MultiColumnChart(
+async def MultiColumnChart(
     chartName,
     title,
     subtitle,
@@ -522,8 +526,8 @@ def MultiColumnChart(
             credits: {{
                 enabled: false
             }},
-            legend: {{ 
-                enabled: false 
+            legend: {{
+                enabled: false
             }},
             plotOptions: {{
                 line: {{
@@ -573,4 +577,3 @@ def MultiColumnChart(
     template = re.sub(r"\bnan\b", "NaN", template)
 
     return template
-

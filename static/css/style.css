@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -29,156 +30,48 @@ body {
   background-size: cover;
   background-position: center;
   /* background-image: url("../img/backgrounds/background12.jpeg"); */
-  background: linear-gradient(90deg,  rgb(82, 187, 181) 0%, rgba(157,233,184,1) 25%,rgba(157,233,229,1) 50%, rgba(157,233,184,1) 75%,  rgb(76, 204, 198) 100%);
-
-
-  
+  background: linear-gradient(
+    90deg,
+    rgb(82, 187, 181) 0%,
+    rgba(157, 233, 184, 1) 25%,
+    rgba(157, 233, 229, 1) 50%,
+    rgba(157, 233, 184, 1) 75%,
+    rgb(76, 204, 198) 100%
+  );
 }
 
-table, tbody, tr, th, td{
-  background-color: rgba(0, 0, 0, 0.0) !important;
+table,
+tbody,
+tr,
+th,
+td {
+  background-color: rgba(0, 0, 0, 0) !important;
   border-color: black !important;
 }
 
 .card {
-  background-color: rgba(0, 0, 0, 0.0) !important;
+  background-color: rgba(0, 0, 0, 0) !important;
   border-color: black !important;
 }
 
-.indexList li{
+.indexList li {
   list-style: none;
 }
 
-.indexList a{
+.indexList a {
   text-decoration: none !important;
   color: black !important;
   text-align: center !important;
 }
 
-.indexList a:hover{
+.indexList a:hover {
   text-decoration: underline !important;
   color: red !important;
-}
-.form-input2 input {
-  text-align: center;
-  height: 2rem !important;
-  width: 13rem !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  width: 40rem;
-  padding: 1rem 4rem 1rem 1rem;
-  background: var(--arrow-icon) no-repeat right 0.8em center/1.4em,
-    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-  border-radius: 1rem;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-
-.flash-message {
-  text-align: inherit;
-  color: darkolivegreen !important;
-  padding-left: 5rem;
-  align-items: stretch;
-  font-weight: bold;
-  padding-top: 10%;
 }
 
 .content_title {
   text-align: right;
 }
-
-.form-input input {
-  text-align: center;
-  height: 2rem !important;
-  width: 15rem !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  width: 40rem;
-  padding: 1rem 4rem 1rem 1rem;
-  background: var(--arrow-icon) no-repeat right 0.8em center/1.4em,
-    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-  border-radius: 1rem;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-
-.form-button2 input {
-  text-align: center;
-  margin-left: 18%;
-  height: 50px !important;
-  width: 450px !important;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  width: 40rem;
-  padding: 1rem 2rem 1rem 1rem;
-  background: var(--arrow-icon) no-repeat right 0.8em center/1.4em,
-    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-  border-radius: 1rem;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.form-button input {
-  text-align: center;
-  margin-left: 23%;
-  height: 50px !important;
-  width: 400px !important;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  width: 40rem;
-  padding: 1rem 2rem 2rem 1rem;
-  background: var(--arrow-icon) no-repeat right 0.8em center/1.4em,
-    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-  border-radius: 1rem;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  font-weight: bold;
-}
-.form-label {
-  margin-left: 11%;
-  text-align: center;
-  padding-top: 1%;
-  font-weight: bold;
-}
-.form-group {
-  display: block;
-  margin: 0;
-  text-align: center;
-  text-size-adjust: inherit;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  width: 40rem;
-  padding: 1rem 4rem 1rem 1rem;
-  background: var(--arrow-icon) no-repeat right 0.8em center/1.4em,
-    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-  border-radius: 1rem;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-}
-
-
 
 body.light-mode .video-bg:before {
   content: "";
@@ -203,6 +96,7 @@ body.light-mode .video-bg:before {
   width: 100%;
   height: 100%;
 }
+
 .video-bg video {
   width: 100%;
   height: 100%;
