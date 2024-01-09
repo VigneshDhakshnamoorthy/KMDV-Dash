@@ -8,7 +8,7 @@ from flask_login import (
 
 
 from database.database import init_db
-from database.models import User
+from database.models import User, db
 from routes.authenticationRoutes import AuthenticationPage
 from routes.dashRoutes import DashboardPage
 from routes.enumLinks import FileAssociate
@@ -57,3 +57,9 @@ async def index():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=6963, threaded=True)
+
+
+# if __name__ == "__main__":
+#     from waitress import serve
+#     app.debug = True
+#     serve(app, host="0.0.0.0", port=6963, threads=4)

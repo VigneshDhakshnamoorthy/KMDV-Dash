@@ -60,6 +60,23 @@ async def load_data(excel_file_path, sheet_name, start, end):
     load_data_dfs[key] = df
     return df
 
+async def load_data_specific(excel_file_path, sheet_name, col_start, col_end, row_start, row_end):
+    key = f"{excel_file_path}_{sheet_name}_{col_start}_{col_end}_{row_start}_{row_end}"
+    if key in load_data_dfs:
+        return load_data_dfs[key]
+
+    df = await to_thread(
+        pd.read_excel, excel_file_path, sheet_name, usecols=range(col_start, col_end), skiprows=range(1, row_start)
+    )
+    df = df.head(row_end - row_start)
+    df = df.dropna(how="all")
+
+    load_data_dfs[key] = df
+    return df
+
+def filter_data_by_rows(df, start_row, end_row):
+    filtered_df = df.iloc[start_row-1:end_row] 
+    return filtered_df
 
 async def load_tables(excel_file_path, sheet_name):
     utilization_task_wise = await load_data(excel_file_path, sheet_name, 0, 2)
