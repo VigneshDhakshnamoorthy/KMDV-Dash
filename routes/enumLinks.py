@@ -35,3 +35,18 @@ class FileAssociate(Enum):
     @classmethod
     def get_value(cls, key):
         return cls[key].value if key in cls.__members__ else None
+    
+
+class ChartData(Enum):
+    max_width = "100%"
+    min_width = "50%"
+    height = "75vh"
+    background_color = "transparent"
+    borderColor="black"
+    dataLabels_format_1f="{point.y:.1f}"
+    dataLabels_format_0f="{point.y:.0f}"
+    dataLabels_format_m0f="$ {point.y:.0f}"
+    lineColor_bar = "#e2725b"
+    lineColor_column = "#00416a"
+    lineColor_spline = "#e2725b"
+    gridLineWidth = 0
