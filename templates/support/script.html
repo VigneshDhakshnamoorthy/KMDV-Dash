@@ -48,6 +48,18 @@
     });
   });
 
+  $(document).ready(function () {
+    $("#dropdown_month").on("change", function () {
+      $(this).closest("form").submit();
+    });
+  });
+
+  $(document).ready(function () {
+    $("#dropdown_year").on("change", function () {
+      $(this).closest("form").submit();
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     var scrollPosition = localStorage.getItem("scrollPosition");
 

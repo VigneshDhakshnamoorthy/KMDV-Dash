@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from functools import partial
 import openpyxl
 import pandas as pd
 from datetime import datetime as dat
@@ -46,19 +47,68 @@ async def getSheetNames(excel_file_path):
         print(f"Error loading Excel file '{excel_file_path}': {str(e)}")
         return []
 
+@staticmethod
+def getDateNow():
+    return dat.now()
+
+@staticmethod
+def getYear():
+    return  getDateNow().year
+
+def getMonth(year_selection = getYear(), month = getDateNow().month, max = getYear()):
+    dif = year_selection - 2023
+    if dif == 0:
+        month =  13
+    if  max > year_selection:
+        month = 13
+    return (dif*12)+month
 
 async def load_data(excel_file_path, sheet_name, start, end):
     key = f"{excel_file_path}_{sheet_name}_{start}_{end}"
     if key in load_data_dfs:
         return load_data_dfs[key]
-
-    df = await to_thread(
+    try:
+        df = await to_thread(
         pd.read_excel, excel_file_path, sheet_name, usecols=range(start, end)
-    )
+    )   
+    except pd.errors.ParserError:
+         df = await to_thread(
+        pd.read_excel, excel_file_path, sheet_name
+    )   
+
     df = df.dropna(how="all")
 
     load_data_dfs[key] = df
     return df
+
+
+async def load_data_month_skip(excel_file_path, sheet_name, start, end, year_selection=dat.now().year):
+    key = f"{excel_file_path}_{sheet_name}_{start}_{end}_{year_selection}"
+    if key in load_data_dfs:
+        return load_data_dfs[key]
+    
+    skip_columns =[]
+    if not end % 12 == 1:
+        skip_columns =[i for i in range(1,((end//12)*12)+1)]
+    else:
+        skip_columns =[i for i in range(1,(abs((end//12)-1)*12)+1)]
+    
+    columns_to_read = [col for col in range(start, end) if col not in skip_columns]
+
+    try:
+        df = await to_thread(
+        pd.read_excel, excel_file_path, sheet_name, usecols=columns_to_read
+    )   
+    except pd.errors.ParserError:
+         df = await to_thread(
+        pd.read_excel, excel_file_path, sheet_name
+    )   
+
+    df = df.dropna(how="all")
+
+    load_data_dfs[key] = df
+    return df
+
 
 async def load_data_specific(excel_file_path, sheet_name, col_start, col_end, row_start, row_end):
     key = f"{excel_file_path}_{sheet_name}_{col_start}_{col_end}_{row_start}_{row_end}"
@@ -128,8 +178,8 @@ async def getChartData(filePath, sheetName, set_index):
     return chart_data
 
 
-async def getChartDataTotal(filePath, sheetName, set_index, start, end=None, projects_list=None):
-    summary_fromsheet = await load_data(filePath, sheetName, 0, getMonth())
+async def getChartDataTotal(filePath, sheetName, set_index, start, end=None, projects_list=None, month = getMonth(),  year_selection=dat.now().year):
+    summary_fromsheet = await load_data_month_skip(filePath, sheetName, 0, month, year_selection)
     decimal_places = 2
     summary_fromsheet = summary_fromsheet.set_index(set_index)
     if end is None:
@@ -195,8 +245,13 @@ def getRowResource(dictf, projects_to_extract, month):
         result[project] = {"keys": columns, "values": values}
     return result
 
+    
+def getYearList(year=getYear(), month = getDateNow().month):
+    if month > 1:   
+        yearList = [i for i in range(2023,year+1)]
+    else:
+        yearList = [i for i in range(2023,year)]
+    return yearList[::-1]
 
-def getMonth():
-    # month = dat.now().month
-    month = 12
-    return month
+
+

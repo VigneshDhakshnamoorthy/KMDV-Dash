@@ -3,15 +3,21 @@ from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
 from routes.enumLinks import ChartData
 from utils.dataUtil import (
+    dataframeSlice,
     filter_data_by_rows,
     filterDataSummary,
     getChartData,
     getChartDataTotal,
+    getDateNow,
     getMonth,
     getRowResource,
+    getYearList,
+    getYearOption,
     load_data,
+    load_data_month_skip,
     load_data_specific,
     sum_columns_row,
+    update_year_option,
 )
 
 from utils.zynaCharts import (
@@ -197,40 +203,80 @@ async def Dashboard():
         ),
     )
 
+month_today = 5
+year_list = getYearList(month=month_today)
 
 @DashboardPage.route("/depdash", methods=["GET", "POST"])
 @login_required
 async def depdash():
+    selected_option_year = year_list[0]
     project_list = await asyncio.to_thread(current_user.get_projects_list)
     project_list.append("All")
+    
+    if request.method == "POST" and "selected_year" in request.form:
+        selected_option_year = request.form.get("selected_year")
+        session["selected_year"] = selected_option_year
+
+        selected_option_project = session["selected_project"]
+        
+    
+    if request.method == "POST" and "selected_project" in request.form:
+        selected_option_project = request.form.get("selected_project")
+        session["selected_project"] = selected_option_project
+        
+        selected_option_year = session["selected_year"]
+        
     efforts_chart_data = await asyncio.to_thread(
         lambda: getChartDataTotal(
-            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Efforts", set_index="Project",start=1,projects_list = project_list
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Efforts",
+            set_index="Project",
+            start=1,
+            month=getMonth(int(selected_option_year), month=month_today, max =max(year_list)),
+            projects_list=project_list,
+            year_selection = int(selected_option_year),
         )
     )
     cost_chart_data = await asyncio.to_thread(
         lambda: getChartDataTotal(
-            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Cost", set_index="Project",start=1,end=-2,projects_list = project_list
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Cost",
+            set_index="Project",
+            start=1,
+            end=-2,
+            month=getMonth(int(selected_option_year), month=month_today, max =max(year_list)),
+            projects_list=project_list,
+            year_selection = int(selected_option_year),
         )
     )
     resource_chart_data = await asyncio.to_thread(
         lambda: getChartDataTotal(
-            filePath="dataSources/monthData/dashSummary.xlsx", sheetName="Resource", set_index="Project",start=1,end=-2,projects_list = project_list
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Resource",
+            set_index="Project",
+            start=1,
+            end=-2,
+            month=getMonth(int(selected_option_year), month=month_today, max =max(year_list)),
+            projects_list=project_list,
+            year_selection = int(selected_option_year),
+            
         )
     )
     efforts_chart_data = await efforts_chart_data
     cost_chart_data = await cost_chart_data
     resource_chart_data = await resource_chart_data
-
     options_project = [entry["name"] for entry in efforts_chart_data]
 
-    if request.method == "POST":
-        selected_option_project = request.form.get("selected_project")
-        session["selected_project"] = selected_option_project
+    print(session["selected_year"])
+
+
 
     if request.method == "GET":
         selected_option_project = options_project[0]
         session["selected_project"] = options_project[0]
+        
+        selected_option_year = year_list[0]
+        session["selected_year"] = year_list[0]
 
     filtered_data_efforts = await asyncio.to_thread(
         lambda: filterDataSummary(efforts_chart_data, selected_option_project)
@@ -244,7 +290,9 @@ async def depdash():
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
+        dropdown_year=year_list,
         selected_project=selected_option_project,
+        selected_year=int(selected_option_year),
         userName=current_user.username,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
@@ -319,21 +367,28 @@ async def depdash():
 @DashboardPage.route("/mdash", methods=["GET", "POST"])
 @login_required
 async def mdash():
+    selected_option_year = year_list[0]
+    if request.method == "POST" and "selected_year" in request.form:
+        selected_option_year = request.form.get("selected_year")
+        session["selected_year"] = selected_option_year
+
+        selected_option_month = session["selected_month"]
+
     summary_efforts_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth()
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth(int(selected_option_year), month=month_today, max =max(year_list)), int(selected_option_year)
         )
     )
 
     summary_cost_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth()
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth(int(selected_option_year), month=month_today, max =max(year_list)), int(selected_option_year)
         )
     )
 
     summary_resource_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth()
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth(int(selected_option_year), month=month_today, max =max(year_list)),int(selected_option_year)
         )
     )
     decimal_places = 2
@@ -346,8 +401,9 @@ async def mdash():
 
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
     cost_dict = summary_cost_fromsheet.to_dict()
-    resource_dict = summary_resource_fromsheet.to_dict()
-    resource_dict_filtered = filter_data_by_rows(summary_resource_fromsheet,2,-2).to_dict()
+    resource_dict_filtered = filter_data_by_rows(
+        summary_resource_fromsheet, 2, -2
+    ).to_dict()
 
     efforts_chart_data = []
     cost_chart_data = []
@@ -360,29 +416,20 @@ async def mdash():
         month_data = {"name": month, "data": values}
         cost_chart_data.append(month_data)
 
-    options_project = [entry["name"] for entry in efforts_chart_data]
     options_cost = [
         entry["name"] for entry in cost_chart_data if entry["name"] != "Project"
     ]
 
-    if request.method == "POST" and "selected_project" in request.form:
-        selected_option_project = request.form.get("selected_project")
-        session["selected_project"] = selected_option_project
-
-        selected_option_month = session["selected_cost"]
-
-    if request.method == "POST" and "selected_cost" in request.form:
-        selected_option_month = request.form.get("selected_cost")
-        session["selected_cost"] = selected_option_month
-
-        selected_option_project = session["selected_project"]
-
+    selected_option_month = options_cost[-1]
+    
     if request.method == "GET":
-        selected_option_project = options_project[0]
-        session["selected_project"] = options_project[0]
-
         selected_option_month = options_cost[-1]
-        session["selected_cost"] = options_cost[-1]
+        session["selected_month"] = options_cost[-1]
+        
+        selected_option_year = year_list[0]
+        session["selected_year"] = year_list[0]
+
+    print(session["selected_year"])
 
     efforts_list_dict = getRowResource(
         summary_efforts_fromsheet, ["QA Department"], selected_option_month
@@ -391,9 +438,7 @@ async def mdash():
     cost_per_dict = await asyncio.to_thread(
         lambda: sum_columns_row(cost_dict, selected_option_month)
     )
-    resource_per_dict = await asyncio.to_thread(
-        lambda: sum_columns_row(resource_dict, selected_option_month)
-    )
+
     cost_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
             summary_cost_fromsheet,
@@ -410,10 +455,10 @@ async def mdash():
     )
     return render_template(
         "pages/mdash.html",
-        dropdown_project=options_project,
-        dropdown_cost=options_cost,
-        selected_project=selected_option_project,
+        dropdown_month=options_cost,
+        dropdown_year=year_list,
         selected_month=selected_option_month,
+        selected_year=int(selected_option_year),
         userName=current_user.username,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",

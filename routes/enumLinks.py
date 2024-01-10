@@ -7,7 +7,7 @@ class FileAssociate(Enum):
     ONETRACKER = "dataSources/WSR/ONETRACKER.xlsx"
     SICAV = None
     TREENA = None
-    BEEQOM = "dataSources/WSR/BEEQOM.xlsx"
+    BEQOM = "dataSources/WSR/BEQOM.xlsx"
     CORPORATE_ACTIONS = None
     HRIS = None
     ICS = "dataSources/WSR/ICS.xlsx"
