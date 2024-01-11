@@ -1,35 +1,31 @@
-from datetime import datetime as dat
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
-from routes.enumLinks import ChartData
+from routes.enumLinks import ChartData, getUserName
 from utils.dataUtil import (
-    dataframeSlice,
     filter_data_by_rows,
     filterDataSummary,
-    getChartData,
     getChartDataTotal,
-    getDateNow,
     getMonth,
     getRowResource,
     getYearList,
-    getYearOption,
     load_data,
     load_data_month_skip,
-    load_data_specific,
     sum_columns_row,
-    update_year_option,
 )
 
 from utils.zynaCharts import (
     BarChart,
     ColumnChart,
     MultiColumnChart,
-    MultiLineChart,
     MultiSplineChart,
     SplineChart,
 )
 import asyncio
 
+
+
+month_today = 5
+year_list = getYearList(month=month_today)
 
 DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates")
 
@@ -39,19 +35,19 @@ DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates"
 async def Dashboard():
     summary_efforts_fromsheet = await asyncio.to_thread(
         lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth()
+            "dataSources/monthData/dashSummary.xlsx", "Efforts", 0, getMonth(month=month_today)
         )
     )
 
     summary_cost_fromsheet = await asyncio.to_thread(
         lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth()
+            "dataSources/monthData/dashSummary.xlsx", "Cost", 0, getMonth(month=month_today)
         )
     )
 
     summary_resource_fromsheet = await asyncio.to_thread(
         lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth()
+            "dataSources/monthData/dashSummary.xlsx", "Resource", 0, getMonth(month=month_today)
         )
     )
     decimal_places = 2
@@ -115,7 +111,7 @@ async def Dashboard():
         dropdown_cost=options_cost,
         selected_project=selected_option_project,
         selected_month=selected_option_month,
-        userName=current_user.username,
+        userName=getUserName(current_user),
         getSplineChart1=await SplineChart(
             chartName="SplineChart1",
             title="Total Efforts (Hrs.)",
@@ -203,8 +199,6 @@ async def Dashboard():
         ),
     )
 
-month_today = 5
-year_list = getYearList(month=month_today)
 
 @DashboardPage.route("/depdash", methods=["GET", "POST"])
 @login_required
@@ -267,9 +261,6 @@ async def depdash():
     resource_chart_data = await resource_chart_data
     options_project = [entry["name"] for entry in efforts_chart_data]
 
-    print(session["selected_year"])
-
-
 
     if request.method == "GET":
         selected_option_project = options_project[0]
@@ -293,7 +284,7 @@ async def depdash():
         dropdown_year=year_list,
         selected_project=selected_option_project,
         selected_year=int(selected_option_year),
-        userName=current_user.username,
+        userName=getUserName(current_user),
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
@@ -429,8 +420,6 @@ async def mdash():
         selected_option_year = year_list[0]
         session["selected_year"] = year_list[0]
 
-    print(session["selected_year"])
-
     efforts_list_dict = getRowResource(
         summary_efforts_fromsheet, ["QA Department"], selected_option_month
     )
@@ -459,7 +448,7 @@ async def mdash():
         dropdown_year=year_list,
         selected_month=selected_option_month,
         selected_year=int(selected_option_year),
-        userName=current_user.username,
+        userName=getUserName(current_user),
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",

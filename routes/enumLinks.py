@@ -50,3 +50,10 @@ class ChartData(Enum):
     lineColor_column = "#00416a"
     lineColor_spline = "#e2725b"
     gridLineWidth = 0
+    
+
+def getUserName(current_user):
+    if current_user.user_type != 'normal':
+        return f"{str(current_user.email.split("@")[0]).title()} ({str(current_user.user_type).title()})"
+    else:
+        return f"{str(current_user.email.split("@")[0]).title()}"

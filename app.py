@@ -11,7 +11,7 @@ from database.database import init_db
 from database.models import User, db
 from routes.authenticationRoutes import AuthenticationPage
 from routes.dashRoutes import DashboardPage
-from routes.enumLinks import FileAssociate
+from routes.enumLinks import FileAssociate, getUserName
 from routes.wsrRoutes import WSRPage
 
 
@@ -35,6 +35,7 @@ def load_user(user_id):
 def not_found(e):
     return render_template("accounts/404.html")
 
+    
 
 @app.route("/home", methods=["GET"])
 @app.route("/", methods=["GET"])
@@ -49,7 +50,7 @@ async def index():
         ]
         return render_template(
             "pages/index.html",
-            userName=current_user.username,
+            userName=getUserName(current_user),
             projects=project_list,
             filtered_project=filtered_projects,
         )

@@ -21,7 +21,7 @@ async def login():
     if form.validate_on_submit():
         user = await to_thread(
             User.query.filter_by,
-            username=form.username.data,
+            email=form.email.data,
             password=form.password.data,
         )
         user = user.first()
@@ -30,7 +30,7 @@ async def login():
             flash("Login successful!", "success")
             return redirect(url_for("index"))
         else:
-            flash("Login unsuccessful. Please check your username and password.", "danger")
+            flash("Login unsuccessful. Please check your email and password.", "danger")
 
     return render_template("accounts/login.html", form=form)
 
@@ -52,7 +52,7 @@ async def signup():
         return redirect(url_for("AuthenticationPage.signup"))
     if form.validate_on_submit():
         existing_user = await to_thread(
-            User.query.filter_by, username=form.username.data
+            User.query.filter_by, email=form.email.data
         )
         existing_user = existing_user.first()
         if existing_user:
@@ -61,9 +61,10 @@ async def signup():
 
         try:
             new_user = User(
-                username=form.username.data,
+                email=form.email.data,
                 password=form.password.data,
                 projects=form.projects.data,
+                user_type = form.user_type.data,
             )
             db.session.add(new_user)
             db.session.commit()

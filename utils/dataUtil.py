@@ -140,8 +140,7 @@ async def load_tables(excel_file_path, sheet_name):
     # task_next_week['ETC..'] = task_next_week['ETC..'].dt.strftime('%d-%b-%Y')
     defect = await load_data(excel_file_path, sheet_name, 16, 23)
     # defect['ETC'] = defect['ETC'].dt.strftime('%d-%b-%Y')
-    summary = await load_data(excel_file_path, sheet_name, 24, 26)
-    # summary = summary.astype({"Count": "int"})
+
 
     weekDatasummary = await load_data(excel_file_path, sheet_name, 24, 26)
     weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
@@ -155,7 +154,6 @@ async def load_tables(excel_file_path, sheet_name):
         task_last_week,
         task_next_week,
         defect,
-        summary,
         weekDatasummary,
         monthDatasummary,
     ]

@@ -63,13 +63,10 @@ async def pages(template):
                 defect=tables_fromsheet[4].to_html(
                     classes="table caption-top table-bordered table-hover", index=False
                 ),
-                summary=tables_fromsheet[5].to_html(
+                weekDatasummary=tables_fromsheet[5].to_html(
                     classes="table caption-top table-bordered table-hover", index=False
                 ),
-                weekDatasummary=tables_fromsheet[6].to_html(
-                    classes="table caption-top table-bordered table-hover", index=False
-                ),
-                monthDatasummary=tables_fromsheet[7].to_html(
+                monthDatasummary=tables_fromsheet[6].to_html(
                     classes="table caption-top table-bordered table-hover", index=False
                 ),
             )

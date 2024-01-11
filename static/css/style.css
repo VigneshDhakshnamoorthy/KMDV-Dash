@@ -3,26 +3,47 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+}
 
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
+/* WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 5px;
+}
 
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px black;
-    border-radius: 10px;
-  }
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px black;
+  border-radius: 10px;
+}
 
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(rgb(80, 80, 185), rgb(200, 82, 135));
-  }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(rgb(80, 80, 185), rgb(200, 82, 135));
+}
 
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #b30000;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: linear-gradient(rgb(80, 80, 185), rgb(200, 82, 135)) #b30000;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px black;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(rgb(80, 80, 185), rgb(200, 82, 135));
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
 }
 
 body {
@@ -38,6 +59,14 @@ body {
     rgba(157, 233, 184, 1) 75%,
     rgb(76, 204, 198) 100%
   );
+}
+
+.footer {
+  display: block !important;
+  margin-left: 50vh;
+  margin-top: 0vh;
+  padding-top: 1vh;
+  padding-left: 25vh;
 }
 
 table,
