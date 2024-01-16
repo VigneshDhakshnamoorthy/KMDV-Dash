@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 import pandas as pd
-from database.forms import AdminForm, LoginForm, SignupForm
+from database.forms import LoginForm, SignupForm
 from database.models import User, db
 from routes.enumLinks import FileAssociate
 from asyncio import to_thread
