@@ -644,26 +644,3 @@ async def dataGet(typer):
         
     return tableDf.to_html(index=False)
         
-
-@DashboardPage.route("/dataGet2", methods=["GET", "POST"])
-@login_required
-async def dataGet2():
-    summary_efforts_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx",
-            "Efforts",
-            0,
-            getMonth(month=month_today),
-        )
-    )
-    tableDf = await summary_efforts_fromsheet
-    return tableDf.to_html(index=False)
-    
-
-@DashboardPage.route("/htmxGet", methods=["GET", "POST"])
-@login_required
-async def htmxGet():
-    liData = ["Efforts", "Cost", "Resource"]
-    if request.method == "POST":
-        print(f"Selected : {request.form.get("monthData")}")
-    return render_template("pages/htmxTable.html", liData = liData)
