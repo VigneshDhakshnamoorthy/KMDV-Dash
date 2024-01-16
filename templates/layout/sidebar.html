@@ -13,9 +13,13 @@
     <div class="item">
       <a class="sub-btn"><i class="fas fa-desktop"></i>Dashboard<i class="fas fa-angle-right dropdown"></i></a>
       <div class="sub-menu">
+        {% if current_user.user_type in ['admin', 'master'] %}
         <a href="/home/mdash" class="sub-item">Master Dashboard</a>
+        {% endif %}
         <a href="/home/depdash" class="sub-item">Department Dashboard</a>
+        {% if current_user.user_type in ['admin'] %}
         <a href="/home/dashboard" class="sub-item">Project Dashboard</a>
+        {% endif %}
       </div>
     </div>
     <div class="item">
@@ -45,7 +49,7 @@
         <div class="item">
           <a class="sub-btn"><i class="fas fa-people-arrows"></i>Active<i class="fas fa-angle-right dropdown"></i></a>
           <div class="sub-menu sub2">
-            <a href="/wsr/BEEQOM" class="sub-item">Beeqom</a>
+            <a href="/wsr/BEEQOM" class="sub-item">Beqom</a>
             <a href="/wsr/HRIS" class="sub-item">HRIS</a>
             <a href="/wsr/ICS" class="sub-item">ICS</a>
             <a href="/wsr/VEMS" class="sub-item">vEMS</a>

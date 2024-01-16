@@ -1,15 +1,16 @@
-{% extends 'layout/base.html' %} 
-
-{% block title %}QA-Dash : Board{% endblock %}
-
+{% extends 'layout/base.html' %} {% block title %}QA-Dash : Board{% endblock %}
 {% block baseBody %}
-
 
 <div class="grey-bg container-fluid">
   <div class="row border-bottom">
     <div class="col logoImag mb-2">
-      <a href="/home"><img src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
-          alt="oaktreecapital Logo" width="150" height="50" /></a>
+      <a href="/home"
+        ><img
+          src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+          alt="oaktreecapital Logo"
+          width="150"
+          height="50"
+      /></a>
     </div>
 
     <div class="col">
@@ -20,20 +21,23 @@
 
     <div class="col">
       <div class="pageHeader mt-3">
-        <h6 class="">Logged In : <span style="color: maroon;">{{userName}}</span></h6>
+        <h6 class="">
+          Logged In : <span style="color: maroon">{{userName}}</span>
+        </h6>
       </div>
     </div>
   </div>
 
   <br />
-  
+
   <div class="row">
     <div class="col">
       <div class="dropdownMonth rounded-pill">
         <form method="POST" action="#">
-          <label for="dropdown_cost"><b>Select Month</b></label><span class="mr-2 ml-2"> : </span>
-          <select id="dropdown_cost" name="selected_cost">
-            {% for option in dropdown_cost %} {% if option == selected_month %}
+          <label for="dropdown_year"><b>Select Year</b></label
+          ><span class="mr-2 ml-2"> : </span>
+          <select id="dropdown_year" name="selected_year">
+            {% for option in dropdown_year %} {% if option == selected_year %}
             <option value="{{ option }}" selected>{{ option }}</option>
             {% else %}
             <option value="{{ option }}">{{ option }}</option>
@@ -42,27 +46,38 @@
         </form>
       </div>
     </div>
-  </div>
-  <br />
-  <div class="row">
-    <div class="col charts2">{{getColumnChart1 | safe}}</div>
-    <div class="col charts2">{{getMultiColumnChart1 | safe}}</div>
+    <!-- <div class="col">
+      <div class="dropdownMonth rounded-pill">
+        <form method="POST" action="#">
+          <label for="dropdown_month"><b>Select Month</b></label
+          ><span class="mr-2 ml-2"> : </span>
+          <select id="dropdown_month" name="selected_month">
+            {% for option in dropdown_month %} {% if option == selected_month %}
+            <option value="{{ option }}" selected>{{ option }}</option>
+            {% else %}
+            <option value="{{ option }}">{{ option }}</option>
+            {% endif %} {% endfor %}
+          </select>
+        </form>
+      </div>
+    </div> -->
   </div>
   <br />
   <div class="row">
     <div class="col charts2">{{getMultiLineChart1 | safe}}</div>
     <div class="col charts2">{{getBarChart2 | safe}}</div>
-
+  </div>
+  <br />
+  <div class="row">
+    <div class="col charts2">{{getBarChart1 | safe}}</div>
+    <div class="col charts2">{{getColumnChart1 | safe}}</div>
   </div>
   <br />
 
   <div class="row">
-    <div class="col">{{getBarChart1 | safe}}</div>
-
+    <div class="col charts2">{{getMultiColumnChart1 | safe}}</div>
   </div>
   <br />
-
-  
 </div>
 
 {% endblock %}

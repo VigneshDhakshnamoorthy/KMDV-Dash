@@ -1,7 +1,8 @@
 from sqlite3 import IntegrityError
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-from database.forms import LoginForm, SignupForm
+import pandas as pd
+from database.forms import AdminForm, LoginForm, SignupForm
 from database.models import User, db
 from routes.enumLinks import FileAssociate
 from asyncio import to_thread
@@ -21,7 +22,7 @@ async def login():
     if form.validate_on_submit():
         user = await to_thread(
             User.query.filter_by,
-            username=form.username.data,
+            email=form.email.data,
             password=form.password.data,
         )
         user = user.first()
@@ -30,7 +31,7 @@ async def login():
             flash("Login successful!", "success")
             return redirect(url_for("index"))
         else:
-            flash("Login unsuccessful. Please check your username and password.", "danger")
+            flash("Login unsuccessful. Please check your email and password.", "danger")
 
     return render_template("accounts/login.html", form=form)
 
@@ -51,9 +52,7 @@ async def signup():
         )
         return redirect(url_for("AuthenticationPage.signup"))
     if form.validate_on_submit():
-        existing_user = await to_thread(
-            User.query.filter_by, username=form.username.data
-        )
+        existing_user = await to_thread(User.query.filter_by, email=form.email.data)
         existing_user = existing_user.first()
         if existing_user:
             flash("Username already exists. Please choose a different one.", "danger")
@@ -61,9 +60,10 @@ async def signup():
 
         try:
             new_user = User(
-                username=form.username.data,
+                email=form.email.data,
                 password=form.password.data,
                 projects=form.projects.data,
+                user_type=form.user_type.data,
             )
             db.session.add(new_user)
             db.session.commit()

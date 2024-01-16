@@ -8,10 +8,10 @@ from flask_login import (
 
 
 from database.database import init_db
-from database.models import User
+from database.models import User, db
 from routes.authenticationRoutes import AuthenticationPage
 from routes.dashRoutes import DashboardPage
-from routes.enumLinks import FileAssociate
+from routes.enumLinks import FileAssociate, getUserName
 from routes.wsrRoutes import WSRPage
 
 
@@ -28,13 +28,14 @@ login_manager.login_view = "AuthenticationPage.login"
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User,int(user_id))
 
 
 @app.errorhandler(404)
 def not_found(e):
     return render_template("accounts/404.html")
 
+    
 
 @app.route("/home", methods=["GET"])
 @app.route("/", methods=["GET"])
@@ -49,7 +50,7 @@ async def index():
         ]
         return render_template(
             "pages/index.html",
-            userName=current_user.username,
+            userName=getUserName(current_user),
             projects=project_list,
             filtered_project=filtered_projects,
         )
@@ -57,3 +58,9 @@ async def index():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=6963, threaded=True)
+
+
+# if __name__ == "__main__":
+#     from waitress import serve
+#     app.debug = True
+#     serve(app, host="0.0.0.0", port=6963, threads=4)

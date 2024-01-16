@@ -1,71 +1,43 @@
 <!-- app/templates/signup.html -->
-{% extends 'accounts/baseAut.html' %}
-
-{% block title %}QA-Dash-Sign Up{% endblock %}
-
-{% block content_title %}Sign Up{% endblock %}
-
-{% block content %}
+{% extends 'accounts/baseAut.html' %} {% block title %}QA-Dash-Sign Up{%
+endblock %} {% block content_title %}Sign Up{% endblock %} {% block content %}
 
 <form method="post" action="">
-    {{ form.hidden_tag() }}
-    <br>
-    <div class="row">
-        <div class="col form-label">
+  {{ form.hidden_tag() }}
+  <br />
+  <div class="row">
+    <div class="col form-label">{{ form.email.label }}</div>
+    <div class="col form-input">{{ form.email }}</div>
+  </div>
+  <div class="row">
+    <div class="col form-label">{{ form.password.label }}</div>
+    <div class="col form-input">{{ form.password }}</div>
+  </div>
+  <div class="row">
+    <div class="col form-label">{{ form.confirm_password.label }}</div>
+    <div class="col form-input">{{ form.confirm_password }}</div>
+  </div>
+  <div class="row superUserRadio">
+    <div class="col form-label">{{ form.user_type.label }}</div>
+    <div class="col">{{ form.user_type }}</div>
+  </div>
+  <div class="row">
+    <div class="col form-label">{{ form.projects.label }}</div>
+    <div class="col">{{ form.projects }}</div>
+  </div>
 
-            {{ form.username.label }}
-        </div>
-        <div class="col form-input">
-            {{ form.username(class="form-control") }}
+  <br />
 
-        </div>
-    </div>
-    <div class="row">
-        <div class="col form-label">
-
-            {{ form.password.label }}
-        </div>
-        <div class="col form-input">
-            {{ form.password(class="form-control") }}
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="col form-label">
-
-            {{ form.confirm_password.label }}
-        </div>
-        <div class="col form-input">
-            {{ form.confirm_password(class="form-control") }}
-
-        </div>
-
-    </div>
-
-    <div class="row ">
-        <div class="col form-label">
-
-            {{ form.projects.label }}
-        </div>
-        <div class="col ">
-            {{ form.projects }}
-
-        </div>
-    </div>
-    <br>
-    <br>
-
-    <div class="row">
-    </div>
-    <div class="row form-button2">
-        <div class="colspan-2 ">
-            {{ form.submit(class="form-control") }}
-        </div>
-        <div class="col">
-
-        </div>
-    </div>
+  <div class="row"></div>
+  <div class="row form-button2">
+    <div class="colspan-2">{{ form.submit(class="form-control") }}</div>
+    <div class="col"></div>
+  </div>
 </form>
-<br>
-<p class="col form-label">Already have an account? <a href="{{ url_for('AuthenticationPage.login') }}">Login</a></p>
+<br />
+<p class="col form-label">
+  Already have an account?
+  <a href="{{ url_for('AuthenticationPage.login') }}">Login</a>
+</p>
+
 {% endblock %}
