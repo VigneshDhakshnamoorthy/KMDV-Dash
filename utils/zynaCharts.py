@@ -1,4 +1,99 @@
+import json
 import re
+
+
+async def PieChart(
+    chartName,
+    title,
+    subtitle,
+    max_width,
+    min_width,
+    height,
+    background_color,
+    borderColor,
+    colorByPoint,
+    dataLabels_enabled,
+    dataLabels_format,
+    dataLabels_font_size,
+    series_name,
+    series_data,
+    chart_type="pie",
+):
+    template = f"""
+    <style>
+    #{chartName} {{
+        min-width: {min_width};
+        max-width: {max_width};
+        height:{height};
+
+    }}
+    </style>
+
+    <div id="{chartName}"></div>
+    <script>
+        Highcharts.chart('{chartName}', {{
+            chart: {{
+                type: '{chart_type}',
+                backgroundColor: '{background_color}',
+                borderColor: '{borderColor}',
+                borderWidth: 1,
+            }},
+            title: {{
+            text: '{title}'
+            }},
+            subtitle: {{
+                text: '{subtitle}'
+            }},
+            tooltip: {{
+                valueSuffix: "",
+            }},
+            credits: {{
+            enabled: false
+            }},
+            legend: {{
+                enabled: false
+            }},
+            plotOptions: {{
+                series: {{
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: [
+                        {{
+                            enabled: {dataLabels_enabled},
+                            distance: 20,
+                        }},
+                        {{
+                            enabled: {dataLabels_enabled},
+                            distance: -40,
+                            format: '{dataLabels_format}',
+                            style: {{
+                                fontSize: '{dataLabels_font_size}',
+                                textOutline: "none",
+                                opacity: 0.7,
+                            }},
+                            filter: {{
+                                operator: ">",
+                                property: "percentage",
+                                value: 1,
+                            }},
+                        }},
+                    ],
+                }},
+            }},
+            series: [
+                {{
+                    name: '{series_name}',
+                    colorByPoint: {colorByPoint},
+                    data: {series_data},
+                }},
+            ],
+        }});
+    </script>
+    """
+
+    template = re.sub(r"\bnan\b", "NaN", template)
+
+    return template
 
 
 async def LineChart(
@@ -67,7 +162,7 @@ async def LineChart(
             }},
             plotOptions: {{
                 line: {{
-                    smooth: true,
+                    allowPointSelect: true,
                     enableMouseTracking: true,
                 }}
             }},
@@ -370,7 +465,7 @@ async def MultiSplineChart(
                     format: '{dataLabels_format}',
 
                 }},
-                
+
             }},
             {{
                 name: '{yAxisName2}',
@@ -382,7 +477,7 @@ async def MultiSplineChart(
                     format: '{dataLabels_format}',
 
                 }},
-                
+
             }}]
         }});
     </script>

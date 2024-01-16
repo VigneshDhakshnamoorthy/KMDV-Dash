@@ -19,6 +19,7 @@ from utils.zynaCharts import (
     ColumnChart,
     MultiColumnChart,
     MultiSplineChart,
+    PieChart,
     SplineChart,
 )
 import asyncio
@@ -415,7 +416,8 @@ async def mdash():
     summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
 
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
-    cost_dict = summary_cost_fromsheet.to_dict()
+    cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -6).to_dict()
+    dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -8, "").to_dict()
     resource_dict_filtered = filter_data_by_rows(
         summary_resource_fromsheet, 2, -2
     ).to_dict()
@@ -452,6 +454,10 @@ async def mdash():
         lambda: sum_columns_row(cost_dict, selected_option_month)
     )
 
+    dep_cost_per_dict = await asyncio.to_thread(
+        lambda: sum_columns_row(dep_cost_dict, selected_option_month)
+    )
+
     cost_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
             summary_cost_fromsheet,
@@ -466,6 +472,20 @@ async def mdash():
             selected_option_month,
         )
     )
+    dep_cost_per_dict = [{"name": row['Project'], "y": row['Total']} for index, row in dep_cost_per_dict.iterrows()]
+
+    # dep_cost_pe_dict = [
+    # {key: value[i] for i, key in enumerate(dep_cost_per_dict[0]["projects"])}
+    # for key, value in dep_cost_per_dict[1].items()]
+    # pie_series_data = [
+    # {"name": "Business Operation", "y": 73688},
+    # {"name": "Client", "y": 13013},
+    # {"name": "Data", "y": 5693},
+    # {"name": "Finance", "selected": True, "y": 244486},
+    # {"name": "Investment", "y": 15080},
+    # {"name": "Marketing", "y": 205423}]
+    
+    
     return render_template(
         "pages/mdash.html",
         dropdown_month=options_cost,
@@ -568,8 +588,24 @@ async def mdash():
             dataLabels_font_size="13px",
             gridLineWidth=ChartData.gridLineWidth.value,
         ),
-        getBarChart2=await BarChart(
-            chartName="BarChart2",
+        getPieChart1=await PieChart(
+            chartName="pie2",
+            title="Department Wise Cost Summary",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            colorByPoint="true",
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_font_size="12px",
+            series_name="Value",
+            series_data=dep_cost_per_dict,
+        ),
+        getBarChart3=await BarChart(
+            chartName="BarChart3",
             title="Resource Management Summary",
             subtitle=f"Month : {selected_option_month}",
             max_width=ChartData.max_width.value,
@@ -632,7 +668,7 @@ async def dataGet(typer):
     tableDf = summary_efforts_fromsheet
 
     match typer:
-        case "Efforts":            
+        case "Efforts":
             tableDf = summary_efforts_fromsheet
         case "Cost":
             tableDf = summary_cost_fromsheet
@@ -641,6 +677,4 @@ async def dataGet(typer):
         case _:
             tableDf = summary_resource_fromsheet
 
-        
     return tableDf.to_html(index=False)
-        

@@ -134,7 +134,10 @@ async def load_data_specific(
 
 
 def filter_data_by_rows(df, start_row, end_row):
-    filtered_df = df.iloc[start_row - 1 : end_row]
+    if not end_row == "":
+        filtered_df = df.iloc[start_row - 1 : end_row]
+    else:
+        filtered_df = df.iloc[start_row - 1 :]
     return filtered_df
 
 
