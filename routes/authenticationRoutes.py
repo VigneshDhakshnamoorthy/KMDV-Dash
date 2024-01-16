@@ -1,7 +1,8 @@
 from sqlite3 import IntegrityError
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-from database.forms import LoginForm, SignupForm
+import pandas as pd
+from database.forms import AdminForm, LoginForm, SignupForm
 from database.models import User, db
 from routes.enumLinks import FileAssociate
 from asyncio import to_thread
@@ -51,9 +52,7 @@ async def signup():
         )
         return redirect(url_for("AuthenticationPage.signup"))
     if form.validate_on_submit():
-        existing_user = await to_thread(
-            User.query.filter_by, email=form.email.data
-        )
+        existing_user = await to_thread(User.query.filter_by, email=form.email.data)
         existing_user = existing_user.first()
         if existing_user:
             flash("Username already exists. Please choose a different one.", "danger")
@@ -64,7 +63,7 @@ async def signup():
                 email=form.email.data,
                 password=form.password.data,
                 projects=form.projects.data,
-                user_type = form.user_type.data,
+                user_type=form.user_type.data,
             )
             db.session.add(new_user)
             db.session.commit()

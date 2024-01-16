@@ -2,6 +2,7 @@ from wtforms import (
     EmailField,
     PasswordField,
     RadioField,
+    SelectField,
     SelectMultipleField,
     SubmitField,
 )
@@ -33,3 +34,4 @@ class SignupForm(FlaskForm):
 
     def set_projects_choices(self, choices):
         self.projects.choices = choices
+        
