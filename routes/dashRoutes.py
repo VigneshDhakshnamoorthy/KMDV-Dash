@@ -355,8 +355,8 @@ async def depdash():
             dataLabels_Color="white",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
-            dataLabels_align="right",
-            dataLabels_padding=8,
+            dataLabels_align="center",
+            dataLabels_padding=0,
             gridLineWidth=ChartData.gridLineWidth.value,
         ),
         getSplineChart1=await SplineChart(
