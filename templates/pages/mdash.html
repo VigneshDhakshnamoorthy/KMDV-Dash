@@ -65,6 +65,42 @@
   <br />
 
   <div class="row">
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title"><b>Average Team Size</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+            {{dropdown_month[0]}} - {{selected_month}}
+          </p>
+          <h2 style="color: #000099;">{{avg_team_size_util}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title"><b>Total Efforts (Hrs.)</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+          </p>
+          <h2 style="color: #bf4080;">{{efforts_total}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title"><b>Total Cost</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+            {{dropdown_month[0]}} - {{selected_month}}
+          </p>
+          <h2 style="color: #00994d;">{{actual_total}}</h2>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="row">
     <div class="col charts2">{{getMultiLineChart1 | safe}}</div>
     <div class="col charts2">{{getBarChart3 | safe}}</div>
   </div>

@@ -45,7 +45,7 @@ class ChartData(Enum):
     borderColor="black"
     dataLabels_format_1f="{point.y:.1f}"
     dataLabels_format_0f="{point.y:.0f}"
-    dataLabels_format_m0f="$ {point.y:.0f}"
+    dataLabels_format_m0f="$ {point.y:,.0f}"
     lineColor_bar = "#e2725b"
     lineColor_column = "#00416a"
     lineColor_spline = "#e2725b"

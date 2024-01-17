@@ -1,3 +1,4 @@
+import math
 from flask import Blueprint, jsonify, render_template, request, session
 from flask_login import current_user, login_required
 import pandas as pd
@@ -291,6 +292,15 @@ async def depdash():
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
+    total_efforts = [value for value in list(filtered_data_efforts[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    total_cost = [value for value in list(filtered_data_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    avg_team = [value for value in list(filtered_resource_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(float(value)) and value > 0]
+    total_efforts ="{:0,.0f}".format(math.ceil(sum(total_efforts)))
+    total_cost ="$ {:0,.0f}".format(math.ceil(sum(total_cost)))
+    if len(avg_team) > 0:
+        avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
+    else:
+        avg_team = 0
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
@@ -298,6 +308,9 @@ async def depdash():
         selected_project=selected_option_project,
         selected_year=int(selected_option_year),
         userName=getUserName(current_user),
+        total_efforts =total_efforts,
+        total_cost =total_cost,
+        avg_team =avg_team,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
@@ -473,19 +486,11 @@ async def mdash():
         )
     )
     dep_cost_per_dict = [{"name": row['Project'], "y": row['Total']} for index, row in dep_cost_per_dict.iterrows()]
-
-    # dep_cost_pe_dict = [
-    # {key: value[i] for i, key in enumerate(dep_cost_per_dict[0]["projects"])}
-    # for key, value in dep_cost_per_dict[1].items()]
-    # pie_series_data = [
-    # {"name": "Business Operation", "y": 73688},
-    # {"name": "Client", "y": 13013},
-    # {"name": "Data", "y": 5693},
-    # {"name": "Finance", "selected": True, "y": 244486},
-    # {"name": "Investment", "y": 15080},
-    # {"name": "Marketing", "y": 205423}]
-    
-    
+    projected_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Projected Monthly Cost"]["values"])))
+    actual_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Total T&M"]["values"])))
+    efforts_total = "{:0,.0f}".format(math.ceil(sum(efforts_list_dict["QA Department"]["values"])))
+    avg_team_size_util = "{:0,.1f}".format(sum(resource_list_dict["QA Summary"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
+    avg_team_size_non_util = "{:0,.1f}".format(sum(resource_list_dict["Non Utilization"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
     return render_template(
         "pages/mdash.html",
         dropdown_month=options_cost,
@@ -493,6 +498,11 @@ async def mdash():
         selected_month=selected_option_month,
         selected_year=int(selected_option_year),
         userName=getUserName(current_user),
+        projected_total = projected_total,
+        actual_total = actual_total,
+        efforts_total = efforts_total,
+        avg_team_size_util = avg_team_size_util,
+        avg_team_size_non_util = avg_team_size_non_util,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",

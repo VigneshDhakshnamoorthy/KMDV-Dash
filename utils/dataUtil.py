@@ -7,6 +7,7 @@ from asyncio import to_thread
 
 load_data_dfs = {}
 
+pd.set_option("display.float_format", lambda x: "{:.0f}".format(x))
 
 def getSheetNames(excel_file_path):
     key = f"sheet_names_{excel_file_path}"
@@ -142,8 +143,9 @@ def filter_data_by_rows(df, start_row, end_row):
 
 
 async def removeDot(df):
-    df.rename(columns=lambda x: x.replace(".", ""), inplace=True)
-    return df
+    mod_df = df.copy()
+    mod_df.rename(columns=lambda x: x.replace(".", ""), inplace=True)
+    return mod_df
 
 
 async def load_tables(excel_file_path, sheet_name):
@@ -168,10 +170,11 @@ async def load_tables(excel_file_path, sheet_name):
     defect = await removeDot(defect)
 
     weekDatasummary = await load_data(excel_file_path, sheet_name, 24, 26)
-    weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
+    #weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
 
     monthDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
-    monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
+   # monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
+
 
     dfs = [
         utilization_task_wise,
