@@ -66,6 +66,39 @@
   <br />
 
   <div class="row">
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title"><b>Average Team Size</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          </p>
+          <h2 style="color: #000099;">{{avg_team}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title" ><b>Total Efforts</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          </p>
+          <h2 style="color: #bf4080;">{{total_efforts}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col charts2">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title"><b>Total Cost</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          </p>
+          <h2 style="color: #00994d;">{{total_cost}}</h2>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="row">
     <div class="col charts2">{{getColumnChart1 | safe}}</div>
     <div class="col charts2">{{getSplineChart1 | safe}}</div>
   </div>

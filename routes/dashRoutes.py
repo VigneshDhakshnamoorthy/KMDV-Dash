@@ -1,3 +1,4 @@
+import math
 from flask import Blueprint, jsonify, render_template, request, session
 from flask_login import current_user, login_required
 import pandas as pd
@@ -19,6 +20,7 @@ from utils.zynaCharts import (
     ColumnChart,
     MultiColumnChart,
     MultiSplineChart,
+    PieChart,
     SplineChart,
 )
 import asyncio
@@ -290,6 +292,15 @@ async def depdash():
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
+    total_efforts = [value for value in list(filtered_data_efforts[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    total_cost = [value for value in list(filtered_data_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    avg_team = [value for value in list(filtered_resource_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(float(value)) and value > 0]
+    total_efforts ="{:0,.0f}".format(math.ceil(sum(total_efforts)))
+    total_cost ="$ {:0,.0f}".format(math.ceil(sum(total_cost)))
+    if len(avg_team) > 0:
+        avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
+    else:
+        avg_team = 0
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
@@ -297,6 +308,9 @@ async def depdash():
         selected_project=selected_option_project,
         selected_year=int(selected_option_year),
         userName=getUserName(current_user),
+        total_efforts =total_efforts,
+        total_cost =total_cost,
+        avg_team =avg_team,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
@@ -415,7 +429,8 @@ async def mdash():
     summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
 
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
-    cost_dict = summary_cost_fromsheet.to_dict()
+    cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -6).to_dict()
+    dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -8, "").to_dict()
     resource_dict_filtered = filter_data_by_rows(
         summary_resource_fromsheet, 2, -2
     ).to_dict()
@@ -452,6 +467,10 @@ async def mdash():
         lambda: sum_columns_row(cost_dict, selected_option_month)
     )
 
+    dep_cost_per_dict = await asyncio.to_thread(
+        lambda: sum_columns_row(dep_cost_dict, selected_option_month)
+    )
+
     cost_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
             summary_cost_fromsheet,
@@ -466,6 +485,12 @@ async def mdash():
             selected_option_month,
         )
     )
+    dep_cost_per_dict = [{"name": row['Project'], "y": row['Total']} for index, row in dep_cost_per_dict.iterrows()]
+    projected_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Projected Monthly Cost"]["values"])))
+    actual_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Total T&M"]["values"])))
+    efforts_total = "{:0,.0f}".format(math.ceil(sum(efforts_list_dict["QA Department"]["values"])))
+    avg_team_size_util = "{:0,.1f}".format(sum(resource_list_dict["QA Summary"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
+    avg_team_size_non_util = "{:0,.1f}".format(sum(resource_list_dict["Non Utilization"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
     return render_template(
         "pages/mdash.html",
         dropdown_month=options_cost,
@@ -473,6 +498,11 @@ async def mdash():
         selected_month=selected_option_month,
         selected_year=int(selected_option_year),
         userName=getUserName(current_user),
+        projected_total = projected_total,
+        actual_total = actual_total,
+        efforts_total = efforts_total,
+        avg_team_size_util = avg_team_size_util,
+        avg_team_size_non_util = avg_team_size_non_util,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
@@ -568,8 +598,24 @@ async def mdash():
             dataLabels_font_size="13px",
             gridLineWidth=ChartData.gridLineWidth.value,
         ),
-        getBarChart2=await BarChart(
-            chartName="BarChart2",
+        getPieChart1=await PieChart(
+            chartName="pie2",
+            title="Department Wise Cost Summary",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            colorByPoint="true",
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_font_size="12px",
+            series_name="Value",
+            series_data=dep_cost_per_dict,
+        ),
+        getBarChart3=await BarChart(
+            chartName="BarChart3",
             title="Resource Management Summary",
             subtitle=f"Month : {selected_option_month}",
             max_width=ChartData.max_width.value,
@@ -632,7 +678,7 @@ async def dataGet(typer):
     tableDf = summary_efforts_fromsheet
 
     match typer:
-        case "Efforts":            
+        case "Efforts":
             tableDf = summary_efforts_fromsheet
         case "Cost":
             tableDf = summary_cost_fromsheet
@@ -641,6 +687,4 @@ async def dataGet(typer):
         case _:
             tableDf = summary_resource_fromsheet
 
-        
     return tableDf.to_html(index=False)
-        

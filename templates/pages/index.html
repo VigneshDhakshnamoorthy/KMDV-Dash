@@ -13,7 +13,11 @@
         <ul class="indexList">
           {% for project in projects %}
           <li style="display: inline-block">
-            {{ project|replace('_', ' ') }} {% if not loop.last %}<span style="font-weight: bold; color: red;"> | </span>{% endif %}
+            {{ project|replace('_', ' ') }} {% if not loop.last %}<span
+              style="font-weight: bold; color: #e2725b"
+            >
+              | </span
+            >{% endif %}
           </li>
           {% endfor %}
         </ul>
@@ -41,7 +45,11 @@
         {% for project in filtered_project %}
         <li style="display: inline-block">
           <a href="/wsr/{{ project }}" class="sub-item"
-            >{{ project|replace('_', ' ') }} {% if not loop.last %}<span style="font-weight: bold; color: red;"> | </span>{% endif %}
+            >{{ project|replace('_', ' ') }} {% if not loop.last %}<span
+              style="font-weight: bold; color: #e2725b"
+            >
+              | </span
+            >{% endif %}
           </a>
         </li>
         {% endfor %}
