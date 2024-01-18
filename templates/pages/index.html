@@ -30,16 +30,20 @@
   <div class="card mx-2" style="width: 25rem">
     <div class="card-body">
       <h5 class="card-title">
-        <u><b>Dashboard</b></u>
+        <u><b>QA Dashboards</b></u>
       </h5>
-      <p class="card-text">Track Monthly Data</p>
-      <a href="/home/depdash" class="btn btn-primary">Go Dashboard</a>
+      <div class="pt-2"></div>
+      {% if current_user.user_type in ['admin', 'master'] %}
+      <a href="/home/mdash" class="btn btn-primary">Master</a>
+      {% endif %}
+      <div class="pt-2"></div>
+      <a href="/home/depdash" class="btn btn-primary">Department</a>
     </div>
   </div>
   <div class="card mx-2" style="width: 25rem">
     <div class="card-body">
       <h5 class="card-title ml-2">
-        <u><b>WSR</b></u>
+        <u><b>Weekly Status Reports</b></u>
       </h5>
       <ul class="indexList">
         {% for project in filtered_project %}
@@ -56,6 +60,13 @@
       </ul>
     </div>
   </div>
+
 </div>
+<div class="d-flex justify-content-center text-center">
+  <p class="pl-3">Powered By CES &copy; 2023</p>
+  <a href="https://cesltd.com/"><img class="ml-1"
+      src="/static/img/logo/ces-logo-white.png" alt="oaktreecapital Logo" width="40"
+      height="25"></a>
+  </div>
 
 {% endblock %}
