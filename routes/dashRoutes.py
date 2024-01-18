@@ -26,7 +26,7 @@ from utils.zynaCharts import (
 import asyncio
 
 
-month_today = 5
+month_today = 1
 year_list = getYearList(month=month_today)
 
 DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates")
@@ -434,7 +434,6 @@ async def mdash():
     resource_dict_filtered = filter_data_by_rows(
         summary_resource_fromsheet, 2, -2
     ).to_dict()
-
     efforts_chart_data = []
     cost_chart_data = []
 
@@ -564,7 +563,7 @@ async def mdash():
             colorByPoint="false",
             xAxisTitle="",
             xAxisData=cost_list_dict["Total T&M"]["keys"],
-            yAxisTitle="Efforts",
+            yAxisTitle="$ Cost",
             yAxisData1=cost_list_dict["Projected Monthly Cost"]["values"],
             yAxisData2=cost_list_dict["Total T&M"]["values"],
             dataLabels_enabled="true",
@@ -590,7 +589,7 @@ async def mdash():
             colorByPoint="false",
             xAxisTitle="",
             xAxisData=list(cost_per_dict["Project"]),
-            yAxisTitle="Cost",
+            yAxisTitle="$ Cost",
             yAxisData=list(cost_per_dict["Total"]),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
@@ -637,54 +636,3 @@ async def mdash():
         ),
     )
 
-
-@DashboardPage.route("/dataGet/<typer>", methods=["GET", "POST"])
-@login_required
-async def dataGet(typer):
-    summary_efforts_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx",
-            "Efforts",
-            0,
-            getMonth(month=month_today),
-        )
-    )
-
-    summary_cost_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx",
-            "Cost",
-            0,
-            getMonth(month=month_today),
-        )
-    )
-
-    summary_resource_fromsheet = await asyncio.to_thread(
-        lambda: load_data(
-            "dataSources/monthData/dashSummary.xlsx",
-            "Resource",
-            0,
-            getMonth(month=month_today),
-        )
-    )
-    decimal_places = 2
-    summary_efforts_fromsheet = await summary_efforts_fromsheet
-    summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
-    summary_cost_fromsheet = await summary_cost_fromsheet
-    summary_cost_fromsheet = summary_cost_fromsheet.round(decimal_places)
-    summary_resource_fromsheet = await summary_resource_fromsheet
-    summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
-
-    tableDf = summary_efforts_fromsheet
-
-    match typer:
-        case "Efforts":
-            tableDf = summary_efforts_fromsheet
-        case "Cost":
-            tableDf = summary_cost_fromsheet
-        case "Resource":
-            tableDf = summary_resource_fromsheet
-        case _:
-            tableDf = summary_resource_fromsheet
-
-    return tableDf.to_html(index=False)

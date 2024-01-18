@@ -6,6 +6,7 @@ from database.forms import LoginForm, SignupForm
 from database.models import User, db
 from routes.enumLinks import FileAssociate
 from asyncio import to_thread
+import base64 
 
 
 AuthenticationPage = Blueprint(
@@ -34,6 +35,32 @@ async def login():
             flash("Login unsuccessful. Please check your email and password.", "danger")
 
     return render_template("accounts/login.html", form=form)
+
+@AuthenticationPage.route("/login/<name>/<password>", methods=["GET", "POST"])
+async def auto_login(name,password):
+    # sample_string_bytes = password.encode("ascii") 
+    # base64_bytes = base64.b64encode(sample_string_bytes) 
+    # base64_string = base64_bytes.decode("ascii")
+    # print(base64_string)
+    try:
+        base64_bytes = password.encode("ascii") 
+        sample_string_bytes = base64.b64decode(base64_bytes) 
+        base64_string = sample_string_bytes.decode("ascii") 
+    except:
+        return redirect(url_for("AuthenticationPage.logout"))
+    
+    user = await to_thread(
+            User.query.filter_by,
+            email=f"{name}@oaktreecapital.com",
+            password=base64_string,
+        )
+    user = user.first()
+    if user:
+        login_user(user)
+        flash("Login successful!", "success")
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("AuthenticationPage.logout"))
 
 
 @AuthenticationPage.route("/signup", methods=["GET", "POST"])
