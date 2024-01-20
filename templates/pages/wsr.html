@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %} {% block title %}QA-Dash : {{pageName}}{%
+endblock %} {% block baseBody %} {% include 'layout/header.html' %}
+
+<br />
+
+<div class="row">
+  <div class="col">
+    <div class="pageHeader"></div>
+  </div>
+
+  <div class="col">
+    <div class="pageHeader">
+      <h3 class="">{{weekdays}}</h3>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="dropdownMonth rounded-pill pr-4">
+      <a
+        class="btn btn-primary"
+        style="color: #fff"
+        href="/wsr/summary/{{pageName}}"
+        >Project Summary</a
+      >
+    </div>
+  </div>
+</div>
+{% include 'tables/projectSummary.html' %} {% include
+'tables/utilizationSummary.html' %}
+<br />
+
+{% include 'tables/taskSummary.html' %} {% include 'tables/defectSummary.html'%}
+{% endblock %}

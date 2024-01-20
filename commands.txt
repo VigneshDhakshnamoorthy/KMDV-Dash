@@ -1,5 +1,6 @@
 docker build -t vigneshkmd/qa-dash-flask:0.0.1 -f Dockerfile.flask .
 docker build -t vigneshkmd/qa-dash-gunicorn:0.0.1 -f Dockerfile.gunicorn .
+docker build --no-cache -t vigneshkmd/qa-dash-gunicorn:0.0.1 -f Dockerfile.gunicorn .
 
 
 docker container run -d -p 6963:6963 vigneshkmd/qa-dash-flask:0.0.1

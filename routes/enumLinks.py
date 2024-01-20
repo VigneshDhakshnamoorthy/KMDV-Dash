@@ -8,20 +8,21 @@ class FileAssociate(Enum):
     SICAV = None
     TREENA = None
     BEQOM = "dataSources/WSR/BEQOM.xlsx"
-    CORPORATE_ACTIONS = None
-    HRIS = None
+    CORPORATE_ACTIONS = "dataSources/WSR/CORPORATE_ACTIONS.xlsx"
+    HRIS = "dataSources/WSR/HRIS.xlsx"
     ICS = "dataSources/WSR/ICS.xlsx"
     VEMS = "dataSources/WSR/VEMS.xlsx"
     WORKDAY = "dataSources/WSR/WORKDAY.xlsx"
     FX_CENTRAL = None
-    MERCATUS = None
+    MERCATUS = "dataSources/WSR/MERCATUS.xlsx"
     QA_SMOKE_TEST = None
-    PIW = None
+    PIW = "dataSources/WSR/PIW.xlsx"
     PUBLIC_WEBSITE = None
     SUMMIT = None
     QA_MANAGEMENT = None
     CLIENT_RELATIONS = None
     CORNERSTONE = None
+    ACCOUNT_MASTER = "dataSources/WSR/ACCOUNT_MASTER.xlsx"
 
 
     @staticmethod
@@ -49,6 +50,7 @@ class ChartData(Enum):
     lineColor_bar = "#e2725b"
     lineColor_column = "#00416a"
     lineColor_spline = "#e2725b"
+    lineColor_spline2 = "#bd1354"
     gridLineWidth = 0
     
 

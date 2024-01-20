@@ -5,6 +5,12 @@
   font-family: "Poppins", sans-serif;
 }
 
+:root {
+  --teamsize: #000099;
+  --totaleffort: #bf4080;
+  --totalcost: #00994d;
+}
+
 /* WebKit browsers (Chrome, Safari) */
 ::-webkit-scrollbar {
   width: 5px;
@@ -200,4 +206,37 @@ body.light-mode .video-bg:before {
 
 .nav-item .nav-link {
   color: black !important;
+}
+
+.table-height {
+  overflow-y: auto !important;
+  max-height: 400px !important;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #00c9cc !important;
+
+}
+
+/* .sticky-header tr th{
+  background-color: #00c9cc !important;
+  color: #fff;
+  font-weight: 400;
+} */
+
+td.linklist a:link, a:visited{
+  text-decoration: none !important;
+  background-color: #00c9cc;
+  color: #fff;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.distag{
+  pointer-events:none !important;
 }
