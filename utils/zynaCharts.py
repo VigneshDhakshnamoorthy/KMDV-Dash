@@ -298,6 +298,9 @@ async def MultiLineChart(
     dataLabels_format,
     dataLabels_Color,
     gridLineWidth=1,
+    legend = "false",
+    legend_H_align = 'center',
+    legend_V_align = 'bottom',
     chart_type="line",
 ):
     template = f"""
@@ -342,7 +345,9 @@ async def MultiLineChart(
                 enabled: false
             }},
             legend: {{
-                enabled: true
+                enabled: {legend},
+                align: '{legend_H_align}',
+                verticalAlign: '{legend_V_align}',
             }},
             plotOptions: {{
                 line: {{
@@ -403,6 +408,9 @@ async def MultiSplineChart(
     dataLabels_format,
     dataLabels_Color,
     gridLineWidth=0,
+    legend = "false",
+    legend_H_align = 'center',
+    legend_V_align = 'bottom',
     chart_type="spline",
 ):
     template = f"""
@@ -447,7 +455,9 @@ async def MultiSplineChart(
                 enabled: false
             }},
             legend: {{
-                enabled: false
+                enabled: {legend},
+                align: '{legend_H_align}',
+                verticalAlign: '{legend_V_align}',
             }},
             plotOptions: {{
                 line: {{
@@ -487,6 +497,131 @@ async def MultiSplineChart(
 
     return template
 
+async def MultiSplineChart3(
+    chartName,
+    title,
+    subtitle,
+    max_width,
+    min_width,
+    height,
+    background_color,
+    borderColor,
+    xAxisTitle,
+    xAxisData,
+    yAxisTitle,
+    yAxisName1,
+    yAxisData1,
+    lineColor1,
+    yAxisName2,
+    yAxisData2,
+    lineColor2,
+    yAxisName3,
+    yAxisData3,
+    lineColor3,
+    dataLabels_enabled,
+    dataLabels_format,
+    dataLabels_Color,
+    gridLineWidth=0,
+    legend = "false",
+    legend_H_align = 'center',
+    legend_V_align = 'bottom',
+    chart_type="spline",
+):
+    template = f"""
+    <style>
+        #{chartName} {{
+            min-width: {min_width};
+            max-width: {max_width};
+            height:{height};
+
+        }}
+    </style>
+
+    <div id="{chartName}"></div>
+
+    <script>
+        Highcharts.chart('{chartName}', {{
+            chart: {{
+                backgroundColor: '{background_color}',
+                borderColor: '{borderColor}',
+                borderWidth: 1,
+                type: '{chart_type}',
+            }},
+            title: {{
+                text: '{title}'
+            }},
+            subtitle: {{
+                text: '{subtitle}'
+            }},
+            xAxis: {{
+                title: {{
+                    text: '{xAxisTitle}'
+                }},
+                categories: {xAxisData},
+            }},
+            yAxis: {{
+                gridLineWidth: {gridLineWidth},
+                title: {{
+                    text: '{yAxisTitle}'
+                }}
+            }},
+            credits: {{
+                enabled: false
+            }},
+            legend: {{
+                enabled: {legend},
+                align: '{legend_H_align}',
+                verticalAlign: '{legend_V_align}',
+            }},
+            plotOptions: {{
+                line: {{
+                    smooth: true,
+                    enableMouseTracking: true,
+                }}
+            }},
+            series: [{{
+                name: '{yAxisName1}',
+                data: {yAxisData1},
+                color: '{lineColor1}',
+                dataLabels: {{
+                    enabled: {dataLabels_enabled},
+                    color: '{dataLabels_Color}',
+                    format: '{dataLabels_format}',
+
+                }},
+
+            }},
+            {{
+                name: '{yAxisName2}',
+                data: {yAxisData2},
+                color: '{lineColor2}',
+                dataLabels: {{
+                    enabled: {dataLabels_enabled},
+                    color: '{dataLabels_Color}',
+                    format: '{dataLabels_format}',
+
+                }},
+
+            }},
+            {{
+                name: '{yAxisName3}',
+                data: {yAxisData3},
+                color: '{lineColor3}',
+                dataLabels: {{
+                    enabled: {dataLabels_enabled},
+                    color: '{dataLabels_Color}',
+                    format: '{dataLabels_format}',
+
+                }},
+
+            }}]
+        }});
+    </script>
+    """
+
+    template = re.sub(r"\bnan\b", "NaN", template)
+
+    return template
 
 async def BarChart(
     chartName,
@@ -707,6 +842,11 @@ async def MultiColumnChart(
     dataLabels_align,
     dataLabels_padding,
     gridLineWidth=1,
+    yAxisName1 ="",
+    yAxisName2="",
+    legend = "false",
+    legend_H_align = 'center',
+    legend_V_align = 'bottom',
     chart_type="column",
 ):
     template = f"""
@@ -750,7 +890,9 @@ async def MultiColumnChart(
                 enabled: false
             }},
             legend: {{
-                enabled: false
+                enabled: {legend},
+                align: '{legend_H_align}',
+                verticalAlign: '{legend_V_align}',
             }},
             plotOptions: {{
                 line: {{
@@ -758,7 +900,7 @@ async def MultiColumnChart(
                 }}
             }},
             series: [{{
-                name: '',
+                name: '{yAxisName1}',
                 data: {yAxisData1},
                 color: '{lineColor1}',
                 colorByPoint: {colorByPoint},
@@ -776,7 +918,7 @@ async def MultiColumnChart(
 
             }},
             {{
-                name: '',
+                name: '{yAxisName2}',
                 data: {yAxisData2},
                 color: '{lineColor2}',
                 colorByPoint: {colorByPoint},

@@ -1,72 +1,109 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : Index{% endblock %}
 {% block baseBody %}
 
-<h1 class="text-center mt-5">Welcome {{userName}}</h1>
+<div class="grey-bg container-fluid">
+  <div class="row border-bottom">
+    <div class="col logoImag mb-2">
+      <a href="/home"
+        ><img
+          src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+          alt="oaktreecapital Logo"
+          width="150"
+          height="50"
+      /></a>
+    </div>
 
-<div class="d-flex pt-3 justify-content-center text-center">
-  <div class="card mx-2" style="width: 51rem">
-    <div class="card-body">
-      <h5 class="card-title ml-2">
-        <u><b>Projects Assigned</b></u>
-      </h5>
-      <div class="card-body d-flex justify-content-center">
-        <ul class="indexList">
-          {% for project in projects %}
-          <li style="display: inline-block">
-            {{ project|replace('_', ' ') }} {% if not loop.last %}<span
-              style="font-weight: bold; color: #e2725b"
-            >
-              | </span
-            >{% endif %}
-          </li>
-          {% endfor %}
-        </ul>
+    <div class="col">
+      <div class="pageHeader text-center">
+        <h2 class="">Welcome {{userName}}</h2>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="pageHeader mt-3">
+        <h6 class=""></h6>
       </div>
     </div>
   </div>
+
+  <br />
 </div>
 
 <div class="d-flex justify-content-center text-center">
-  <div class="card mx-2" style="width: 25rem">
+  <div class="card mx-2" style="width: 43rem">
     <div class="card-body">
       <h5 class="card-title">
         <u><b>QA Dashboards</b></u>
       </h5>
-      <div class="pt-2"></div>
+      <div class="pt-2 mx-2"></div>
       {% if current_user.user_type in ['admin', 'master'] %}
-      <a href="/home/mdash" class="btn btn-primary">Master</a>
+      <a
+        href="/home/mdash"
+        class="btn btn-primary mr-2"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Clcik to View Master Dashboard"
+        >Master</a
+      >
       {% endif %}
-      <div class="pt-2"></div>
-      <a href="/home/depdash" class="btn btn-primary">Department</a>
+      <a
+        href="/home/depdash"
+        class="btn btn-primary"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Clcik to View Department Dashboard"
+        >Department</a
+      >
     </div>
   </div>
-  <div class="card mx-2" style="width: 25rem">
-    <div class="card-body">
-      <h5 class="card-title ml-2">
-        <u><b>Weekly Status Reports</b></u>
-      </h5>
-      <ul class="indexList">
-        {% for project in filtered_project %}
-        <li style="display: inline-block">
-          <a href="/wsr/{{ project }}" class="sub-item"
-            >{{ project|replace('_', ' ') }} {% if not loop.last %}<span
-              style="font-weight: bold; color: #e2725b"
-            >
-              | </span
-            >{% endif %}
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
 </div>
+<h2 class="text-center pb-2">Project Summary Reports</h2>
+<div class="d-flex justify-content-center">
+  <div
+    class="table-height row border-bottom grey-bg container-fluid"
+    style="overflow-x: auto; width: 45rem"
+  >
+    <table class="table table-sm caption-top table-bordered table-hover">
+      <thead class="sticky-header">
+        <tr>
+          <th>Project</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for index, row in project_table_html.iterrows() %} {% if
+        row['Project'] in projects %}
+        <tr>
+          <td class="linklist">
+            <u>
+              <a
+                class="sub-item"
+                href="/wsr/summary/{{ row['Project']}}"
+                data-toggle="tooltip"
+                data-placement="left"
+                title="Clcik to View Dashboard : {{ row['Project']|replace('_', ' ') }}"
+                >{{ row['Project']|replace('_', ' ') }}</a
+              ></u
+            >
+          </td>
+          <td>{{ row['Status'] }}</td>
+        </tr>
+        {% endif %} {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<br />
 <div class="d-flex justify-content-center text-center">
   <p class="pl-3">Powered By CES &copy; 2023</p>
-  <a href="https://cesltd.com/"><img class="ml-1"
-      src="/static/img/logo/ces-logo-white.png" alt="oaktreecapital Logo" width="40"
-      height="25"></a>
-  </div>
+  <a href="https://cesltd.com/"
+    ><img
+      class="ml-1"
+      src="/static/img/logo/ces-logo-white.png"
+      alt="oaktreecapital Logo"
+      width="40"
+      height="25"
+  /></a>
+</div>
 
 {% endblock %}

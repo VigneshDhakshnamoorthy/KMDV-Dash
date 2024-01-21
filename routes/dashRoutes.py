@@ -20,6 +20,7 @@ from utils.zynaCharts import (
     ColumnChart,
     MultiColumnChart,
     MultiSplineChart,
+    MultiSplineChart3,
     PieChart,
     SplineChart,
 )
@@ -371,7 +372,176 @@ async def depdash():
             lineColor=ChartData.lineColor_spline.value,
             xAxisTitle="Month",
             xAxisData=list(filtered_resource_cost[0]["data"].keys()),
-            yAxisTitle="Team Size",
+            yAxisTitle="Team Utilization",
+            yAxisData=list(filtered_resource_cost[0]["data"].values()),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_1f.value,
+            dataLabels_Color="black",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+    )
+
+@DashboardPage.route("/depdash/<template>", methods=["GET", "POST"])
+@login_required
+async def depdashdirect(template):
+    selected_option_year = year_list[0]
+    project_list = await asyncio.to_thread(current_user.get_projects_list)
+    project_list.append("All")
+
+    if request.method == "POST" and "selected_year" in request.form:
+        selected_option_year = request.form.get("selected_year")
+        session["selected_year"] = selected_option_year
+
+        selected_option_project = session["selected_project"]
+
+    if request.method == "POST" and "selected_project" in request.form:
+        selected_option_project = request.form.get("selected_project")
+        session["selected_project"] = selected_option_project
+
+        selected_option_year = session["selected_year"]
+
+    efforts_chart_data = await asyncio.to_thread(
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Efforts",
+            set_index="Project",
+            start=1,
+            month=getMonth(
+                int(selected_option_year), month=month_today, max=max(year_list)
+            ),
+            projects_list=project_list,
+            year_selection=int(selected_option_year),
+        )
+    )
+    cost_chart_data = await asyncio.to_thread(
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Cost",
+            set_index="Project",
+            start=1,
+            end=-2,
+            month=getMonth(
+                int(selected_option_year), month=month_today, max=max(year_list)
+            ),
+            projects_list=project_list,
+            year_selection=int(selected_option_year),
+        )
+    )
+    resource_chart_data = await asyncio.to_thread(
+        lambda: getChartDataTotal(
+            filePath="dataSources/monthData/dashSummary.xlsx",
+            sheetName="Resource",
+            set_index="Project",
+            start=1,
+            end=-2,
+            month=getMonth(
+                int(selected_option_year), month=month_today, max=max(year_list)
+            ),
+            projects_list=project_list,
+            year_selection=int(selected_option_year),
+        )
+    )
+    efforts_chart_data = await efforts_chart_data
+    cost_chart_data = await cost_chart_data
+    resource_chart_data = await resource_chart_data
+    options_project = [entry["name"] for entry in efforts_chart_data]
+
+    if request.method == "GET":
+        selected_option_project = template
+        session["selected_project"] = template
+
+        selected_option_year = year_list[0]
+        session["selected_year"] = year_list[0]
+
+    filtered_data_efforts = await asyncio.to_thread(
+        lambda: filterDataSummary(efforts_chart_data, selected_option_project)
+    )
+    filtered_data_cost = await asyncio.to_thread(
+        lambda: filterDataSummary(cost_chart_data, selected_option_project)
+    )
+    filtered_resource_cost = await asyncio.to_thread(
+        lambda: filterDataSummary(resource_chart_data, selected_option_project)
+    )
+    total_efforts = [value for value in list(filtered_data_efforts[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    total_cost = [value for value in list(filtered_data_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(value)]
+    avg_team = [value for value in list(filtered_resource_cost[0]["data"].values()) if isinstance(value, (int, float)) and not math.isnan(float(value)) and value > 0]
+    total_efforts ="{:0,.0f}".format(math.ceil(sum(total_efforts)))
+    total_cost ="$ {:0,.0f}".format(math.ceil(sum(total_cost)))
+    if len(avg_team) > 0:
+        avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
+    else:
+        avg_team = 0
+    return render_template(
+        "pages/depdash.html",
+        dropdown_project=options_project,
+        dropdown_year=year_list,
+        selected_project=selected_option_project,
+        selected_year=int(selected_option_year),
+        userName=getUserName(current_user),
+        total_efforts =total_efforts,
+        total_cost =total_cost,
+        avg_team =avg_team,
+        getColumnChart1=await ColumnChart(
+            chartName="ColumnChart1",
+            title="Total Efforts (Hrs.)",
+            subtitle=f"Project : {selected_option_project}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height="",
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.lineColor_column.value,
+            colorByPoint="false",
+            xAxisTitle="Month",
+            xAxisData=list(filtered_data_efforts[0]["data"].keys()),
+            yAxisTitle="Efforts",
+            yAxisData=list(filtered_data_efforts[0]["data"].values()),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_0f.value,
+            dataLabels_Color="white",
+            dataLabels_font_size="12px",
+            dataLabels_rotation=0,
+            dataLabels_align="center",
+            dataLabels_padding=0,
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getColumnChart2=await ColumnChart(
+            chartName="ColumnChart2",
+            title="Cost of Labor",
+            subtitle=f"Project : {selected_option_project}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height="",
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.lineColor_column.value,
+            colorByPoint="false",
+            xAxisTitle="Month",
+            xAxisData=list(filtered_data_cost[0]["data"].keys()),
+            yAxisTitle="Cost",
+            yAxisData=list(filtered_data_cost[0]["data"].values()),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="white",
+            dataLabels_font_size="12px",
+            dataLabels_rotation=0,
+            dataLabels_align="center",
+            dataLabels_padding=0,
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getSplineChart1=await SplineChart(
+            chartName="SplineChart1",
+            title="QA Team Size",
+            subtitle=f"Project : {selected_option_project}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height="",
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.lineColor_spline.value,
+            xAxisTitle="Month",
+            xAxisData=list(filtered_resource_cost[0]["data"].keys()),
+            yAxisTitle="Team Utilization",
             yAxisData=list(filtered_resource_cost[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_1f.value,
@@ -480,7 +650,7 @@ async def mdash():
     resource_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
             summary_resource_fromsheet,
-            ["Non Utilization", "QA Summary"],
+            ["Non Utilization", "QA Summary", "QA Department"],
             selected_option_month,
         )
     )
@@ -526,7 +696,7 @@ async def mdash():
             dataLabels_padding=0,
             gridLineWidth=ChartData.gridLineWidth.value,
         ),
-        getMultiLineChart1=await MultiSplineChart(
+        getMultiLineChart1=await MultiSplineChart3(
             chartName="MultiLineChart1",
             title="QA Team Size",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
@@ -540,14 +710,18 @@ async def mdash():
             yAxisTitle="Team Size",
             yAxisName1="Non Utilization",
             yAxisData1=resource_list_dict["Non Utilization"]["values"],
-            lineColor1=ChartData.lineColor_column.value,
-            yAxisName2="Team Size",
-            yAxisData2=resource_list_dict["QA Summary"]["values"],
-            lineColor2=ChartData.lineColor_bar.value,
+            lineColor1=ChartData.lineColor_spline2.value,
+            yAxisName2="Utilization",
+            yAxisData2=resource_list_dict["QA Department"]["values"],
+            lineColor2=ChartData.lineColor_column.value,
+            yAxisName3="Team Size",
+            yAxisData3=resource_list_dict["QA Summary"]["values"],
+            lineColor3=ChartData.lineColor_bar.value,
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_1f.value,
             dataLabels_Color="black",
             gridLineWidth=ChartData.gridLineWidth.value,
+            legend ="true",
         ),
         getMultiColumnChart1=await MultiColumnChart(
             chartName="MultiColumnChart1",
@@ -564,7 +738,9 @@ async def mdash():
             xAxisTitle="",
             xAxisData=cost_list_dict["Total T&M"]["keys"],
             yAxisTitle="$ Cost",
+            yAxisName1 = "Projected",
             yAxisData1=cost_list_dict["Projected Monthly Cost"]["values"],
+            yAxisName2 = "Actual",
             yAxisData2=cost_list_dict["Total T&M"]["values"],
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
@@ -575,6 +751,7 @@ async def mdash():
             dataLabels_align="center",
             dataLabels_padding=0,
             gridLineWidth=ChartData.gridLineWidth.value,
+            legend ="true",
         ),
         getBarChart1=await BarChart(
             chartName="BarChart1",
