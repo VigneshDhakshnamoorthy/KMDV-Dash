@@ -63,24 +63,30 @@
       </div>
     </div>
     <div class="col">
-      {% if not selected_project ==
-        "All" %}
-      <div class="dropdownMonth rounded-pill pr-4 pt-4 mt-4">
-        <a
-          class="btn btn-primary"
-          style="color: #fff"
-          href="/wsr/summary/{{selected_project}}"
+      {% if not selected_project == "All" %}
+      <div
+        class="dropdownMonth rounded-pill pr-4 pt-4 mt-4"
+        hx-get="/wsr/summary/{{selected_project}}"
+        hx-trigger="click"
+        hx-indicator="dots"
+        hx-swap="outerHTML"
+        hx-target="body"
+      >
+        <a class="btn btn-primary" style="color: #fff" href="#"
           >Project Summary</a
         >
       </div>
       {% else %}
-      <div class="dropdownMonth rounded-pill pr-4 pt-4 mt-4"  data-toggle="tooltip"
-      data-placement="left"
-      title="Choose project to see the summary">
+      <div
+        class="dropdownMonth rounded-pill pr-4 pt-4 mt-4"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Choose project to see the summary"
+      >
         <a
           class="btn btn-primary distag"
           style="color: grey"
-          href="/wsr/summary/{{selected_project}}"
+          href="#"
           >Project Summary</a
         >
       </div>
@@ -94,19 +100,17 @@
       <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title"><b>Average Team Size</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-          </p>
-          <h2 style="color: var(--teamsize);;">{{avg_team}}</h2>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+          <h2 style="color: var(--teamsize)">{{avg_team}}</h2>
         </div>
       </div>
     </div>
     <div class="col charts2">
       <div class="card">
         <div class="card-body text-center">
-          <h5 class="card-title" ><b>Total Efforts (Hrs.)</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-          </p>
-          <h2 style="color: var(--totaleffort);;">{{total_efforts}}</h2>
+          <h5 class="card-title"><b>Total Efforts (Hrs.)</b></h5>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+          <h2 style="color: var(--totaleffort)">{{total_efforts}}</h2>
         </div>
       </div>
     </div>
@@ -114,13 +118,11 @@
       <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title"><b>Total Cost</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-          </p>
-          <h2 style="color: var(--totalcost);;">{{total_cost}}</h2>
+          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+          <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
         </div>
       </div>
     </div>
-    
   </div>
   <div class="row">
     <div class="col charts2">{{getColumnChart1 | safe}}</div>
