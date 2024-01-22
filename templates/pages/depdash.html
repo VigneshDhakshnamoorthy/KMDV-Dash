@@ -64,15 +64,11 @@
     </div>
     <div class="col-2">
       {% if not selected_project == "All" %}
-      <div
-        class="dropdownMonth rounded-pill pt-4 mt-4"
-        hx-get="/wsr/summary/{{selected_project}}"
-        hx-trigger="click"
-        hx-indicator="dots"
-        hx-swap="outerHTML"
-        hx-target="body"
-      >
-        <a class="btn btn-primary" style="color: #fff" href="#"
+      <div class="dropdownMonth rounded-pill pt-4 mt-4">
+        <a
+          class="btn btn-primary"
+          style="color: #fff"
+          href="/wsr/summary/{{selected_project}}"
           >Project Summary</a
         >
       </div>
@@ -83,10 +79,7 @@
         data-placement="left"
         title="Choose project to see the summary"
       >
-        <a
-          class="btn btn-primary distag"
-          style="color: grey"
-          href="#"
+        <a class="btn btn-primary distag" style="color: grey" href="#"
           >Project Summary</a
         >
       </div>
@@ -94,17 +87,12 @@
     </div>
     <div class="col-2">
       {% if wsr_bool %}
-      <div
-        class="dropdownMonth rounded-pill pt-4 mt-4"
-        hx-get="/wsr/{{selected_project}}"
-        hx-trigger="click"
-        hx-indicator="dots"
-        hx-swap="outerHTML"
-        hx-target="body"
-        style="font-size: smaller;"
-      >
-        <a class="btn btn-primary" style="color: #fff; font-size: 0.99rem;" href="#"
-        >Weekly Status Report</a
+      <div class="dropdownMonth rounded-pill pt-4 mt-4">
+        <a
+          class="btn btn-primary"
+          style="color: #fff; font-size: 0.99rem"
+          href="/wsr/{{selected_project}}"
+          >Weekly Status Report</a
         >
       </div>
       {% else %}
@@ -113,11 +101,10 @@
         data-toggle="tooltip"
         data-placement="left"
         title="Choose project to see the summary"
-
       >
         <a
           class="btn btn-primary distag"
-          style="color: grey; font-size: 0.99rem;"
+          style="color: grey; font-size: 0.99rem"
           href="#"
           >Weekly Status Report</a
         >
