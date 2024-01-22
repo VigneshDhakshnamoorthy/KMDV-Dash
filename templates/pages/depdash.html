@@ -31,7 +31,7 @@
   <br />
 
   <div class="row">
-    <div class="col">
+    <div class="col-4">
       <div class="dropdownMonth rounded-pill">
         <form method="POST" action="#">
           <label for="dropdown_year"><b>Select Year</b></label
@@ -46,7 +46,7 @@
         </form>
       </div>
     </div>
-    <div class="col">
+    <div class="col-4">
       <div class="dropdownMonth rounded-pill">
         <form method="POST" action="#">
           <label for="dropdown_project"><b>Select Project</b></label
@@ -62,10 +62,10 @@
         </form>
       </div>
     </div>
-    <div class="col">
+    <div class="col-2">
       {% if not selected_project == "All" %}
       <div
-        class="dropdownMonth rounded-pill pr-4 pt-4 mt-4"
+        class="dropdownMonth rounded-pill pt-4 mt-4"
         hx-get="/wsr/summary/{{selected_project}}"
         hx-trigger="click"
         hx-indicator="dots"
@@ -78,7 +78,7 @@
       </div>
       {% else %}
       <div
-        class="dropdownMonth rounded-pill pr-4 pt-4 mt-4"
+        class="dropdownMonth rounded-pill pt-4 mt-4"
         data-toggle="tooltip"
         data-placement="left"
         title="Choose project to see the summary"
@@ -88,6 +88,38 @@
           style="color: grey"
           href="#"
           >Project Summary</a
+        >
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-2">
+      {% if not selected_project == "All" %}
+      <div
+        class="dropdownMonth rounded-pill pt-4 mt-4"
+        hx-get="/wsr/{{selected_project}}"
+        hx-trigger="click"
+        hx-indicator="dots"
+        hx-swap="outerHTML"
+        hx-target="body"
+        style="font-size: smaller;"
+      >
+        <a class="btn btn-primary" style="color: #fff; font-size: 0.99rem;" href="#"
+        >Weekly Status Report</a
+        >
+      </div>
+      {% else %}
+      <div
+        class="dropdownMonth rounded-pill pt-4 mt-4"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Choose project to see the summary"
+
+      >
+        <a
+          class="btn btn-primary distag"
+          style="color: grey; font-size: 0.99rem;"
+          href="#"
+          >Weekly Status Report</a
         >
       </div>
       {% endif %}
