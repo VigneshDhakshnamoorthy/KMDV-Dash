@@ -93,7 +93,7 @@
       {% endif %}
     </div>
     <div class="col-2">
-      {% if not selected_project == "All" %}
+      {% if wsr_bool %}
       <div
         class="dropdownMonth rounded-pill pt-4 mt-4"
         hx-get="/wsr/{{selected_project}}"
