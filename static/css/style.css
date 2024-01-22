@@ -53,7 +53,7 @@
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   background-size: cover;
   background-position: center;
   /* background-image: url("../img/backgrounds/background12.jpeg"); */
@@ -69,10 +69,10 @@ body {
 
 .footer {
   display: block !important;
-  margin-left: 50vh;
-  margin-top: 0vh;
-  padding-top: 1vh;
-  padding-left: 25vh;
+  margin-left: 50dvh;
+  margin-top: 0dvh;
+  padding-top: 1dvh;
+  padding-left: 30dvh;
 }
 
 table,
@@ -140,7 +140,7 @@ body.light-mode .video-bg:before {
 }
 
 .Page {
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -149,7 +149,7 @@ body.light-mode .video-bg:before {
 }
 
 .indexPage {
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -239,4 +239,9 @@ td.linklist a:link, a:visited{
 
 .distag{
   pointer-events:none !important;
+} 
+
+.containeraccount{
+  padding-left: 3rem;
+  padding-top: 2rem;
 }

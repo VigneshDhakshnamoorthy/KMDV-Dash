@@ -2,7 +2,7 @@ import math
 from flask import Blueprint, jsonify, render_template, request, session
 from flask_login import current_user, login_required
 import pandas as pd
-from routes.enumLinks import ChartData, getUserName
+from routes.enumLinks import ChartData, FileAssociate, getUserName
 from utils.dataUtil import (
     filter_data_by_rows,
     filterDataSummary,
@@ -302,6 +302,8 @@ async def depdash():
         avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
     else:
         avg_team = 0
+    
+    wsr_bool = not FileAssociate.get_value(session["selected_project"]) is None
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
@@ -312,6 +314,7 @@ async def depdash():
         total_efforts =total_efforts,
         total_cost =total_cost,
         avg_team =avg_team,
+        wsr_bool=wsr_bool,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
@@ -471,6 +474,9 @@ async def depdashdirect(template):
         avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
     else:
         avg_team = 0
+        
+    wsr_bool = not FileAssociate.get_value(session["selected_project"]) is None
+
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
@@ -481,6 +487,7 @@ async def depdashdirect(template):
         total_efforts =total_efforts,
         total_cost =total_cost,
         avg_team =avg_team,
+        wsr_bool=wsr_bool,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="Total Efforts (Hrs.)",
