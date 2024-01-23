@@ -7,6 +7,7 @@ from utils.dataUtil import (
     filter_data_by_rows,
     filterDataSummary,
     getChartDataTotal,
+    getDateNow,
     getMonth,
     getRowResource,
     getYearList,
@@ -27,7 +28,7 @@ from utils.zynaCharts import (
 import asyncio
 
 
-month_today = 1
+month_today = getDateNow().month
 year_list = getYearList(month=month_today)
 
 DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates")
@@ -160,7 +161,7 @@ async def Dashboard():
             yAxisData=list(filtered_data_efforts[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -332,7 +333,7 @@ async def depdash():
             yAxisData=list(filtered_data_efforts[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -356,7 +357,7 @@ async def depdash():
             yAxisData=list(filtered_data_cost[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -505,7 +506,7 @@ async def depdashdirect(template):
             yAxisData=list(filtered_data_efforts[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -529,7 +530,7 @@ async def depdashdirect(template):
             yAxisData=list(filtered_data_cost[0]["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -696,7 +697,7 @@ async def mdash():
             yAxisData=efforts_list_dict["QA Department"]["values"],
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
-            dataLabels_Color="white",
+            dataLabels_Color="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",
@@ -751,8 +752,8 @@ async def mdash():
             yAxisData2=cost_list_dict["Total T&M"]["values"],
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
-            dataLabels_Color1="white",
-            dataLabels_Color2="#001440",
+            dataLabels_Color1="black",
+            dataLabels_Color2="black",
             dataLabels_font_size="12px",
             dataLabels_rotation=0,
             dataLabels_align="center",

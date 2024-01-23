@@ -1,11 +1,11 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : {{pageName}}{%
 endblock %} {% block baseBody %}
 
-<div class="row border-bottom">
+<div class="row border-bottom banner">
   <div class="col logoImag rounded-pill">
     <a href="/home"
       ><img
-        src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+        src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
         alt="oaktreecapital Logo"
         width="150"
         height="50"
@@ -48,7 +48,7 @@ endblock %} {% block baseBody %}
   <div class="col">
     <div class="dropdownMonth rounded-pill">
       <a
-        class="btn btn-primary"
+        class="buttonLink"
         style="color: #fff"
         href="/wsr/summary/{{pageName}}"
         >Project Summary</a
@@ -59,7 +59,7 @@ endblock %} {% block baseBody %}
   <div class="col">
     <div class="dropdownMonth rounded-pill">
       <a
-        class="btn btn-primary"
+        class="buttonLink"
         style="color: #fff"
         href="/home/depdash/{{pageName}}"
         >Project Dashboard</a

@@ -1,12 +1,12 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : Index{% endblock %}
 {% block baseBody %}
 
-<div class="grey-bg container-fluid">
+<div class="grey-bg container-fluid banner">
   <div class="row border-bottom">
     <div class="col logoImag mb-2">
       <a href="/home"
         ><img
-          src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+          src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
           alt="oaktreecapital Logo"
           width="150"
           height="50"
@@ -26,8 +26,8 @@
     </div>
   </div>
 
-  <br />
 </div>
+<br />
 
 <div class="d-flex justify-content-center text-center">
   <div class="card mx-2" style="width: 43rem">
@@ -39,7 +39,7 @@
       {% if current_user.user_type in ['admin', 'master'] %}
       <a
         href="/home/mdash"
-        class="btn btn-primary mr-2"
+        class="buttonLink"
         data-toggle="tooltip"
         data-placement="left"
         title="Clcik to View Master Dashboard"
@@ -48,7 +48,7 @@
       {% endif %}
       <a
         href="/home/depdash"
-        class="btn btn-primary"
+        class="buttonLink"
         data-toggle="tooltip"
         data-placement="left"
         title="Clcik to View Department Dashboard"
@@ -66,8 +66,8 @@
     <table class="table table-sm caption-top table-bordered table-hover">
       <thead class="sticky-header">
         <tr>
-          <th>Project</th>
-          <th>Status</th>
+          <th style="color: #fff;">Project</th>
+          <th style="color: #fff;">Status</th>
         </tr>
       </thead>
       <tbody>
@@ -99,7 +99,7 @@
   <a href="https://cesltd.com/"
     ><img
       class="ml-1"
-      src="/static/img/logo/ces-logo-white.png"
+      src="/static/img/logo/ces-logo-blue.png"
       alt="oaktreecapital Logo"
       width="40"
       height="25"

@@ -4,6 +4,7 @@ import math
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
 from routes.enumLinks import ChartData, FileAssociate, getUserName
+from routes.dashRoutes import month_today,year_list
 
 from utils.dataUtil import (
     filterDataSummary,
@@ -20,8 +21,8 @@ from utils.zynaCharts import ColumnChart, SplineChart
 
 WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 
-month_today = 1
-year_list = getYearList(month=month_today)
+# month_today = 1
+# year_list = getYearList(month=month_today)
 
 
 @WSRPage.route("/summary/<template>", methods=["GET", "POST"])

@@ -9,6 +9,7 @@
   --teamsize: #000099;
   --totaleffort: #bf4080;
   --totalcost: #00994d;
+  --oaklogocolour: #008265;
 }
 
 /* WebKit browsers (Chrome, Safari) */
@@ -58,12 +59,7 @@ body {
   background-position: center;
   /* background-image: url("../img/backgrounds/background12.jpeg"); */
   background: linear-gradient(
-    90deg,
-    rgb(82, 187, 181) 0%,
-    rgba(157, 233, 184, 1) 25%,
-    rgba(157, 233, 229, 1) 50%,
-    rgba(157, 233, 184, 1) 75%,
-    rgb(76, 204, 198) 100%
+    90deg,#fff
   );
 }
 
@@ -217,7 +213,7 @@ body.light-mode .video-bg:before {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #00c9cc !important;
+  background-color: var(--oaklogocolour) !important;
 
 }
 
@@ -229,12 +225,43 @@ body.light-mode .video-bg:before {
 
 td.linklist a:link, a:visited{
   text-decoration: none !important;
-  background-color: #00c9cc;
+  background-color: var(--oaklogocolour);
   color: #fff;
   padding: 5px 5px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  border-radius: 0.5rem;
+}
+
+td.linklist a:hover{
+  text-decoration: none !important;
+  background-color: var(--oaklogocolour);
+  color: yellow;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 0.5rem;
+}
+a.buttonLink:link{
+  background-color: var(--oaklogocolour);
+  color: #fff;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 0.5rem;
+}
+
+a.buttonLink:hover{
+  background-color: var(--oaklogocolour);
+  color: yellow;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 0.5rem;
 }
 
 .distag{
@@ -244,4 +271,9 @@ td.linklist a:link, a:visited{
 .containeraccount{
   padding-left: 3rem;
   padding-top: 2rem;
+}
+
+.banner{
+  background-color: var(--oaklogocolour);
+  color: #fff;
 }

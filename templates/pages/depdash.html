@@ -2,11 +2,11 @@
 {% block baseBody %}
 
 <div class="grey-bg container-fluid">
-  <div class="row border-bottom">
+  <div class="row border-bottom banner">
     <div class="col logoImag mb-2">
       <a href="/home"
         ><img
-          src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+          src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
           alt="oaktreecapital Logo"
           width="150"
           height="50"
@@ -15,7 +15,11 @@
 
     <div class="col">
       <div class="pageHeader text-center">
+        {% if selected_project == "All" %}
         <h2 class="">Dashboard</h2>
+        {% else %}
+        <h2 class="">{{selected_project|replace('_', ' ')}}</h2>
+        {% endif %}
       </div>
     </div>
 
@@ -64,9 +68,9 @@
     </div>
     <div class="col-2">
       {% if not selected_project == "All" %}
-      <div class="dropdownMonth rounded-pill pt-4 mt-4">
+      <div class="dropdownMonth rounded-pill pt-4 mt-4 ">
         <a
-          class="btn btn-primary"
+          class="buttonLink"
           style="color: #fff"
           href="/wsr/summary/{{selected_project}}"
           >Project Summary</a
@@ -79,7 +83,7 @@
         data-placement="left"
         title="Choose project to see the summary"
       >
-        <a class="btn btn-primary distag" style="color: grey" href="#"
+        <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
           >Project Summary</a
         >
       </div>
@@ -89,7 +93,7 @@
       {% if wsr_bool %}
       <div class="dropdownMonth rounded-pill pt-4 mt-4">
         <a
-          class="btn btn-primary"
+          class="buttonLink"
           style="color: #fff; font-size: 0.98rem"
           href="/wsr/{{selected_project}}"
           >Weekly Status Report</a
@@ -103,8 +107,8 @@
         title="Choose project to see the summary"
       >
         <a
-          class="btn btn-primary distag"
-          style="color: grey; font-size: 0.98rem"
+          class="buttonLink distag"
+          style="color: rgb(187, 175, 175); font-size: 0.98rem"
           href="#"
           >Weekly Status Report</a
         >
