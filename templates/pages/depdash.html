@@ -1,9 +1,9 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : Board{% endblock %}
 {% block baseBody %}
 
-<div class="grey-bg container-fluid">
+<div class="grey-bg">
   <div class="row border-bottom banner">
-    <div class="col logoImag mb-2">
+    <div class="col logoImag mb-2 pt-2">
       <a href="/home"
         ><img
           src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
@@ -16,17 +16,17 @@
     <div class="col">
       <div class="pageHeader text-center">
         {% if selected_project == "All" %}
-        <h2 class="">Dashboard</h2>
+        <h4 class="">DASHBOARD</h4>
         {% else %}
-        <h2 class="">{{selected_project|replace('_', ' ')}}</h2>
+        <h4 class="">{{selected_project|replace('_', ' ')}}</h4>
         {% endif %}
       </div>
     </div>
 
     <div class="col">
-      <div class="pageHeader mt-3">
-        <h6 class="">
-          Logged In : <span style="color: maroon">{{userName}}</span>
+      <div class="pageHeader mt-1">
+        <h6 class="" style="color: white">
+          LOGGED IN : <span style="color: white">{{userName}}</span>
         </h6>
       </div>
     </div>
@@ -34,9 +34,9 @@
 
   <br />
 
-  <div class="row">
-    <div class="col-4">
-      <div class="dropdownMonth rounded-pill">
+  <div class="row filter-banner">
+    <div class="col-3">
+      <div class="dropdownYear rounded-pill">
         <form method="POST" action="#">
           <label for="dropdown_year"><b>Select Year</b></label
           ><span class=""> : </span>
@@ -66,24 +66,28 @@
         </form>
       </div>
     </div>
+    <div class="col"></div>
     <div class="col-2">
       {% if not selected_project == "All" %}
-      <div class="dropdownMonth rounded-pill pt-4 mt-4 ">
+      <div class="dropdownYear">
         <a
           class="buttonLink"
-          style="color: #fff"
+          style="color: #fff; font-size: 1rem"
           href="/wsr/summary/{{selected_project}}"
           >Project Summary</a
         >
       </div>
       {% else %}
       <div
-        class="dropdownMonth rounded-pill pt-4 mt-4"
+        class="dropdownYear"
         data-toggle="tooltip"
         data-placement="left"
         title="Choose project to see the summary"
       >
-        <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
+        <a
+          class="buttonLink distag"
+          style="color: rgb(187, 175, 175); font-size: 1rem"
+          href="#"
           >Project Summary</a
         >
       </div>
@@ -91,24 +95,24 @@
     </div>
     <div class="col-2">
       {% if wsr_bool %}
-      <div class="dropdownMonth rounded-pill pt-4 mt-4">
+      <div class="dropdownYear">
         <a
           class="buttonLink"
-          style="color: #fff; font-size: 0.98rem"
+          style="color: #fff; font-size: 1rem"
           href="/wsr/{{selected_project}}"
           >Weekly Status Report</a
         >
       </div>
       {% else %}
       <div
-        class="dropdownMonth rounded-pill pt-4 mt-4"
+        class="dropdownYear"
         data-toggle="tooltip"
         data-placement="left"
         title="Choose project to see the summary"
       >
         <a
           class="buttonLink distag"
-          style="color: rgb(187, 175, 175); font-size: 0.98rem"
+          style="color: rgb(187, 175, 175); font-size: 1rem"
           href="#"
           >Weekly Status Report</a
         >
@@ -122,7 +126,7 @@
     <div class="col charts2">
       <div class="card">
         <div class="card-body text-center">
-          <h5 class="card-title"><b>Average Team Size</b></h5>
+          <h5 class="card-title"><b>AVERAGE TEAM SIZE</b></h5>
           <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
           <h2 style="color: var(--teamsize)">{{avg_team}}</h2>
         </div>
@@ -131,7 +135,7 @@
     <div class="col charts2">
       <div class="card">
         <div class="card-body text-center">
-          <h5 class="card-title"><b>Total Efforts (Hrs.)</b></h5>
+          <h5 class="card-title"><b>TOTAL EFFORTS (HRS.)</b></h5>
           <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
           <h2 style="color: var(--totaleffort)">{{total_efforts}}</h2>
         </div>
@@ -140,7 +144,7 @@
     <div class="col charts2">
       <div class="card">
         <div class="card-body text-center">
-          <h5 class="card-title"><b>Total Cost</b></h5>
+          <h5 class="card-title"><b>TOTAL COST</b></h5>
           <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
           <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
         </div>

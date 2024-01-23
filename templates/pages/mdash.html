@@ -1,9 +1,9 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : Board{% endblock %}
 {% block baseBody %}
 
-<div class="grey-bg container-fluid">
+<div class="grey-bg">
   <div class="row border-bottom banner">
-    <div class="col logoImag mb-2">
+    <div class="col logoImag mb-2 pt-2">
       <a href="/home"
         ><img
           src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
@@ -15,14 +15,14 @@
 
     <div class="col">
       <div class="pageHeader text-center">
-        <h2 class="">Master Dashboard</h2>
+        <h4 class="">MASTER DASHBOARD</h4>
       </div>
     </div>
 
     <div class="col">
-      <div class="pageHeader mt-3">
-        <h6 class="" >
-          Logged In : <span style="color: maroon">{{userName}}</span>
+      <div class="pageHeader mt-1">
+        <h6 class="" style="color: white">
+          LOGGED IN : <span style="color: white">{{userName}}</span>
         </h6>
       </div>
     </div>
@@ -32,9 +32,9 @@
 
   <div class="row">
     <div class="col">
-      <div class="dropdownMonth rounded-pill">
+      <div class="dropdownYear rounded-pill" style="text-align: right;">
         <form method="POST" action="#">
-          <label for="dropdown_year"><b>Select Year</b></label
+          <label for="dropdown_year"><b>SELECT YEAR</b></label
           ><span class="mr-2 ml-2"> : </span>
           <select id="dropdown_year" name="selected_year">
             {% for option in dropdown_year %} {% if option == selected_year %}

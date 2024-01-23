@@ -55,4 +55,4 @@ class ChartData(Enum):
     
 
 def getUserName(current_user):
-    return f"{str(current_user.email.split('@')[0]).title()}"
+    return f"{str(current_user.email.split('@')[0]).upper()}"

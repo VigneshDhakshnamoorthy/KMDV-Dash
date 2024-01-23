@@ -318,7 +318,7 @@ async def depdash():
         wsr_bool=wsr_bool,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
-            title="Total Efforts (Hrs.)",
+            title="TOTAL EFFORTS (HRS.)",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -342,7 +342,7 @@ async def depdash():
         ),
         getColumnChart2=await ColumnChart(
             chartName="ColumnChart2",
-            title="Cost of Labor",
+            title="COST OF QA",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -366,7 +366,7 @@ async def depdash():
         ),
         getSplineChart1=await SplineChart(
             chartName="SplineChart1",
-            title="QA Team Size",
+            title="QA TEAM SIZE",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -491,7 +491,7 @@ async def depdashdirect(template):
         wsr_bool=wsr_bool,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
-            title="Total Efforts (Hrs.)",
+            title="TOTAL EFFORTS (HRS.)",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -515,7 +515,7 @@ async def depdashdirect(template):
         ),
         getColumnChart2=await ColumnChart(
             chartName="ColumnChart2",
-            title="Cost of Labor",
+            title="COST OF QA",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -539,7 +539,7 @@ async def depdashdirect(template):
         ),
         getSplineChart1=await SplineChart(
             chartName="SplineChart1",
-            title="QA Team Size",
+            title="QA TEAM SIZE",
             subtitle=f"Project : {selected_option_project}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -607,8 +607,8 @@ async def mdash():
     summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
 
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
-    cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -6).to_dict()
-    dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -8, "").to_dict()
+    cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -5).to_dict()
+    dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -7, "").to_dict()
     resource_dict_filtered = filter_data_by_rows(
         summary_resource_fromsheet, 2, -2
     ).to_dict()
@@ -682,7 +682,7 @@ async def mdash():
         avg_team_size_non_util = avg_team_size_non_util,
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
-            title="Total Efforts (Hrs.)",
+            title="TOTAL EFFORTS (HRS.)",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -706,7 +706,7 @@ async def mdash():
         ),
         getMultiLineChart1=await MultiSplineChart3(
             chartName="MultiLineChart1",
-            title="QA Team Size",
+            title="QA TEAM SIZE",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -721,10 +721,10 @@ async def mdash():
             lineColor1=ChartData.lineColor_spline2.value,
             yAxisName2="Utilization",
             yAxisData2=resource_list_dict["QA Department"]["values"],
-            lineColor2=ChartData.lineColor_column.value,
+            lineColor2=ChartData.lineColor_bar.value,
             yAxisName3="Team Size",
             yAxisData3=resource_list_dict["QA Summary"]["values"],
-            lineColor3=ChartData.lineColor_bar.value,
+            lineColor3=ChartData.lineColor_column.value,
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_1f.value,
             dataLabels_Color="black",
@@ -733,7 +733,7 @@ async def mdash():
         ),
         getMultiColumnChart1=await MultiColumnChart(
             chartName="MultiColumnChart1",
-            title="Cost of Labor (Projected vs Actual)",
+            title="COST OF QA (PROJECTED vs ACTUAL)",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -763,7 +763,7 @@ async def mdash():
         ),
         getBarChart1=await BarChart(
             chartName="BarChart1",
-            title="Project Wise Cost Summary",
+            title="PROJECTS COST SUMMARY",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -784,7 +784,7 @@ async def mdash():
         ),
         getPieChart1=await PieChart(
             chartName="pie2",
-            title="Department Wise Cost Summary",
+            title="DEPARTMENTS COST SUMMARY",
             subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -800,7 +800,7 @@ async def mdash():
         ),
         getBarChart3=await BarChart(
             chartName="BarChart3",
-            title="Resource Management Summary",
+            title="RESOURCE MANAGEMENT SUMMARY",
             subtitle=f"Month : {selected_option_month}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,

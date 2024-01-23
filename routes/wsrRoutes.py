@@ -143,7 +143,7 @@ async def summary(template):
             wsr_bool=wsr_bool,
             getColumnChart1=await ColumnChart(
                 chartName="ColumnChart1",
-                title="Total Bug",
+                title="TOTAL BUGS",
                 subtitle=f"Project : {selected_option_project}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,
@@ -167,7 +167,7 @@ async def summary(template):
             ),
             getSplineChart1=await SplineChart(
                 chartName="SplineChart1",
-                title="Total Execution",
+                title="TOTAL EXECUTION",
                 subtitle=f"Project : {selected_option_project}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,
