@@ -41,7 +41,7 @@ class FileAssociate(Enum):
 class ChartData(Enum):
     max_width = "100%"
     min_width = "50%"
-    height = "75vh"
+    height = "75dvh"
     background_color = "transparent"
     borderColor="black"
     dataLabels_format_1f="{point.y:.1f}"
@@ -51,6 +51,12 @@ class ChartData(Enum):
     lineColor_column = "#00416a"
     lineColor_spline = "#e2725b"
     lineColor_spline2 = "#bd1354"
+    line_clients_marketing = "#45c8ff"
+    line_data_architecture = "#544fc5"
+    line_finance = "#00e272"
+    line_investment = "#fe6a35"
+    line_it_business_operations = "#6b8abc"
+
     gridLineWidth = 0
     
 

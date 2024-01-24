@@ -34,9 +34,9 @@
 
   <br />
 
-  <div class="row filter-banner">
-    <div class="col-3">
-      <div class="dropdownYear rounded-pill">
+  <div class="depDashGrid">
+    <div class="depcol-1">
+      <div class="dropdownYear">
         <form method="POST" action="#">
           <label for="dropdown_year"><b>Select Year</b></label
           ><span class=""> : </span>
@@ -50,8 +50,8 @@
         </form>
       </div>
     </div>
-    <div class="col-4">
-      <div class="dropdownMonth rounded-pill">
+    <div class="depcol-2">
+      <div class="dropdownMonth">
         <form method="POST" action="#">
           <label for="dropdown_project"><b>Select Project</b></label
           ><span class=""> : </span>
@@ -66,8 +66,7 @@
         </form>
       </div>
     </div>
-    <div class="col"></div>
-    <div class="col-2">
+    <div class="depcol-3">
       {% if not selected_project == "All" %}
       <div class="dropdownYear">
         <a
@@ -79,7 +78,7 @@
       </div>
       {% else %}
       <div
-        class="dropdownYear"
+        class="dropdownMonth"
         data-toggle="tooltip"
         data-placement="left"
         title="Choose project to see the summary"
@@ -93,7 +92,7 @@
       </div>
       {% endif %}
     </div>
-    <div class="col-2">
+    <div class="depcol-4">
       {% if wsr_bool %}
       <div class="dropdownYear">
         <a
@@ -120,6 +119,7 @@
       {% endif %}
     </div>
   </div>
+
   <br />
 
   <div class="row">
@@ -152,16 +152,15 @@
     </div>
   </div>
   <div class="row">
-    <div class="col charts2">{{getColumnChart1 | safe}}</div>
     <div class="col charts2">{{getSplineChart1 | safe}}</div>
+    <div class="col charts2">{{getColumnChart1 | safe}}</div>
   </div>
   <br />
   <div class="row">
     <div class="col charts2">{{getColumnChart2 | safe}}</div>
   </div>
   <br />
-  <br />
-  <br />
+  {% include 'layout/copyright.html' %}
 </div>
 
 {% endblock %}

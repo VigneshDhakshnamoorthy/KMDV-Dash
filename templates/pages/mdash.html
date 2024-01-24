@@ -111,15 +111,29 @@
   <br />
 
   <div class="row">
-    <div class="col charts2">{{getBarChart1 | safe}}</div>
+    <div class="col charts2">{{getColumnChart1 | safe}}</div>
     <div class="col charts2">{{getPieChart1 | safe}}</div>
   </div>
   <br />
 
   <div class="row">
-    <div class="col charts2">{{getColumnChart1 | safe}}</div>
+    <div class="col charts2">{{getBarChart4 | safe}}</div>
+    <div class="col charts2">{{getBarChart5 | safe}}</div>
+  </div>
+  <br />
+
+  <div class="row">
+    <div class="col charts2">{{getBarChart6 | safe}}</div>
+    <div class="col charts2">{{getBarChart7 | safe}}</div>
+  </div>
+  <br />
+
+  <div class="row">
+    <div class="col charts2">{{getBarChart8 | safe}}</div>
+    <div class="col charts2">{{getBarChart1 | safe}}</div>
   </div>
   <br />
 </div>
+{% include 'layout/copyright.html' %}
 
 {% endblock %}

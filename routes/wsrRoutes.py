@@ -158,7 +158,7 @@ async def summary(template):
                 yAxisData=list(filtered_data_efforts[0]["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
-                dataLabels_Color="white",
+                dataLabels_Color="black",
                 dataLabels_font_size="12px",
                 dataLabels_rotation=0,
                 dataLabels_align="center",

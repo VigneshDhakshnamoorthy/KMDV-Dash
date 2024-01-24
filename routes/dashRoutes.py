@@ -13,6 +13,7 @@ from utils.dataUtil import (
     getYearList,
     load_data,
     load_data_month_skip,
+    sum_columns,
     sum_columns_row,
 )
 
@@ -559,7 +560,7 @@ async def depdashdirect(template):
     )
 
 
-@DashboardPage.route("/mdash", methods=["GET", "POST"])
+@DashboardPage.route("/mrdash", methods=["GET", "POST"])
 @login_required
 async def mdash():
     selected_option_year = year_list[0]
@@ -598,6 +599,8 @@ async def mdash():
             int(selected_option_year),
         )
     )
+    
+    
     decimal_places = 2
     summary_efforts_fromsheet = await summary_efforts_fromsheet
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
@@ -643,6 +646,7 @@ async def mdash():
     cost_per_dict = await asyncio.to_thread(
         lambda: sum_columns_row(cost_dict, selected_option_month)
     )
+    print(cost_per_dict)
 
     dep_cost_per_dict = await asyncio.to_thread(
         lambda: sum_columns_row(dep_cost_dict, selected_option_month)
@@ -821,3 +825,385 @@ async def mdash():
         ),
     )
 
+@DashboardPage.route("/mdash", methods=["GET", "POST"])
+@login_required
+async def mdash1():
+    selected_option_year = year_list[0]
+    if request.method == "POST" and "selected_year" in request.form:
+        selected_option_year = request.form.get("selected_year")
+        session["selected_year"] = selected_option_year
+
+        selected_option_month = session["selected_month"]
+
+    summary_efforts_fromsheet = await asyncio.to_thread(
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx",
+            "Efforts",
+            0,
+            getMonth(int(selected_option_year), month=month_today, max=max(year_list)),
+            int(selected_option_year),
+        )
+    )
+
+    summary_cost_fromsheet = await asyncio.to_thread(
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx",
+            "Cost",
+            0,
+            getMonth(int(selected_option_year), month=month_today, max=max(year_list)),
+            int(selected_option_year),
+        )
+    )
+    
+    summary_department_fromsheet = await asyncio.to_thread(
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx",
+            "Department",
+            0,
+            getMonth(int(selected_option_year), month=month_today, max=max(year_list)),
+            int(selected_option_year),
+        )
+    )
+
+
+    summary_resource_fromsheet = await asyncio.to_thread(
+        lambda: load_data_month_skip(
+            "dataSources/monthData/dashSummary.xlsx",
+            "Resource",
+            0,
+            getMonth(int(selected_option_year), month=month_today, max=max(year_list)),
+            int(selected_option_year),
+        )
+    )
+    
+    
+    decimal_places = 2
+    summary_efforts_fromsheet = await summary_efforts_fromsheet
+    summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
+    summary_cost_fromsheet = await summary_cost_fromsheet
+    summary_cost_fromsheet = summary_cost_fromsheet.round(decimal_places)
+    summary_resource_fromsheet = await summary_resource_fromsheet
+    summary_resource_fromsheet = summary_resource_fromsheet.round(decimal_places)
+    summary_department_fromsheet = await summary_department_fromsheet
+    merged_df = pd.merge(summary_cost_fromsheet, summary_department_fromsheet, on="Project")
+    department_dfs = {}
+    for department in merged_df['Department'].unique():
+        department_dfs[department] = merged_df[merged_df['Department'] == department].drop(columns=['Department'])
+
+    
+    efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
+    cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -5).to_dict()
+    dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -7, "").to_dict()
+    resource_dict_filtered = filter_data_by_rows(
+        summary_resource_fromsheet, 2, -2
+    ).to_dict()
+    efforts_chart_data = []
+    cost_chart_data = []
+
+    for month, values in efforts_dict.items():
+        month_data = {"name": month, "data": values}
+        efforts_chart_data.append(month_data)
+
+    for month, values in cost_dict.items():
+        month_data = {"name": month, "data": values}
+        cost_chart_data.append(month_data)
+
+    options_cost = [
+        entry["name"] for entry in cost_chart_data if entry["name"] != "Project"
+    ]
+
+    selected_option_month = options_cost[-1]
+
+    if request.method == "GET":
+        selected_option_month = options_cost[-1]
+        session["selected_month"] = options_cost[-1]
+
+        selected_option_year = year_list[0]
+        session["selected_year"] = year_list[0]
+
+    efforts_list_dict = getRowResource(
+        summary_efforts_fromsheet, ["QA Department"], selected_option_month
+    )
+
+    cost_per_dict = await asyncio.to_thread(
+        lambda: sum_columns_row(cost_dict, selected_option_month)
+    )
+    
+    cost_dep_client_marketing = await asyncio.to_thread(
+        lambda: sum_columns(department_dfs['CLIENTS & MARKETING'], selected_option_month)
+    )
+    
+    cost_dep_data_architecture = await asyncio.to_thread(
+        lambda: sum_columns(department_dfs['DATA & ARCHITECTURE'], selected_option_month)
+    )
+    cost_dep_finance = await asyncio.to_thread(
+        lambda: sum_columns(department_dfs['FINANCE'], selected_option_month)
+    )
+    cost_dep_investment = await asyncio.to_thread(
+        lambda: sum_columns(department_dfs['INVESTMENT'], selected_option_month)
+    )
+    cost_dep_business_operation = await asyncio.to_thread(
+        lambda: sum_columns(department_dfs['IT BUSINESS OPERATIONS'], selected_option_month)
+    )
+
+
+    dep_cost_per_dict = await asyncio.to_thread(
+        lambda: sum_columns_row(dep_cost_dict, selected_option_month)
+    )
+
+    cost_list_dict = await asyncio.to_thread(
+        lambda: getRowResource(
+            summary_cost_fromsheet,
+            ["Total T&M", "Projected Monthly Cost"],
+            selected_option_month,
+        )
+    )
+    resource_list_dict = await asyncio.to_thread(
+        lambda: getRowResource(
+            summary_resource_fromsheet,
+            ["Non Utilization", "QA Summary", "QA Department"],
+            selected_option_month,
+        )
+    )
+    dep_cost_per_dict = [{"name": row['Project'], "y": row['Total']} for index, row in dep_cost_per_dict.iterrows()]
+    projected_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Projected Monthly Cost"]["values"])))
+    actual_total = "$ {:0,.0f}".format(math.ceil(sum(cost_list_dict["Total T&M"]["values"])))
+    efforts_total = "{:0,.0f}".format(math.ceil(sum(efforts_list_dict["QA Department"]["values"])))
+    avg_team_size_util = "{:0,.1f}".format(sum(resource_list_dict["QA Summary"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
+    avg_team_size_non_util = "{:0,.1f}".format(sum(resource_list_dict["Non Utilization"]["values"])/len(resource_list_dict["QA Summary"]["values"]))
+    return render_template(
+        "pages/mdash.html",
+        dropdown_month=options_cost,
+        dropdown_year=year_list,
+        selected_month=selected_option_month,
+        selected_year=int(selected_option_year),
+        userName=getUserName(current_user),
+        projected_total = projected_total,
+        actual_total = actual_total,
+        efforts_total = efforts_total,
+        avg_team_size_util = avg_team_size_util,
+        avg_team_size_non_util = avg_team_size_non_util,
+        getColumnChart1=await ColumnChart(
+            chartName="ColumnChart1",
+            title="TOTAL EFFORTS (HRS.)",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.lineColor_column.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=efforts_list_dict["QA Department"]["keys"],
+            yAxisTitle="Efforts",
+            yAxisData=efforts_list_dict["QA Department"]["values"],
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="12px",
+            dataLabels_rotation=0,
+            dataLabels_align="center",
+            dataLabels_padding=0,
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getMultiLineChart1=await MultiSplineChart3(
+            chartName="MultiLineChart1",
+            title="QA TEAM SIZE",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            xAxisTitle="",
+            xAxisData=resource_list_dict["Non Utilization"]["keys"],
+            yAxisTitle="Team Size",
+            yAxisName1="Non Utilization",
+            yAxisData1=resource_list_dict["Non Utilization"]["values"],
+            lineColor1=ChartData.lineColor_spline2.value,
+            yAxisName2="Utilization",
+            yAxisData2=resource_list_dict["QA Department"]["values"],
+            lineColor2=ChartData.lineColor_bar.value,
+            yAxisName3="Team Size",
+            yAxisData3=resource_list_dict["QA Summary"]["values"],
+            lineColor3=ChartData.lineColor_column.value,
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_1f.value,
+            dataLabels_Color="black",
+            gridLineWidth=ChartData.gridLineWidth.value,
+            legend ="true",
+        ),
+        getMultiColumnChart1=await MultiColumnChart(
+            chartName="MultiColumnChart1",
+            title="COST OF QA (PROJECTED vs ACTUAL)",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor1=ChartData.lineColor_column.value,
+            lineColor2=ChartData.lineColor_bar.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=cost_list_dict["Total T&M"]["keys"],
+            yAxisTitle="$ Cost",
+            yAxisName1 = "Projected",
+            yAxisData1=cost_list_dict["Projected Monthly Cost"]["values"],
+            yAxisName2 = "Actual",
+            yAxisData2=cost_list_dict["Total T&M"]["values"],
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color1="black",
+            dataLabels_Color2="black",
+            dataLabels_font_size="12px",
+            dataLabels_rotation=0,
+            dataLabels_align="center",
+            dataLabels_padding=0,
+            gridLineWidth=ChartData.gridLineWidth.value,
+            legend ="true",
+        ),
+        getBarChart4=await BarChart(
+            chartName="BarChart4",
+            title="CLIENTS & MARKETING COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.line_clients_marketing.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(cost_dep_client_marketing["Project"]),
+            yAxisTitle="$ Cost",
+            yAxisData=list(cost_dep_client_marketing["Total"]),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getBarChart5=await BarChart(
+            chartName="BarChart5",
+            title="DATA & ARCHITECTURE COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.line_data_architecture.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(cost_dep_data_architecture["Project"]),
+            yAxisTitle="$ Cost",
+            yAxisData=list(cost_dep_data_architecture["Total"]),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getBarChart6=await BarChart(
+            chartName="BarChart6",
+            title="FINANCE COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.line_finance.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(cost_dep_finance["Project"]),
+            yAxisTitle="$ Cost",
+            yAxisData=list(cost_dep_finance["Total"]),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getBarChart7=await BarChart(
+            chartName="BarChart7",
+            title="INVESTMENT COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.line_investment.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(cost_dep_investment["Project"]),
+            yAxisTitle="$ Cost",
+            yAxisData=list(cost_dep_investment["Total"]),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getBarChart8=await BarChart(
+            chartName="BarChart8",
+            title="IT BUSINESS OPERATIONS COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.line_it_business_operations.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(cost_dep_business_operation["Project"]),
+            yAxisTitle="$ Cost",
+            yAxisData=list(cost_dep_business_operation["Total"]),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+        getPieChart1=await PieChart(
+            chartName="pie2",
+            title="DEPARTMENTS COST SUMMARY",
+            subtitle=f"Month : {options_cost[0]} - {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            colorByPoint="true",
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_m0f.value,
+            dataLabels_font_size="12px",
+            series_name="Value",
+            series_data=dep_cost_per_dict,
+        ),
+        getBarChart3=await BarChart(
+            chartName="BarChart3",
+            title="RESOURCE MANAGEMENT SUMMARY",
+            subtitle=f"Month : {selected_option_month}",
+            max_width=ChartData.max_width.value,
+            min_width=ChartData.min_width.value,
+            height=ChartData.height.value,
+            background_color=ChartData.background_color.value,
+            borderColor=ChartData.borderColor.value,
+            lineColor=ChartData.lineColor_bar.value,
+            colorByPoint="false",
+            xAxisTitle="",
+            xAxisData=list(resource_dict_filtered["Project"].values()),
+            yAxisTitle="Resource",
+            yAxisData=list(resource_dict_filtered[selected_option_month].values()),
+            dataLabels_enabled="true",
+            dataLabels_format=ChartData.dataLabels_format_1f.value,
+            dataLabels_Color="black",
+            dataLabels_font_size="13px",
+            gridLineWidth=ChartData.gridLineWidth.value,
+        ),
+    )

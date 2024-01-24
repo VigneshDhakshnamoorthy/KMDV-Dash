@@ -17,6 +17,8 @@
 .dropdownMonth select{
     font-weight: bold;
     width: 18rem !important;
+    height: 2.3rem;
+
 
 }
 
@@ -38,6 +40,7 @@
 .dropdownYear select{
     font-weight: bold;
     width: 10rem !important;
+    height: 2.3rem;
 
 }
 
