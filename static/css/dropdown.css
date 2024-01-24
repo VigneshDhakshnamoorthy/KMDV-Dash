@@ -7,16 +7,18 @@
 }
 
 .dropdownMonth {
-    text-align: right;
+    text-align: left;
     margin: 0%;
     text-decoration: none;
-    margin: 1rem 0rem 0rem 0rem;
-
+    margin: 0rem 0rem 0rem 0rem;
+    font-size: small;
 }
 
 .dropdownMonth select{
     font-weight: bold;
-    width: 19rem !important;
+    width: 18rem !important;
+    height: 2.3rem;
+
 
 }
 
@@ -27,8 +29,32 @@
 
 }
 
+.dropdownYear {
+    text-align: left;
+    margin: 0%;
+    text-decoration: none;
+    margin: 0rem 0rem 0rem 0rem;
+    font-size: small;
+}
+
+.dropdownYear select{
+    font-weight: bold;
+    width: 10rem !important;
+    height: 2.3rem;
+
+}
+
+.dropdownYear option{
+    background-color: whitesmoke;
+    color: black;
+    font-weight: bold;
+
+}
+
 .dropdownWeek select{
     font-weight: bold;
+    width: 10rem !important;
+    background-color: whitesmoke;
 
 }
 
@@ -39,21 +65,6 @@
 
 }
 
-select {
-    /* Reset */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: 0;
-    outline: 0;
-    font: inherit;
-    width: 15rem;
-    padding: 1rem 4rem 1rem 1rem;
-    background: var(--arrow-icon) no-repeat right 0.8em center/1.4em, linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
-    border-radius: 0.25em;
-    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-}
 
 select::-ms-expand {
     display: none;

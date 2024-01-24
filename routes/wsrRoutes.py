@@ -4,6 +4,7 @@ import math
 from flask import Blueprint, render_template, request, session
 from flask_login import current_user, login_required
 from routes.enumLinks import ChartData, FileAssociate, getUserName
+from routes.dashRoutes import month_today,year_list
 
 from utils.dataUtil import (
     filterDataSummary,
@@ -20,8 +21,8 @@ from utils.zynaCharts import ColumnChart, SplineChart
 
 WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 
-month_today = 1
-year_list = getYearList(month=month_today)
+# month_today = 1
+# year_list = getYearList(month=month_today)
 
 
 @WSRPage.route("/summary/<template>", methods=["GET", "POST"])
@@ -142,7 +143,7 @@ async def summary(template):
             wsr_bool=wsr_bool,
             getColumnChart1=await ColumnChart(
                 chartName="ColumnChart1",
-                title="Total Bug",
+                title="TOTAL BUGS",
                 subtitle=f"Project : {selected_option_project}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,
@@ -157,7 +158,7 @@ async def summary(template):
                 yAxisData=list(filtered_data_efforts[0]["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
-                dataLabels_Color="white",
+                dataLabels_Color="black",
                 dataLabels_font_size="12px",
                 dataLabels_rotation=0,
                 dataLabels_align="center",
@@ -166,7 +167,7 @@ async def summary(template):
             ),
             getSplineChart1=await SplineChart(
                 chartName="SplineChart1",
-                title="Total Execution",
+                title="TOTAL EXECUTION",
                 subtitle=f"Project : {selected_option_project}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,

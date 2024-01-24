@@ -1,11 +1,11 @@
 {% extends 'layout/base.html' %} {% block title %}QA-Dash : {{pageName}}{%
 endblock %} {% block baseBody %}
 
-<div class="row border-bottom">
-  <div class="col logoImag rounded-pill">
+<div class="row border-bottom banner">
+  <div class="col logoImag mb-2 pt-2">
     <a href="/home"
       ><img
-        src="https://b2cprdassets.blob.core.windows.net/ocmb2c/Assets/Images/OClogo.svg"
+        src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
         alt="oaktreecapital Logo"
         width="150"
         height="50"
@@ -13,7 +13,7 @@ endblock %} {% block baseBody %}
   </div>
   <div class="col">
     <div class="pageHeader text-center">
-      <h2 class="">{{pageName|replace('_', ' ')}}</h2>
+      <h4 class="">{{pageName|replace('_', ' ')}}</h4>
     </div>
   </div>
 
@@ -38,29 +38,31 @@ endblock %} {% block baseBody %}
 
 <div class="row">
   <div class="col"></div>
+  <div class="col"></div>
 
-  <div class="col-5">
-    <div class="pageHeader text-right">
-      <h3 class="">{{weekdays}}</h3>
+  <div class="col-6">
+    <div class=" text-right">
+      <h4 class="">{{weekdays}}</h4>
     </div>
   </div>
+  <div class="col"></div>
 
-  <div class="col">
-    <div class="dropdownMonth rounded-pill">
+  <div class="col-2">
+    <div class="dropdownMonth text-right">
       <a
-        class="btn btn-primary"
-        style="color: #fff"
+        class="buttonLink"
+        style="color: #fff; font-size: 1rem"
         href="/wsr/summary/{{pageName}}"
         >Project Summary</a
       >
     </div>
   </div>
 
-  <div class="col">
-    <div class="dropdownMonth rounded-pill">
+  <div class="col-2">
+    <div class="dropdownMonth text-right">
       <a
-        class="btn btn-primary"
-        style="color: #fff"
+        class="buttonLink"
+        style="color: #fff; font-size: 1rem"
         href="/home/depdash/{{pageName}}"
         >Project Dashboard</a
       >

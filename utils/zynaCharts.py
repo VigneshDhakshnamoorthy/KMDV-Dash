@@ -60,11 +60,14 @@ async def PieChart(
                     dataLabels: [
                         {{
                             enabled: {dataLabels_enabled},
-                            distance: 20,
+                            distance: 30,
+                            rotation:0,
+
                         }},
                         {{
                             enabled: {dataLabels_enabled},
-                            distance: -40,
+                            distance: 0,
+                            rotation:0,
                             format: '{dataLabels_format}',
                             style: {{
                                 fontSize: '{dataLabels_font_size}',
