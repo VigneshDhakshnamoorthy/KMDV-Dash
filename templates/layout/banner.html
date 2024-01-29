@@ -1,0 +1,32 @@
+<div class="row border-bottom banner">
+  <div class="col logoImag mb-2 pt-2">
+    <a href="/home"
+      ><img
+        src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
+        alt="oaktreecapital Logo"
+        width="150"
+        height="50"
+    /></a>
+  </div>
+
+  <div class="col">
+    <div class="pageHeader text-center">
+      {% if selected_project == 'ALL' %}
+      <h4 class="">DASHBOARD</h4>
+      {% else %}
+      <h4 class="">{{selected_project|replace('_', ' ')|upper}}</h4>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="pageHeader mt-1">
+      <h6 class="" style="color: white">
+        <span style="color: white">{{userName}}</span>&nbsp;&nbsp;<i
+          class="fas fa-user-circle"
+        ></i>
+      </h6>
+    </div>
+  </div>
+</div>
+<br />

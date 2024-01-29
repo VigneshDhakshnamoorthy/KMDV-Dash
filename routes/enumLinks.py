@@ -41,7 +41,7 @@ class FileAssociate(Enum):
 class ChartData(Enum):
     max_width = "100%"
     min_width = "50%"
-    height = "75dvh"
+    height = "72dvh"
     background_color = "transparent"
     borderColor="black"
     dataLabels_format_1f="{point.y:.1f}"
@@ -61,4 +61,4 @@ class ChartData(Enum):
     
 
 def getUserName(current_user):
-    return f"{str(current_user.email.split('@')[0]).upper()}"
+    return f"{str(current_user.email.split('@')[0].split('_')[0]).upper()}"

@@ -6,8 +6,11 @@
 }
 
 :root {
-  --teamsize: #000099;
-  --totaleffort: #bf4080;
+  --teamsize: #00416a;
+  --utilizedteam: #e2725b;
+  --nonutilizedteam: #bd1354;
+
+  --totaleffort: #9900cc;
   --totalcost: #00994d;
   --oaklogocolour: #008265;
 }
@@ -223,7 +226,7 @@ body.light-mode .video-bg:before {
   font-weight: 400;
 } */
 
-td.linklist a:link, a:visited{
+/* td.linklist a:link, a:visited{
   text-decoration: none !important;
   background-color: var(--oaklogocolour);
   color: #fff;
@@ -232,42 +235,32 @@ td.linklist a:link, a:visited{
   text-decoration: none;
   display: inline-block;
   border-radius: 0.5rem;
-}
+} */
 
-td.linklist a:hover{
-  text-decoration: none !important;
-  background-color: var(--oaklogocolour);
-  color: yellow;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 0.5rem;
-}
 a.buttonLink:link{
+  text-decoration: none !important;
   background-color: var(--oaklogocolour);
   color: #fff;
-  padding: 5px 5px;
+  padding: 5px 15px 5px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   border-radius: 0.5rem;
+  font-size: 1rem;
+  /* transform: skew(-5deg); */
+
 }
 
-a.buttonLink:hover{
-  background-color: var(--oaklogocolour);
-  color: yellow;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 0.5rem;
-}
 
 .distag{
   pointer-events:none !important;
 } 
 
+.selectedtag{
+  pointer-events:none !important;
+  background-color: #cc0044 !important;
+  color: #fff !important;
+} 
 .containeraccount{
   padding-left: 3rem;
   padding-top: 2rem;
@@ -278,3 +271,6 @@ a.buttonLink:hover{
   color: #fff;
 }
 
+.card-header-title{
+  font-size:15PX !important;
+}

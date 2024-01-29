@@ -1,166 +1,139 @@
-{% extends 'layout/base.html' %} {% block title %}QA-Dash : Board{% endblock %}
-{% block baseBody %}
+{% extends 'layout/base.html' %} {% block title %}BOARD :
+{{selected_project|replace('_', ' ')}}{% endblock %} {% block baseBody %} {%
+include 'layout/banner.html' %}
 
-<div class="grey-bg">
-  <div class="row border-bottom banner">
-    <div class="col logoImag mb-2 pt-2">
-      <a href="/home"
-        ><img
-          src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
-          alt="oaktreecapital Logo"
-          width="150"
-          height="50"
-      /></a>
-    </div>
-
-    <div class="col">
-      <div class="pageHeader text-center">
-        {% if selected_project == "All" %}
-        <h4 class="">DASHBOARD</h4>
-        {% else %}
-        <h4 class="">{{selected_project|replace('_', ' ')}}</h4>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="col">
-      <div class="pageHeader mt-1">
-        <h6 class="" style="color: white">
-          LOGGED IN : <span style="color: white">{{userName}}</span>
-        </h6>
-      </div>
+<div class="depDashGrid">
+  <div class="depcol-1">
+    <div class="dropdownYear">
+      <form method="POST" action="#">
+        <label style="font-size: smaller" for="dropdown_year"
+          ><b>SELECT YEAR</b></label
+        ><span class=""> : </span>
+        <select id="dropdown_year" name="selected_year">
+          {% for option in dropdown_year %} {% if option == selected_year %}
+          <option value="{{ option }}" selected>{{ option }}</option>
+          {% else %}
+          <option value="{{ option }}">{{ option }}</option>
+          {% endif %} {% endfor %}
+        </select>
+      </form>
     </div>
   </div>
-
-  <br />
-
-  <div class="depDashGrid">
-    <div class="depcol-1">
-      <div class="dropdownYear">
-        <form method="POST" action="#">
-          <label for="dropdown_year"><b>Select Year</b></label
-          ><span class=""> : </span>
-          <select id="dropdown_year" name="selected_year">
-            {% for option in dropdown_year %} {% if option == selected_year %}
-            <option value="{{ option }}" selected>{{ option }}</option>
-            {% else %}
-            <option value="{{ option }}">{{ option }}</option>
-            {% endif %} {% endfor %}
-          </select>
-        </form>
-      </div>
+  <div class="depcol-2">
+    <div class="dropdownMonth">
+      <form method="POST" action="#">
+        <label style="font-size: smaller" for="dropdown_project"
+          ><b>SELECT PROJECT</b></label
+        ><span class=""> : </span>
+        <select id="dropdown_project" name="selected_project">
+          {% for option in dropdown_project %} {% if option == selected_project
+          %}
+          <option value="{{ option }}" selected>{{ option|replace('_', ' ')|upper }}</option>
+          {% else %}
+          <option value="{{ option }}">{{ option|replace('_', ' ')|upper }}</option>
+          {% endif %} {% endfor %}
+        </select>
+      </form>
     </div>
-    <div class="depcol-2">
-      <div class="dropdownMonth">
-        <form method="POST" action="#">
-          <label for="dropdown_project"><b>Select Project</b></label
-          ><span class=""> : </span>
-          <select id="dropdown_project" name="selected_project">
-            {% for option in dropdown_project %} {% if option ==
-            selected_project %}
-            <option value="{{ option }}" selected>{{ option }}</option>
-            {% else %}
-            <option value="{{ option }}">{{ option }}</option>
-            {% endif %} {% endfor %}
-          </select>
-        </form>
-      </div>
-    </div>
-    <div class="depcol-3">
-      {% if not selected_project == "All" %}
-      <div class="dropdownYear">
-        <a
-          class="buttonLink"
-          style="color: #fff; font-size: 1rem"
-          href="/wsr/summary/{{selected_project}}"
-          >Project Summary</a
-        >
-      </div>
-      {% else %}
-      <div
-        class="dropdownMonth"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Choose project to see the summary"
+  </div>
+  <div class="depcol-3">
+    <div
+      class=""
+      data-toggle="tooltip"
+      data-placement="left"
+      title="You are in Project Dashboard Page"
+    >
+      <a
+        class="buttonLink selectedtag"
+        style="color: rgb(187, 175, 175)"
+        href="#"
+        >DASHBOARD</a
       >
-        <a
-          class="buttonLink distag"
-          style="color: rgb(187, 175, 175); font-size: 1rem"
-          href="#"
-          >Project Summary</a
-        >
-      </div>
-      {% endif %}
     </div>
-    <div class="depcol-4">
-      {% if wsr_bool %}
-      <div class="dropdownYear">
-        <a
-          class="buttonLink"
-          style="color: #fff; font-size: 1rem"
-          href="/wsr/{{selected_project}}"
-          >Weekly Status Report</a
-        >
-      </div>
-      {% else %}
-      <div
-        class="dropdownYear"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Choose project to see the summary"
+  </div>
+  <div class="depcol-4">
+    {% if not selected_project == "ALL" %}
+    <div class="">
+      <a
+        class="buttonLink"
+        style="color: #fff"
+        href="/wsr/summary/{{selected_project}}/{{selected_year}}"
+        >SUMMARY</a
       >
-        <a
-          class="buttonLink distag"
-          style="color: rgb(187, 175, 175); font-size: 1rem"
-          href="#"
-          >Weekly Status Report</a
-        >
-      </div>
-      {% endif %}
     </div>
-  </div>
-
-  <br />
-
-  <div class="row">
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>AVERAGE TEAM SIZE</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-          <h2 style="color: var(--teamsize)">{{avg_team}}</h2>
-        </div>
-      </div>
+    {% else %}
+    <div
+      class=""
+      data-toggle="tooltip"
+      data-placement="left"
+      title="Choose project to see the summary"
+    >
+      <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
+        >SUMMARY</a
+      >
     </div>
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>TOTAL EFFORTS (HRS.)</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-          <h2 style="color: var(--totaleffort)">{{total_efforts}}</h2>
-        </div>
-      </div>
+    {% endif %}
+  </div>
+  <div class="depcol-5">
+    {% if wsr_bool %}
+    <div class="">
+      <a class="buttonLink" style="color: #fff" href="/wsr/{{selected_project}}/{{selected_year}}"
+        >WEEKLY STATUS</a
+      >
     </div>
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>TOTAL COST</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-          <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
-        </div>
-      </div>
+    {% else %}
+    <div
+      class=""
+      data-toggle="tooltip"
+      data-placement="left"
+      title="Choose project to see the summary"
+    >
+      <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
+        >WEEKLY STATUS</a
+      >
     </div>
+    {% endif %}
   </div>
-  <div class="row">
-    <div class="col charts2">{{getSplineChart1 | safe}}</div>
-    <div class="col charts2">{{getColumnChart1 | safe}}</div>
-  </div>
-  <br />
-  <div class="row">
-    <div class="col charts2">{{getColumnChart2 | safe}}</div>
-  </div>
-  <br />
-  {% include 'layout/copyright.html' %}
 </div>
 
-{% endblock %}
+<br />
+
+<div class="row">
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title"><b>UTILIZED TEAM (AVG.)</b></h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+        <h2 style="color: var(--utilizedteam)">{{avg_team}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title"><b>TOTAL EFFORTS (HRS.)</b></h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+        <h2 style="color: var(--totaleffort)">{{total_efforts}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title"><b>ACTUAL COST</b></h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+        <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col charts2">{{getSplineChart1 | safe}}</div>
+  <div class="col charts2">{{getColumnChart1 | safe}}</div>
+</div>
+<br />
+<div class="row">
+  <div class="col charts2">{{getColumnChart2 | safe}}</div>
+</div>
+<br />
+{% include 'layout/copyright.html' %} {% endblock %}

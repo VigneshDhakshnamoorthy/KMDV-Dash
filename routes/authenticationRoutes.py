@@ -38,10 +38,11 @@ async def login():
 
 @AuthenticationPage.route("/login/<name>/<password>", methods=["GET", "POST"])
 async def auto_login(name,password):
-    # sample_string_bytes = password.encode("ascii") 
-    # base64_bytes = base64.b64encode(sample_string_bytes) 
-    # base64_string = base64_bytes.decode("ascii")
-    # print(base64_string)
+    logout_user()
+    sample_string_bytes = password.encode("ascii") 
+    base64_bytes = base64.b64encode(sample_string_bytes) 
+    base64_string = base64_bytes.decode("ascii")
+    print(base64_string)
     try:
         base64_bytes = password.encode("ascii") 
         sample_string_bytes = base64.b64decode(base64_bytes) 
