@@ -1,52 +1,23 @@
-{% extends 'layout/base.html' %} {% block title %}QA-Dash : Board{% endblock %}
-{% block baseBody %}
+{% extends 'layout/base.html' %} {% block title %}Master Board{% endblock %}
+{% block baseBody %} {% include 'layout/banner.html' %}
 
-<div class="grey-bg">
-  <div class="row border-bottom banner">
-    <div class="col logoImag mb-2 pt-2">
-      <a href="/home"
-        ><img
-          src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
-          alt="oaktreecapital Logo"
-          width="150"
-          height="50"
-      /></a>
-    </div>
-
-    <div class="col">
-      <div class="pageHeader text-center">
-        <h4 class="">MASTER DASHBOARD</h4>
-      </div>
-    </div>
-
-    <div class="col">
-      <div class="pageHeader mt-1">
-        <h6 class="" style="color: white">
-          LOGGED IN : <span style="color: white">{{userName}}</span>
-        </h6>
-      </div>
+<div class="depDashGrid">
+  <div class="depcol-1">
+    <div class="dropdownYear" >
+      <form method="POST" action="#">
+        <label for="dropdown_year" style="font-size: smaller"><b>SELECT YEAR</b></label
+        ><span class=""> : </span>
+        <select id="dropdown_year" name="selected_year">
+          {% for option in dropdown_year %} {% if option == selected_year %}
+          <option value="{{ option }}" selected>{{ option }}</option>
+          {% else %}
+          <option value="{{ option }}">{{ option }}</option>
+          {% endif %} {% endfor %}
+        </select>
+      </form>
     </div>
   </div>
-
-  <br />
-
-  <div class="row">
-    <div class="col">
-      <div class="dropdownYear rounded-pill" style="text-align: right;">
-        <form method="POST" action="#">
-          <label for="dropdown_year"><b>SELECT YEAR</b></label
-          ><span class="mr-2 ml-2"> : </span>
-          <select id="dropdown_year" name="selected_year">
-            {% for option in dropdown_year %} {% if option == selected_year %}
-            <option value="{{ option }}" selected>{{ option }}</option>
-            {% else %}
-            <option value="{{ option }}">{{ option }}</option>
-            {% endif %} {% endfor %}
-          </select>
-        </form>
-      </div>
-    </div>
-    <!-- <div class="col">
+  <!-- <div class="col">
       <div class="dropdownMonth rounded-pill">
         <form method="POST" action="#">
           <label for="dropdown_month"><b>Select Month</b></label
@@ -61,79 +32,127 @@
         </form>
       </div>
     </div> -->
-  </div>
-  <br />
-
-  <div class="row">
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>Average Team Size</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-            {{dropdown_month[0]}} - {{selected_month}}
-          </p>
-          <h2 style="color: var(--teamsize);">{{avg_team_size_util}}</h2>
-        </div>
-      </div>
-    </div>
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>Total Efforts (Hrs.)</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-          {{dropdown_month[0]}} - {{selected_month}}
-          </p>
-          <h2 style="color: var(--totaleffort);">{{efforts_total}}</h2>
-        </div>
-      </div>
-    </div>
-    <div class="col charts2">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title"><b>Total Cost</b></h5>
-          <p class="card-subtitle mb-2 text-muted" style="font-size: small">
-            {{dropdown_month[0]}} - {{selected_month}}
-          </p>
-          <h2 style="color: var(--totalcost);">{{actual_total}}</h2>
-        </div>
-      </div>
-    </div>
-    
-  </div>
-  <div class="row">
-    <div class="col charts2">{{getMultiLineChart1 | safe}}</div>
-    <div class="col charts2">{{getBarChart3 | safe}}</div>
-  </div>
-  <br />
-  <div class="row">
-    <div class="col charts2">{{getMultiColumnChart1 | safe}}</div>
-  </div>
-  <br />
-
-  <div class="row">
-    <div class="col charts2">{{getColumnChart1 | safe}}</div>
-    <div class="col charts2">{{getPieChart1 | safe}}</div>
-  </div>
-  <br />
-
-  <div class="row">
-    <div class="col charts2">{{getBarChart4 | safe}}</div>
-    <div class="col charts2">{{getBarChart5 | safe}}</div>
-  </div>
-  <br />
-
-  <div class="row">
-    <div class="col charts2">{{getBarChart6 | safe}}</div>
-    <div class="col charts2">{{getBarChart7 | safe}}</div>
-  </div>
-  <br />
-
-  <div class="row">
-    <div class="col charts2">{{getBarChart8 | safe}}</div>
-    <div class="col charts2">{{getBarChart1 | safe}}</div>
-  </div>
-  <br />
 </div>
-{% include 'layout/copyright.html' %}
+<br />
 
-{% endblock %}
+<div class="row">
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title"><b>QA Team Size (AVG.)</b></h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--teamsize)">{{avg_team_size}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title">
+          <b>UTILIZED TEAM (AVG.)</b>
+        </h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--utilizedteam)">
+          {{avg_team_size_util}}
+          <span style="font-size: large">({{util_percent}})</span>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title">
+          <b>NON UTILIZED TEAM (AVG.)</b>
+        </h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--nonutilizedteam)">
+          {{avg_team_size_non_util}}
+          <span style="font-size: large">({{nonutil_percent}})</span>
+        </h2>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title">
+          <b>Total Efforts (Hrs.)</b>
+        </h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--totaleffort)">{{efforts_total}}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title"><b>PROJECTED BUDGET</b></h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--totalcost)">{{projected_total}}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col charts2">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title card-header-title">
+          <b
+            >ACTUAL <br />
+            COST</b
+          >
+        </h5>
+        <p class="card-subtitle mb-2 text-muted" style="font-size: small">
+          {{dropdown_month[0]}} - {{selected_month}}
+        </p>
+        <h2 style="color: var(--totalcost)">{{actual_total}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col charts2">{{getMultiLineChart1 | safe}}</div>
+</div>
+<br />
+
+<div class="row">
+  <div class="col charts2">{{getBarChart3 | safe}}</div>
+  <div class="col charts2">{{getColumnChart1 | safe}}</div>
+</div>
+<br />
+<div class="row">
+  <div class="col charts2">{{getMultiColumnChart1 | safe}}</div>
+</div>
+<br />
+
+<div class="row">
+  <div class="col charts2">{{getPieChart1 | safe}}</div>
+  <div class="col charts2">{{getBarChart4 | safe}}</div>
+</div>
+<br />
+
+<div class="row">
+  <div class="col charts2">{{getBarChart5 | safe}}</div>
+  <div class="col charts2">{{getBarChart6 | safe}}</div>
+</div>
+<br />
+
+<div class="row">
+  <div class="col charts2">{{getBarChart7 | safe}}</div>
+  <div class="col charts2">{{getBarChart8 | safe}}</div>
+</div>
+<br />
+{% include 'layout/copyright.html' %} {% endblock %}

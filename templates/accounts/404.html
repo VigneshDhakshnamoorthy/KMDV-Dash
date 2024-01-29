@@ -1,29 +1,36 @@
-{% extends 'layout/base.html' %}
+{% extends 'layout/base.html' %} {% block title %}SUMMARY :
+{{template|replace('_', ' ')}}{% endblock %} {% block baseBody %}
 
-
-{% block baseBody %}
-
-
-
-<div class=" container text-center mt-5 pt-5">
-
-  <div class="d-flex p-3 justify-content-center text-center">
-
-
-    <div class="card px-5 mx-5" style="width: 40rem;">
-      <div class="card-body">
-        <h5 class="card-title">Oops! Looks like the page doesn't exist</h5>
-        <p class="card-text"><b>To go to the Home Page</b></p>
-        <a href="/" class="btn btn-primary">Goto Main Page</a>
-      </div>
+<div class="grey-bg">
+  <div class="row border-bottom banner">
+    <div class="col logoImag mb-2 pt-2">
+      <a href="/home"
+        ><img
+          src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
+          alt="oaktreecapital Logo"
+          width="150"
+          height="50"
+      /></a>
     </div>
 
+    <div class="col"></div>
+
+    <div class="col"></div>
   </div>
+  <br />
 
+  <div class="container text-center mt-5 pt-5">
+    <div class="d-flex p-3 justify-content-center text-center">
+      <div class="card px-5 mx-5" style="width: 40rem">
+        <div class="card-body">
+          <h5 class="card-title">Oops! Looks like the page doesn't exist</h5>
+          <a href="/" class="buttonLink" style="color: #fff; font-size: 1rem"
+            >Go to Main Page</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
-
 
 {% endblock %}

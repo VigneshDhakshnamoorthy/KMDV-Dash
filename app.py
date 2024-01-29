@@ -10,7 +10,7 @@ from flask_login import (
 from database.database import init_db
 from database.models import User, db
 from routes.authenticationRoutes import AuthenticationPage
-from routes.dashRoutes import DashboardPage
+from routes.dashRoutes import DashboardPage, year_list
 from routes.enumLinks import FileAssociate, getUserName
 from routes.wsrRoutes import WSRPage
 from utils.dataUtil import load_data, load_tables
@@ -57,6 +57,7 @@ async def index():
             userName=getUserName(current_user),
             projects=project_list,
             filtered_project=filtered_projects,
+            year_list=year_list,
             project_table = tables_fromsheet.to_html(
                     classes="table caption-top table-bordered table-hover", index=False
                 ),

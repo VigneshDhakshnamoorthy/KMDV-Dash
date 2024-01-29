@@ -8,7 +8,8 @@ from asyncio import to_thread
 load_data_dfs = {}
 
 pd.set_option("display.float_format", lambda x: "{:.0f}".format(x))
-
+start_year = 2023
+report_start_year = 2022
 def getSheetNames(excel_file_path):
     key = f"sheet_names_{excel_file_path}"
 
@@ -60,10 +61,10 @@ def getYear():
 
 
 def getMonth(year_selection=getYear(), month=getDateNow().month, max=getYear()):
-    dif = year_selection - 2023
+    dif = year_selection - report_start_year
     if dif == 0:
         month = 13
-    if max > year_selection:
+    if max > report_start_year:
         month = 13
     return (dif * 12) + month
 
@@ -83,6 +84,17 @@ async def load_data(excel_file_path, sheet_name, start, end):
 
     load_data_dfs[key] = df
     return df
+
+async def load_full_data(excel_file_path, sheet_name):
+    return  pd.read_excel(excel_file_path, sheet_name)
+    
+async def filter_full_data(excel_file_path, sheet_name, column_name, project_name , year):
+    df= await load_full_data(excel_file_path, sheet_name)
+    filtered_data = df[(df[column_name] == project_name) & (df[str(year)].notna())]
+    if not filtered_data.empty:
+        return filtered_data.iloc[0][str(year)]
+    else:
+        return None
 
 
 async def load_data_month_skip(
@@ -226,7 +238,7 @@ async def getChartDataTotal(
         summary_fromsheet.index.isin(projects_list)
     ]
     total_row = summary_fromsheet.sum(axis=0)
-    total_row.name = "All"
+    total_row.name = "ALL"
 
     summary_fromsheet = summary_fromsheet._append(total_row)
 
@@ -289,7 +301,7 @@ def getRowResource(dictf, projects_to_extract, month):
 
 def getYearList(year=getYear(), month=getDateNow().month):
     if month > 1:
-        yearList = [i for i in range(2023, year + 1)]
+        yearList = [i for i in range(start_year, year + 1)]
     else:
-        yearList = [i for i in range(2023, year)]
+        yearList = [i for i in range(start_year, year)]
     return yearList[::-1]

@@ -1,6 +1,6 @@
 .depDashGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr  1fr 1fr ;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
   grid-template-rows: 1fr;
   gap: 0px 10px;
   margin: 0px 0px;
@@ -10,28 +10,33 @@
   align-content: space-evenly;
   align-items: center;
   grid-template-areas:
-    "depcol-4 depcol-3  depcol-1 depcol-2 depcol-2"
+    "depcol-1 depcol-1 depcol-2 depcol-2 depcol-2 depcol-3 depcol-4 depcol-5 "
   
 }
 
 .depcol-1 {
   grid-area: depcol-1;
-  justify-self: center;
+  justify-self: start;
 }
 
 .depcol-2 {
   grid-area: depcol-2;
-  justify-self: end;
+  justify-self: start;
 
 }
 
 .depcol-3 {
   grid-area: depcol-3;
-  justify-self: start;
+  justify-self: end;
 
 }
 
 .depcol-4 {
   grid-area: depcol-4;
-  justify-self: start;
+  justify-self: center;
+}
+
+.depcol-5 {
+  grid-area: depcol-5;
+  justify-self:end;
 }
