@@ -62,9 +62,7 @@ def getYear():
 
 def getMonth(year_selection=getYear(), month=getDateNow().month, max=getYear()):
     dif = year_selection - report_start_year
-    if dif == 0:
-        month = 13
-    if max > report_start_year:
+    if dif == 0 or max > report_start_year or max > year_selection:
         month = 13
     return (dif * 12) + month
 
@@ -105,12 +103,19 @@ async def load_data_month_skip(
         return load_data_dfs[key]
 
     skip_columns = []
+    total_columns = await to_thread(pd.read_excel, excel_file_path, sheet_name, nrows=0)
+    total_columns = total_columns.shape[1]
+    end = min(end,total_columns)
     if not end % 12 == 1:
         skip_columns = [i for i in range(1, ((end // 12) * 12) + 1)]
     else:
         skip_columns = [i for i in range(1, (abs((end // 12) - 1) * 12) + 1)]
 
     columns_to_read = [col for col in range(start, end) if col not in skip_columns]
+    
+    # total_columns = pd.read_excel(excel_file_path, sheet_name, nrows=0).shape[1]
+
+    # columns_to_read = [col for col in range(start, end) if col < total_columns and col not in skip_columns]
 
     try:
         df = await to_thread(
@@ -120,7 +125,6 @@ async def load_data_month_skip(
         df = await to_thread(pd.read_excel, excel_file_path, sheet_name)
 
     df = df.dropna(how="all")
-
     load_data_dfs[key] = df
     return df
 

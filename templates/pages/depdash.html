@@ -28,9 +28,13 @@ include 'layout/banner.html' %}
         <select id="dropdown_project" name="selected_project">
           {% for option in dropdown_project %} {% if option == selected_project
           %}
-          <option value="{{ option }}" selected>{{ option|replace('_', ' ')|upper }}</option>
+          <option value="{{ option }}" selected>
+            {{ option|replace('_', ' ')|upper }}
+          </option>
           {% else %}
-          <option value="{{ option }}">{{ option|replace('_', ' ')|upper }}</option>
+          <option value="{{ option }}">
+            {{ option|replace('_', ' ')|upper }}
+          </option>
           {% endif %} {% endfor %}
         </select>
       </form>
@@ -68,7 +72,13 @@ include 'layout/banner.html' %}
       data-placement="left"
       title="Choose project to see the summary"
     >
-      <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
+      <a
+        class="buttonLink distag"
+        style="
+          color: rgb(187, 175, 175);
+          text-decoration: line-through !important;
+        "
+        href="#"
         >SUMMARY</a
       >
     </div>
@@ -77,7 +87,10 @@ include 'layout/banner.html' %}
   <div class="depcol-5">
     {% if wsr_bool %}
     <div class="">
-      <a class="buttonLink" style="color: #fff" href="/wsr/{{selected_project}}/{{selected_year}}"
+      <a
+        class="buttonLink"
+        style="color: #fff"
+        href="/wsr/{{selected_project}}/{{selected_year}}"
         >WEEKLY STATUS</a
       >
     </div>
@@ -86,9 +99,15 @@ include 'layout/banner.html' %}
       class=""
       data-toggle="tooltip"
       data-placement="left"
-      title="Choose project to see the summary"
+      title="Weekly Status Not Available for this project"
     >
-      <a class="buttonLink distag" style="color: rgb(187, 175, 175)" href="#"
+      <a
+        class="buttonLink distag"
+        style="
+          color: rgb(187, 175, 175);
+          text-decoration: line-through !important;
+        "
+        href="#"
         >WEEKLY STATUS</a
       >
     </div>
