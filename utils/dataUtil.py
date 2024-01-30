@@ -162,11 +162,11 @@ async def removeDot(df):
 
 async def load_tables(excel_file_path, sheet_name):
     utilization_task_wise = await load_data(excel_file_path, sheet_name, 0, 2)
-    utilization_task_wise = utilization_task_wise.astype({"Hours.": "int"})
+    # utilization_task_wise = utilization_task_wise.astype({"Hours.": "int"})
     utilization_task_wise = await removeDot(utilization_task_wise)
 
     utilization_resource_wise = await load_data(excel_file_path, sheet_name, 3, 5)
-    utilization_resource_wise = utilization_resource_wise.astype({"Hours..": "int"})
+    # utilization_resource_wise = utilization_resource_wise.astype({"Hours..": "int"})
     utilization_resource_wise = await removeDot(utilization_resource_wise)
 
     task_last_week = await load_data(excel_file_path, sheet_name, 6, 10)
@@ -182,9 +182,11 @@ async def load_tables(excel_file_path, sheet_name):
     defect = await removeDot(defect)
 
     weekDatasummary = await load_data(excel_file_path, sheet_name, 24, 26)
+    weekDatasummary = await removeDot(weekDatasummary)
     #weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
 
     monthDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
+    monthDatasummary = await removeDot(monthDatasummary)
    # monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
 
 

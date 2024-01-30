@@ -13,6 +13,10 @@
   --totaleffort: #9900cc;
   --totalcost: #00994d;
   --oaklogocolour: #008265;
+
+  --buttonSelected:#008265;
+  --buttonUnSelected:#00b38c;
+
 }
 
 /* WebKit browsers (Chrome, Safari) */
@@ -239,12 +243,28 @@ body.light-mode .video-bg:before {
 
 a.buttonLink:link{
   text-decoration: none !important;
-  background-color: var(--oaklogocolour);
+  background-color: var(--buttonUnSelected);
   color: #fff;
   padding: 5px 15px 5px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  border-radius: 0.5rem;
+  border-color: black;
+  font-size: 1rem;
+  /* transform: skew(-5deg); */
+
+}
+
+a.dashboardLink:link{
+  text-decoration: none !important;
+  background-color: var(--oaklogocolour);
+  color: #fff !important;
+  padding: 5px 15px 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.2rem;
   border-radius: 0.5rem;
   font-size: 1rem;
   /* transform: skew(-5deg); */
@@ -258,8 +278,9 @@ a.buttonLink:link{
 
 .selectedtag{
   pointer-events:none !important;
-  background-color: #cc0044 !important;
+  background-color: var(--buttonSelected) !important;
   color: #fff !important;
+  border: black solid 1px;
 } 
 .containeraccount{
   padding-left: 3rem;
