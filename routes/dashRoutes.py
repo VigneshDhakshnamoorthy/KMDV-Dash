@@ -225,13 +225,16 @@ async def Dashboard():
 @DashboardPage.route("/depdash/<project_name>/<project_year>", methods=["GET", "POST"])
 @login_required
 async def depdashdirect(project_name, project_year):
+
     project_name = project_name.upper()
     project_year = int(project_year)
     project_year = year_list[0] if project_year not in year_list else project_year
     selected_option_year = project_year
     project_list = await asyncio.to_thread(current_user.get_projects_list)
     project_list.append("All")
-
+    if not project_name in project_list and project_name != 'ALL':
+        return render_template("accounts/wsrAuth.html")
+    
     if request.method == "GET":
         selected_option_project = project_name
         session["selected_project"] = project_name
