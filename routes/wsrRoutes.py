@@ -7,6 +7,8 @@ from routes.enumLinks import ChartData, FileAssociate, getUserName
 from routes.dashRoutes import month_today,year_list
 
 from utils.dataUtil import (
+    add_missing_dates_project,
+    filter_active_years,
     filter_full_data,
     filterDataSummary,
     getChartDataTotal,
@@ -28,7 +30,19 @@ WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 async def summary(project_name,project_year):
     project_name = project_name.upper()
     project_year = int(project_year)
-    project_year = year_list[0] if project_year not in year_list else project_year
+    filtered_years = year_list
+    if not project_name == "ALL":
+        filtered_years = await asyncio.to_thread(
+            filter_active_years,
+            project_name,
+            year_list,
+            "dataSources/monthData/dashSummary.xlsx",
+            sheet_name="ActiveHistory",
+        )
+        filtered_years = await filtered_years
+
+    print(filtered_years)
+    project_year = filtered_years[0] if project_year not in filtered_years else project_year
     selected_option_year = project_year    
     project_list = await asyncio.to_thread(current_user.get_projects_list)
     if project_name in project_list:
@@ -87,10 +101,15 @@ async def summary(project_name,project_year):
         filtered_data_efforts = await asyncio.to_thread(
             lambda: filterDataSummary(efforts_chart_data, selected_option_project)
         )
+        
+        eff_data = add_missing_dates_project(filtered_data_efforts[0])
+
 
         filtered_resource_cost = await asyncio.to_thread(
             lambda: filterDataSummary(resource_chart_data, selected_option_project)
         )
+        res_data = add_missing_dates_project(filtered_resource_cost[0])
+
         total_efforts = [
             value
             for value in list(filtered_data_efforts[0]["data"].values())
@@ -136,7 +155,7 @@ async def summary(project_name,project_year):
         monthDatasummary =""
         weekdays=""
         wsr_bool = False
-        if not FileAssociate.get_value(project_name) is None:
+        if (not FileAssociate.get_value(project_name) is None) and (int(selected_option_year) > 2022):
             if filtered_dates:
                 tables_fromsheet = await to_thread(
                     load_tables, FileAssociate.get_value(project_name), filtered_dates[0]
@@ -151,7 +170,7 @@ async def summary(project_name,project_year):
         return render_template(
             "pages/wsr_summary.html",
             dropdown_project=options_project,
-            dropdown_year=year_list,
+            dropdown_year=filtered_years,
             selected_project=selected_option_project,
             selected_year=int(selected_option_year),
             userName=getUserName(current_user),
@@ -172,9 +191,9 @@ async def summary(project_name,project_year):
                 lineColor=ChartData.lineColor_column.value,
                 colorByPoint="false",
                 xAxisTitle="",
-                xAxisData=list(filtered_data_efforts[0]["data"].keys()),
+                xAxisData=list(eff_data["data"].keys()),
                 yAxisTitle="BUGS",
-                yAxisData=list(filtered_data_efforts[0]["data"].values()),
+                yAxisData=list(eff_data["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
                 dataLabels_Color="black",
@@ -195,9 +214,9 @@ async def summary(project_name,project_year):
                 borderColor=ChartData.borderColor.value,
                 lineColor=ChartData.lineColor_spline.value,
                 xAxisTitle="",
-                xAxisData=list(filtered_resource_cost[0]["data"].keys()),
+                xAxisData=list(res_data["data"].keys()),
                 yAxisTitle="NO OF TESTS",
-                yAxisData=list(filtered_resource_cost[0]["data"].values()),
+                yAxisData=list(res_data["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
                 dataLabels_Color="black",
@@ -235,6 +254,8 @@ async def pages(project_name,project_year):
                 else await to_thread(getSheetNames, FileAssociate.ONETRACKER.value)
             )
             options_week = await options_week
+            options_week = [date for date in options_week if project_year in date]
+            print(options_week)
             if request.method == "POST":
                 selected_option = request.form.get("selected_option")
                 session["selected_option"] = selected_option

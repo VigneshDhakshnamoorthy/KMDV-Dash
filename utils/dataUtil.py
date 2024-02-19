@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime, timedelta
 from functools import partial
 import openpyxl
@@ -8,8 +9,10 @@ from asyncio import to_thread
 load_data_dfs = {}
 
 pd.set_option("display.float_format", lambda x: "{:.0f}".format(x))
-start_year = 2023
-report_start_year = 2022
+start_year = 2021
+report_start_year = 2021
+
+
 def getSheetNames(excel_file_path):
     key = f"sheet_names_{excel_file_path}"
 
@@ -62,7 +65,11 @@ def getYear():
 
 def getMonth(year_selection=getYear(), month=getDateNow().month, max=getYear()):
     dif = year_selection - report_start_year
-    if dif == 0 or max > report_start_year or max > year_selection:
+    if (
+        dif == 0
+        or max > report_start_year
+        and (max > year_selection or month % 12 == 1)
+    ):
         month = 13
     return (dif * 12) + month
 
@@ -83,11 +90,46 @@ async def load_data(excel_file_path, sheet_name, start, end):
     load_data_dfs[key] = df
     return df
 
+
 async def load_full_data(excel_file_path, sheet_name):
-    return  pd.read_excel(excel_file_path, sheet_name)
-    
-async def filter_full_data(excel_file_path, sheet_name, column_name, project_name , year):
-    df= await load_full_data(excel_file_path, sheet_name)
+    return pd.read_excel(excel_file_path, sheet_name)
+
+
+async def filter_active_projects(project_list, year, excel_file_path, sheet_name):
+    df = await load_full_data(excel_file_path, sheet_name)
+    active_projects = []
+    for project in project_list:
+        project_status = df.loc[df["Project"] == project, str(year)].values
+        if len(project_status) > 0 and project_status[0] == "Active":
+            active_projects.append(project)
+    return active_projects
+
+
+async def filter_active_years(project_name, year_list, excel_file_path, sheet_name):
+    df = await load_full_data(excel_file_path, sheet_name)
+    active_years = []
+    if project_name in df["Project"].values:
+        project_data = df[df["Project"] == project_name]
+        for year in year_list:
+            if str(year) in project_data.columns:
+                if project_data[str(year)].values[0] == "Active":
+                    active_years.append(year)
+    return active_years
+
+
+async def filter_active_projects_df(df, year, excel_file_path, sheet_name):
+    project_list = df["Project"].tolist()
+    active_projects = await filter_active_projects(
+        project_list, year, excel_file_path, sheet_name
+    )
+    filtered_df = df[df["Project"].isin(active_projects)]
+    return filtered_df
+
+
+async def filter_full_data(
+    excel_file_path, sheet_name, column_name, project_name, year
+):
+    df = await load_full_data(excel_file_path, sheet_name)
     filtered_data = df[(df[column_name] == project_name) & (df[str(year)].notna())]
     if not filtered_data.empty:
         return filtered_data.iloc[0][str(year)]
@@ -105,14 +147,14 @@ async def load_data_month_skip(
     skip_columns = []
     total_columns = await to_thread(pd.read_excel, excel_file_path, sheet_name, nrows=0)
     total_columns = total_columns.shape[1]
-    end = min(end,total_columns)
+    end = min(end, total_columns)
     if not end % 12 == 1:
         skip_columns = [i for i in range(1, ((end // 12) * 12) + 1)]
     else:
         skip_columns = [i for i in range(1, (abs((end // 12) - 1) * 12) + 1)]
 
     columns_to_read = [col for col in range(start, end) if col not in skip_columns]
-    
+
     # total_columns = pd.read_excel(excel_file_path, sheet_name, nrows=0).shape[1]
 
     # columns_to_read = [col for col in range(start, end) if col < total_columns and col not in skip_columns]
@@ -187,12 +229,11 @@ async def load_tables(excel_file_path, sheet_name):
 
     weekDatasummary = await load_data(excel_file_path, sheet_name, 24, 26)
     weekDatasummary = await removeDot(weekDatasummary)
-    #weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
+    # weekDatasummary = weekDatasummary.astype({"Week Count": "int"})
 
     monthDatasummary = await load_data(excel_file_path, sheet_name, 27, 29)
     monthDatasummary = await removeDot(monthDatasummary)
-   # monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
-
+    # monthDatasummary = monthDatasummary.astype({"Total Count": "int"})
 
     dfs = [
         utilization_task_wise,
@@ -288,7 +329,8 @@ def sum_columns(dictf, month):
     df = pd.DataFrame(dictf)
     month_index = month_index_no(df, month)
     df["Total"] = df.iloc[:, 1 : month_index + 1].sum(axis=1)
-    return df[["Project", "Total"]]
+    filtered_df = df[df["Total"] > 0]
+    return filtered_df[["Project", "Total"]]
 
 
 def getRowResource(dictf, projects_to_extract, month):
@@ -311,3 +353,74 @@ def getYearList(year=getYear(), month=getDateNow().month):
     else:
         yearList = [i for i in range(start_year, year)]
     return yearList[::-1]
+
+
+def add_missing_dates(data):
+    some_data = copy.deepcopy(data)
+
+    def extract_year(date_str):
+        return date_str.split()[1]
+
+    def generate_missing_dates(year, keys):
+        months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ]
+        existing_months = [key.split()[0] for key in keys]
+        missing_dates = [
+            f"{month} {year}" for month in months if month not in existing_months
+        ]
+        return [{"keys": [f"{month}"], "values": [0]} for month in missing_dates]
+
+    for col, values in some_data.items():
+        year = extract_year(values["keys"][0])
+        missing_dates = generate_missing_dates(year, values["keys"])
+        some_data[col]["keys"].extend([item["keys"][0] for item in missing_dates])
+        some_data[col]["values"].extend([0] * len(missing_dates))
+
+    return some_data
+
+
+def add_missing_dates_project(data):
+    some_data = copy.deepcopy(data)
+
+    keys = list(some_data["data"].keys())
+
+    year = keys[0].split()[1]
+
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
+
+    expected_keys = []
+
+    for month in months:
+        key = f"{month} {year}"
+        if key not in keys:
+            expected_keys.append(key)
+
+    for key in expected_keys:
+        some_data["data"][key] = 0.0
+
+    return some_data

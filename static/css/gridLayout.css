@@ -34,6 +34,7 @@
 .depcol-4 {
   grid-area: depcol-4;
   justify-self: center;
+  margin-left: 30px;
 }
 
 .depcol-5 {

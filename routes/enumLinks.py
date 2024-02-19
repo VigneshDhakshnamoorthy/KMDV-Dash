@@ -22,7 +22,9 @@ class FileAssociate(Enum):
     QA_MANAGEMENT = None
     CLIENT_RELATIONS = None
     CORNERSTONE = None
+    SMA = None
     ACCOUNT_MASTER = "dataSources/WSR/ACCOUNT_MASTER.xlsx"
+    EVEREST = None
 
 
     @staticmethod

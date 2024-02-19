@@ -12,6 +12,11 @@ from flask_login import current_user, login_required
 import pandas as pd
 from routes.enumLinks import ChartData, FileAssociate, getUserName
 from utils.dataUtil import (
+    add_missing_dates,
+    add_missing_dates_project,
+    filter_active_projects,
+    filter_active_projects_df,
+    filter_active_years,
     filter_data_by_rows,
     filterDataSummary,
     getChartDataTotal,
@@ -37,7 +42,7 @@ from utils.zynaCharts import (
 import asyncio
 
 
-month_today = 1
+month_today = 2
 year_list = getYearList(month=month_today)
 
 DashboardPage = Blueprint("DashboardPage", __name__, template_folder="templates")
@@ -72,7 +77,7 @@ async def Dashboard():
             getMonth(month=month_today),
         )
     )
-    decimal_places = 2
+    decimal_places = 3
     summary_efforts_fromsheet = await summary_efforts_fromsheet
     summary_efforts_fromsheet = summary_efforts_fromsheet.round(decimal_places)
     summary_cost_fromsheet = await summary_cost_fromsheet
@@ -228,13 +233,35 @@ async def depdashdirect(project_name, project_year):
 
     project_name = project_name.upper()
     project_year = int(project_year)
-    project_year = year_list[0] if project_year not in year_list else project_year
+    filtered_years = year_list
+    if not project_name == "ALL":
+        filtered_years = await asyncio.to_thread(
+            filter_active_years,
+            project_name,
+            year_list,
+            "dataSources/monthData/dashSummary.xlsx",
+            sheet_name="ActiveHistory",
+        )
+        filtered_years = await filtered_years
+
+    print(filtered_years)
+    project_year = filtered_years[0] if project_year not in filtered_years else project_year
     selected_option_year = project_year
     project_list = await asyncio.to_thread(current_user.get_projects_list)
+
+    project_list = await asyncio.to_thread(
+        filter_active_projects,
+        project_list,
+        project_year,
+        "dataSources/monthData/dashSummary.xlsx",
+        sheet_name="ActiveHistory",
+    )
+
+    project_list = await project_list
     project_list.append("All")
-    if not project_name in project_list and project_name != 'ALL':
+    if not project_name in project_list and project_name != "ALL":
         return render_template("accounts/wsrAuth.html")
-    
+
     if request.method == "GET":
         selected_option_project = project_name
         session["selected_project"] = project_name
@@ -310,17 +337,25 @@ async def depdashdirect(project_name, project_year):
     efforts_chart_data = await efforts_chart_data
     cost_chart_data = await cost_chart_data
     resource_chart_data = await resource_chart_data
-    options_project = [entry["name"] for entry in efforts_chart_data]
 
     filtered_data_efforts = await asyncio.to_thread(
         lambda: filterDataSummary(efforts_chart_data, selected_option_project)
     )
+
+    eff_data = add_missing_dates_project(filtered_data_efforts[0])
+
     filtered_data_cost = await asyncio.to_thread(
         lambda: filterDataSummary(cost_chart_data, selected_option_project)
     )
+    cost_data = add_missing_dates_project(filtered_data_cost[0])
+
     filtered_resource_cost = await asyncio.to_thread(
         lambda: filterDataSummary(resource_chart_data, selected_option_project)
     )
+    res_data = add_missing_dates_project(filtered_resource_cost[0])
+
+    options_project = [entry["name"] for entry in efforts_chart_data]
+
     total_efforts = [
         value
         for value in list(filtered_data_efforts[0]["data"].values())
@@ -341,16 +376,20 @@ async def depdashdirect(project_name, project_year):
     total_efforts = "{:0,.0f}".format(math.ceil(sum(total_efforts)))
     total_cost = "$ {:0,.0f}".format(math.ceil(sum(total_cost)))
     if len(avg_team) > 0:
-        avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
+        if float(sum(avg_team) / len(avg_team)) < 0.1:
+            avg_team = "{:0,.2f}".format(sum(avg_team) / len(avg_team))
+        else:
+            avg_team = "{:0,.1f}".format(sum(avg_team) / len(avg_team))
+
     else:
         avg_team = 0
 
-    wsr_bool = not FileAssociate.get_value(session["selected_project"]) is None
-
+    wsr_bool = (not FileAssociate.get_value(session["selected_project"]) is None) and (int(selected_option_year) > 2022)
+    
     return render_template(
         "pages/depdash.html",
         dropdown_project=options_project,
-        dropdown_year=year_list,
+        dropdown_year=filtered_years,
         selected_project=selected_option_project,
         selected_year=int(selected_option_year),
         userName=getUserName(current_user),
@@ -370,9 +409,9 @@ async def depdashdirect(project_name, project_year):
             lineColor=ChartData.lineColor_column.value,
             colorByPoint="false",
             xAxisTitle="",
-            xAxisData=list(filtered_data_efforts[0]["data"].keys()),
+            xAxisData=list(eff_data["data"].keys()),
             yAxisTitle="EFFORT",
-            yAxisData=list(filtered_data_efforts[0]["data"].values()),
+            yAxisData=list(eff_data["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
             dataLabels_Color="black",
@@ -394,9 +433,9 @@ async def depdashdirect(project_name, project_year):
             lineColor=ChartData.lineColor_column.value,
             colorByPoint="false",
             xAxisTitle="",
-            xAxisData=list(filtered_data_cost[0]["data"].keys()),
+            xAxisData=list(cost_data["data"].keys()),
             yAxisTitle="COST",
-            yAxisData=list(filtered_data_cost[0]["data"].values()),
+            yAxisData=list(cost_data["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
             dataLabels_Color="black",
@@ -417,9 +456,9 @@ async def depdashdirect(project_name, project_year):
             borderColor=ChartData.borderColor.value,
             lineColor=ChartData.lineColor_spline.value,
             xAxisTitle="",
-            xAxisData=list(filtered_resource_cost[0]["data"].keys()),
+            xAxisData=list(res_data["data"].keys()),
             yAxisTitle="NO OF QA",
-            yAxisData=list(filtered_resource_cost[0]["data"].values()),
+            yAxisData=list(res_data["data"].values()),
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_1f.value,
             dataLabels_Color="black",
@@ -498,9 +537,17 @@ async def mdash():
     efforts_dict = summary_efforts_fromsheet.transpose().to_dict()
     cost_dict = filter_data_by_rows(summary_cost_fromsheet, 1, -5).to_dict()
     dep_cost_dict = filter_data_by_rows(summary_cost_fromsheet, -7, "").to_dict()
-    resource_dict_filtered = filter_data_by_rows(
-        summary_resource_fromsheet, 2, -2
-    ).to_dict()
+
+    resource_dict_filtered = filter_data_by_rows(summary_resource_fromsheet, 2, -2)
+    resource_dict_filtered = await filter_active_projects_df(
+        resource_dict_filtered,
+        selected_option_year,
+        "dataSources/monthData/dashSummary.xlsx",
+        sheet_name="ActiveHistory",
+    )
+
+    resource_dict_filtered = resource_dict_filtered.to_dict()
+
     efforts_chart_data = []
     cost_chart_data = []
 
@@ -528,6 +575,7 @@ async def mdash():
     efforts_list_dict = getRowResource(
         summary_efforts_fromsheet, ["QA Department"], selected_option_month
     )
+    eff_data = add_missing_dates(efforts_list_dict)
 
     cost_per_dict = await asyncio.to_thread(
         lambda: sum_columns_row(cost_dict, selected_option_month)
@@ -567,6 +615,8 @@ async def mdash():
             selected_option_month,
         )
     )
+    cost_data = add_missing_dates(cost_list_dict)
+
     resource_list_dict = await asyncio.to_thread(
         lambda: getRowResource(
             summary_resource_fromsheet,
@@ -574,6 +624,7 @@ async def mdash():
             selected_option_month,
         )
     )
+    res_data = add_missing_dates(resource_list_dict)
     dep_cost_per_dict = [
         {"name": row["Project"], "y": row["Total"]}
         for index, row in dep_cost_per_dict.iterrows()
@@ -639,9 +690,9 @@ async def mdash():
             lineColor=ChartData.lineColor_column.value,
             colorByPoint="false",
             xAxisTitle="",
-            xAxisData=efforts_list_dict["QA Department"]["keys"],
+            xAxisData=eff_data["QA Department"]["keys"],
             yAxisTitle="EFFORT",
-            yAxisData=efforts_list_dict["QA Department"]["values"],
+            yAxisData=eff_data["QA Department"]["values"],
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_0f.value,
             dataLabels_Color="black",
@@ -661,16 +712,16 @@ async def mdash():
             background_color=ChartData.background_color.value,
             borderColor=ChartData.borderColor.value,
             xAxisTitle="",
-            xAxisData=resource_list_dict["Non Utilization"]["keys"],
+            xAxisData=res_data["Non Utilization"]["keys"],
             yAxisTitle="NO OF QA",
             yAxisName1="Non Utilization",
-            yAxisData1=resource_list_dict["Non Utilization"]["values"],
+            yAxisData1=res_data["Non Utilization"]["values"],
             lineColor1=ChartData.lineColor_spline2.value,
             yAxisName2="Utilization",
-            yAxisData2=resource_list_dict["QA Department"]["values"],
+            yAxisData2=res_data["QA Department"]["values"],
             lineColor2=ChartData.lineColor_bar.value,
             yAxisName3="Team Size",
-            yAxisData3=resource_list_dict["QA Summary"]["values"],
+            yAxisData3=res_data["QA Summary"]["values"],
             lineColor3=ChartData.lineColor_column.value,
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_1f.value,
@@ -691,12 +742,12 @@ async def mdash():
             lineColor2=ChartData.lineColor_bar.value,
             colorByPoint="false",
             xAxisTitle="",
-            xAxisData=cost_list_dict["Total T&M"]["keys"],
+            xAxisData=cost_data["Total T&M"]["keys"],
             yAxisTitle="$ COST",
             yAxisName1="Projected",
-            yAxisData1=cost_list_dict["Projected Monthly Cost"]["values"],
+            yAxisData1=cost_data["Projected Monthly Cost"]["values"],
             yAxisName2="Actual",
-            yAxisData2=cost_list_dict["Total T&M"]["values"],
+            yAxisData2=cost_data["Total T&M"]["values"],
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
             dataLabels_Color1="black",
@@ -825,7 +876,7 @@ async def mdash():
             colorByPoint="true",
             dataLabels_enabled="true",
             dataLabels_format=ChartData.dataLabels_format_m0f.value,
-            dataLabels_font_size="12px",
+            dataLabels_font_size="11px",
             series_name="Value",
             series_data=dep_cost_per_dict,
         ),
