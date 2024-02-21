@@ -22,7 +22,9 @@ class FileAssociate(Enum):
     QA_MANAGEMENT = None
     CLIENT_RELATIONS = None
     CORNERSTONE = None
+    SMA = None
     ACCOUNT_MASTER = "dataSources/WSR/ACCOUNT_MASTER.xlsx"
+    EVEREST = None
 
 
     @staticmethod
@@ -42,7 +44,7 @@ class ChartData(Enum):
     max_width = "100%"
     min_width = "50%"
     height = "72dvh"
-    background_color = "transparent"
+    background_color = "#fff"
     borderColor="black"
     dataLabels_format_1f="{point.y:.1f}"
     dataLabels_format_0f="{point.y:.0f}"

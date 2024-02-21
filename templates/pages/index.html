@@ -37,7 +37,7 @@
       {% if current_user.user_type in ['admin', 'master'] %}
       <a
         href="/home/mdash"
-        style="color: #fff;"
+        style="color: #fff"
         class="dashboardLink mr-2"
         data-toggle="tooltip"
         data-placement="left"
@@ -47,13 +47,33 @@
       {% endif %}
       <a
         href="/home/depdash/All/{{year_list[0]}}"
-        style="color: #fff;"
-        class="dashboardLink"
+        style="color: #fff"
+        class="dashboardLink  mr-2"
         data-toggle="tooltip"
         data-placement="left"
         title="Clcik to View Department Dashboard"
         >DEPARTMENT</a
       >
+      {% if current_user.user_type in ['admin', 'master'] %}
+      <a
+        href="/Information/Project"
+        style="color: #fff"
+        class="dashboardLink mr-2"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Clcik to View Project Information"
+        >PROJECT</a
+      >
+      <a
+        href="/Information/Technology"
+        style="color: #fff"
+        class="dashboardLink"
+        data-toggle="tooltip"
+        data-placement="left"
+        title="Clcik to View Technology Information"
+        >TECHNOLOGY</a
+      >
+      {% endif %}
     </div>
   </div>
 </div>
@@ -75,7 +95,7 @@
         row['Project'] in projects %}
         <tr>
           <td class="">
-            <u style="color: red;">
+            <u style="color: red">
               <a
                 class="sub-item"
                 href="/wsr/summary/{{ row['Project']}}/{{year_list[0]}}"

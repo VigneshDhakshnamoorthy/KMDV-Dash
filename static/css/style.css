@@ -224,23 +224,6 @@ body.light-mode .video-bg:before {
 
 }
 
-/* .sticky-header tr th{
-  background-color: #00c9cc !important;
-  color: #fff;
-  font-weight: 400;
-} */
-
-/* td.linklist a:link, a:visited{
-  text-decoration: none !important;
-  background-color: var(--oaklogocolour);
-  color: #fff;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border-radius: 0.5rem;
-} */
-
 a.buttonLink:link{
   text-decoration: none !important;
   background-color: var(--buttonUnSelected);
@@ -249,10 +232,8 @@ a.buttonLink:link{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  border-radius: 0.5rem;
-  border-color: black;
-  font-size: 1rem;
-  /* transform: skew(-5deg); */
+  border-radius: 0.2rem;
+  font-size: 0.83rem;
 
 }
 
@@ -264,8 +245,7 @@ a.dashboardLink:link{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 1.2rem;
-  border-radius: 0.5rem;
+  border-radius: 0.8rem;
   font-size: 1rem;
   /* transform: skew(-5deg); */
 
@@ -295,3 +275,4 @@ a.dashboardLink:link{
 .card-header-title{
   font-size:15PX !important;
 }
+
