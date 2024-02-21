@@ -1,9 +1,7 @@
-{% extends 'layout/base.html' %} {% block title %}WSR : {{selected_project|replace('_',
-' ')}}{% endblock %} {% block baseBody %} {% include 'layout/searchBanner.html' %}
-
-
-{% include 'tables/projectSummary.html' %} {% include
-'tables/utilizationSummary.html' %}
+{% extends 'layout/base.html' %} {% block title %}WSR :
+{{selected_project|replace('_', ' ')}}{% endblock %} {% block baseBody %} {%
+include 'layout/searchBanner.html' %} {% include 'tables/projectSummary.html' %}
+{% include 'tables/utilizationSummary.html' %}
 <br />
 
 {% include 'tables/taskSummary.html' %} {% include

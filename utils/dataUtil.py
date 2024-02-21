@@ -386,7 +386,7 @@ def add_missing_dates(data):
         year = extract_year(values["keys"][0])
         missing_dates = generate_missing_dates(year, values["keys"])
         some_data[col]["keys"].extend([item["keys"][0] for item in missing_dates])
-        some_data[col]["values"].extend([0] * len(missing_dates))
+        some_data[col]["values"].extend([""] * len(missing_dates))
 
     return some_data
 
@@ -421,6 +421,6 @@ def add_missing_dates_project(data):
             expected_keys.append(key)
 
     for key in expected_keys:
-        some_data["data"][key] = 0.0
+        some_data["data"][key] = ""
 
     return some_data

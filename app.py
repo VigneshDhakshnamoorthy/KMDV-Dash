@@ -12,6 +12,7 @@ from database.models import User, db
 from routes.authenticationRoutes import AuthenticationPage
 from routes.dashRoutes import DashboardPage, year_list
 from routes.enumLinks import FileAssociate, getUserName
+from routes.informationRoutes import InformationPage
 from routes.wsrRoutes import WSRPage
 from utils.dataUtil import load_data, load_tables
 
@@ -20,6 +21,8 @@ app = Flask(__name__)
 app.register_blueprint(AuthenticationPage)
 app.register_blueprint(DashboardPage, url_prefix="/home")
 app.register_blueprint(WSRPage, url_prefix="/wsr")
+app.register_blueprint(InformationPage, url_prefix="/Information")
+
 init_db(app)
 
 

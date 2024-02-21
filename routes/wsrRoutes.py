@@ -4,7 +4,7 @@ import math
 from flask import Blueprint, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required
 from routes.enumLinks import ChartData, FileAssociate, getUserName
-from routes.dashRoutes import month_today,year_list
+from routes.dashRoutes import month_today, year_list
 
 from utils.dataUtil import (
     add_missing_dates_project,
@@ -25,9 +25,10 @@ from utils.zynaCharts import ColumnChart, SplineChart
 
 WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 
+
 @WSRPage.route("/summary/<project_name>/<project_year>", methods=["GET", "POST"])
 @login_required
-async def summary(project_name,project_year):
+async def summary(project_name, project_year):
     project_name = project_name.upper()
     project_year = int(project_year)
     filtered_years = year_list
@@ -42,27 +43,33 @@ async def summary(project_name,project_year):
         filtered_years = await filtered_years
 
     print(filtered_years)
-    project_year = filtered_years[0] if project_year not in filtered_years else project_year
-    selected_option_year = project_year    
+    project_year = (
+        filtered_years[0] if project_year not in filtered_years else project_year
+    )
+    selected_option_year = project_year
     project_list = await asyncio.to_thread(current_user.get_projects_list)
     if project_name in project_list:
         if project_name != "favicon.ico":
-            if (
-                not project_name in FileAssociate.keys()
-            ):
+            if not project_name in FileAssociate.keys():
                 return render_template("accounts/404.html")
 
         selected_option_project = project_name.upper()
         session["selected_project"] = project_name.upper()
-        
+
         if request.method == "GET":
             selected_option_year = selected_option_year
             session["selected_year"] = selected_option_year
-            
+
         if request.method == "POST" and "selected_year" in request.form:
             selected_option_year = request.form.get("selected_year")
             session["selected_year"] = selected_option_year
-            return redirect(url_for('WSRPage.summary', project_name=selected_option_project,project_year=selected_option_year))
+            return redirect(
+                url_for(
+                    "WSRPage.summary",
+                    project_name=selected_option_project,
+                    project_year=selected_option_year,
+                )
+            )
 
         efforts_chart_data = await asyncio.to_thread(
             lambda: getChartDataTotal(
@@ -94,16 +101,15 @@ async def summary(project_name,project_year):
         resource_chart_data = await resource_chart_data
         options_project = [entry["name"] for entry in efforts_chart_data]
         if not project_name in options_project:
-            return render_template("accounts/projectKickStart.html", template=project_name)
-
-     
+            return render_template(
+                "accounts/projectKickStart.html", template=project_name
+            )
 
         filtered_data_efforts = await asyncio.to_thread(
             lambda: filterDataSummary(efforts_chart_data, selected_option_project)
         )
-        
+        month_current = list(filtered_data_efforts[0]["data"].keys())[-1].split()[0]
         eff_data = add_missing_dates_project(filtered_data_efforts[0])
-
 
         filtered_resource_cost = await asyncio.to_thread(
             lambda: filterDataSummary(resource_chart_data, selected_option_project)
@@ -139,29 +145,38 @@ async def summary(project_name,project_year):
             if project_name != "favicon.ico"
             else await to_thread(getSheetNames, FileAssociate.ONETRACKER.value)
         )
-        
+
         automation_percentage = await asyncio.to_thread(
-        lambda: filter_full_data(
-            "dataSources/monthData/dashSummary.xlsx",
-            "Automation Percentage",
-            "Project",
-            selected_option_project,
-            selected_option_year
+            lambda: filter_full_data(
+                "dataSources/monthData/dashSummary.xlsx",
+                "Automation Percentage",
+                "Project",
+                selected_option_project,
+                selected_option_year,
+            )
         )
-    )
-        
+
         options_week = await options_week
-        filtered_dates = [date_str for date_str in options_week if str(selected_option_year) in date_str]
-        monthDatasummary =""
-        weekdays=""
+        filtered_dates = [
+            date_str
+            for date_str in options_week
+            if str(selected_option_year) in date_str
+            and (month_current in date_str)
+        ]
+        monthDatasummary = ""
+        weekdays = ""
         wsr_bool = False
-        if (not FileAssociate.get_value(project_name) is None) and (int(selected_option_year) > 2022):
+        if (not FileAssociate.get_value(project_name) is None) and (
+            int(selected_option_year) > 2022
+        ):
             if filtered_dates:
                 tables_fromsheet = await to_thread(
-                    load_tables, FileAssociate.get_value(project_name), filtered_dates[0]
+                    load_tables,
+                    FileAssociate.get_value(project_name),
+                    filtered_dates[0],
                 )
                 tables_fromsheet = await tables_fromsheet
-                monthDatasummary=tables_fromsheet[6].to_html(
+                monthDatasummary = tables_fromsheet[6].to_html(
                     classes="table caption-top table-bordered table-hover", index=False
                 )
                 weekdays = weekDays(filtered_dates[0])
@@ -182,7 +197,7 @@ async def summary(project_name,project_year):
             getColumnChart1=await ColumnChart(
                 chartName="ColumnChart1",
                 title="MONTHLY BUG REPORTS",
-                subtitle=f"Project : {selected_option_project}",
+                subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,
                 height="",
@@ -206,7 +221,7 @@ async def summary(project_name,project_year):
             getSplineChart1=await SplineChart(
                 chartName="SplineChart1",
                 title="MONTHLY TESTS CONDUCTED",
-                subtitle=f"Project : {selected_option_project}",
+                subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
                 max_width=ChartData.max_width.value,
                 min_width=ChartData.min_width.value,
                 height="",
@@ -236,7 +251,7 @@ async def summary(project_name,project_year):
 
 @WSRPage.route("/<project_name>/<project_year>", methods=["GET", "POST"])
 @login_required
-async def pages(project_name,project_year):
+async def pages(project_name, project_year):
     project_name = project_name.upper()
     if current_user.is_authenticated:
         project_list = await asyncio.to_thread(current_user.get_projects_list)
@@ -278,7 +293,7 @@ async def pages(project_name,project_year):
                 dropdown_week=options_week,
                 selected_project=project_name,
                 selected_dropdown=selected_option,
-                selected_year = project_year,
+                selected_year=project_year,
                 weekdays=weekDays(selected_option),
                 userName=getUserName(current_user),
                 utilization_task_wise=tables_fromsheet[0].to_html(

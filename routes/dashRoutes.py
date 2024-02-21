@@ -400,7 +400,7 @@ async def depdashdirect(project_name, project_year):
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
             title="MONTHLY EFFORT (HRS.)",
-            subtitle=f"Project : {selected_option_project}",
+            subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
             height="",
@@ -424,7 +424,7 @@ async def depdashdirect(project_name, project_year):
         getColumnChart2=await ColumnChart(
             chartName="ColumnChart2",
             title="COST OF QA",
-            subtitle=f"Project : {selected_option_project}",
+            subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
             height="",
@@ -448,7 +448,7 @@ async def depdashdirect(project_name, project_year):
         getSplineChart1=await SplineChart(
             chartName="SplineChart1",
             title="UTILIZED TEAM",
-            subtitle=f"Project : {selected_option_project}",
+            subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
             height="",
