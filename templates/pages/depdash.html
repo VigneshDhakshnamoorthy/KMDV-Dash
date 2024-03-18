@@ -5,7 +5,12 @@ include 'layout/searchBanner.html' %}
 <div class="row">
   <div class="col charts2">
     <div class="card">
-      <div class="card-body text-center">
+      <div
+        class="card-body text-center"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Average utilization of the team for the year."
+      >
         <h5 class="card-title"><b>UTILIZED TEAM (AVG.)</b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
         <h2 style="color: var(--utilizedteam)">{{avg_team}}</h2>
@@ -14,7 +19,12 @@ include 'layout/searchBanner.html' %}
   </div>
   <div class="col charts2">
     <div class="card">
-      <div class="card-body text-center">
+      <div
+        class="card-body text-center"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Total team effort for the year."
+      >
         <h5 class="card-title"><b>TOTAL EFFORT (HRS.)</b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
         <h2 style="color: var(--totaleffort)">{{total_efforts}}</h2>
@@ -23,7 +33,12 @@ include 'layout/searchBanner.html' %}
   </div>
   <div class="col charts2">
     <div class="card">
-      <div class="card-body text-center">
+      <div
+        class="card-body text-center"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Actual cost billed for the year."
+      >
         <h5 class="card-title"><b>ACTUAL COST</b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
         <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
@@ -32,12 +47,33 @@ include 'layout/searchBanner.html' %}
   </div>
 </div>
 <div class="row">
-  <div class="col charts2">{{getSplineChart1 | safe}}</div>
-  <div class="col charts2">{{getColumnChart1 | safe}}</div>
+  <div
+    class="col charts2"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Utilization of the team by month."
+  >
+    {{getSplineChart1 | safe}}
+  </div>
+  <div
+    class="col charts2"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Effort of the team by month."
+  >
+    {{getColumnChart1 | safe}}
+  </div>
 </div>
 <br />
 <div class="row">
-  <div class="col charts2">{{getColumnChart2 | safe}}</div>
+  <div
+    class="col charts2"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Actual cost by month."
+  >
+    {{getColumnChart2 | safe}}
+  </div>
 </div>
 <br />
 {% include 'layout/copyright.html' %} {% endblock %}

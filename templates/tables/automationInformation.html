@@ -1,0 +1,19 @@
+{% extends 'layout/base.html' %} {% block title %}QA-Dash : PROJECT{% endblock %}
+{% block baseBody %}
+
+{% include 'layout/banner.html' %}
+
+<div class="row" >
+  <div class="col">
+    <h4 class="subHeader" style="color: var(--oaklogocolour)">TEST AUTOMATION METRICS<span style="font-size: x-small;"> ( UPDATED MONTHLY - Last Updated on Feb 1 2024  )</span></h4>
+  </div>
+</div>
+
+<div class="row border-bottom grey-bg">
+  <div class="col" style="font-size: 82%;">
+    <h4 class="subsubHeader"></h4>
+    {{tables_fromsheet|safe}}
+  </div>
+</div>
+
+{% include 'layout/copyright.html' %} {% endblock %}

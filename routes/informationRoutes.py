@@ -1,6 +1,7 @@
 import asyncio
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import current_user, login_required
+from routes.enumLinks import getUserName
 
 from utils.dataUtil import load_data
 
@@ -8,15 +9,17 @@ from utils.dataUtil import load_data
 InformationPage = Blueprint("InformationPage", __name__, template_folder="templates")
 
 
-@InformationPage.route("/Project", methods=["GET", "POST"])
+@InformationPage.route("/Automation", methods=["GET", "POST"])
 @login_required
-async def Project():
+async def Automation():
     tables_fromsheet = await asyncio.to_thread(
         load_data, "dataSources/monthData/dashSummary.xlsx", "Metrics", 0, 11
     )
     tables_fromsheet = await tables_fromsheet
     return render_template(
-        "tables/projectInformation.html",
+        "tables/automationInformation.html",
+        userName=getUserName(current_user),
+        selected_project = "AUTOMATION METRICS",
         tables_fromsheet=tables_fromsheet.to_html(
             classes="table caption-top table-bordered table-hover", index=False
         ),
@@ -36,10 +39,31 @@ async def Technology():
     tech2 = await tech2
     return render_template(
         "tables/technologyInformation.html",
+        userName=getUserName(current_user),
+        selected_project = "TECHNOLOGY INFORMATION",
         tech1=tech1.to_html(
-            classes="table caption-top table-bordered table-hover table-striped table_header", index=False
-        ),       
+            classes="table caption-top table-bordered table-hover table-striped table_header",
+            index=False,
+        ),
         tech2=tech2.to_html(
-            classes="table caption-top table-bordered table-hover table-striped table_header", index=False
+            classes="table caption-top table-bordered table-hover table-striped table_header",
+            index=False,
+        ),
+    )
+
+
+@InformationPage.route("/Applications", methods=["GET", "POST"])
+@login_required
+async def Applications():
+    tables_fromsheet = await asyncio.to_thread(
+        load_data, "dataSources/monthData/dashSummary.xlsx", "Metrics", 0, 11
+    )
+    tables_fromsheet = await tables_fromsheet
+    return render_template(
+        "pages/qaApplications.html",
+        userName=getUserName(current_user),
+        selected_project = "QA APPLICATIONS",
+        tables_fromsheet=tables_fromsheet.to_html(
+            classes="table caption-top table-bordered table-hover", index=False
         ),
     )

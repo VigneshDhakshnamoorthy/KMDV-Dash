@@ -12,7 +12,7 @@
   <div class="col">
     <div class="pageHeader text-center">
       {% if selected_project == 'ALL' %}
-      <h4 class="">DASHBOARD</h4>
+      <h4 class="">PROJECTS DASHBOARD</h4>
       {% else %}
       <h4 class="">{{selected_project|replace('_', ' ')|upper}}</h4>
       {% endif %}
@@ -20,11 +20,13 @@
   </div>
 
   <div class="col">
-    <div class="pageHeader mt-1">
+    <div class="pageHeader mt-2">
       <h6 class="" style="color: white">
-        <span style="color: white">{{userName}}</span>&nbsp;&nbsp;<i
-          class="fas fa-user-circle"
-        ></i>
+        <i class="fas fa-user-circle">&nbsp;&nbsp;</i
+        ><span style="color: white">{{userName}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a style="text-decoration: none; color: #fff" href="/home"
+          ><i class="fas fa-home"></i>&nbsp;&nbsp;HOME</a
+        >&nbsp;&nbsp;
       </h6>
     </div>
   </div>

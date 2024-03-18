@@ -2,11 +2,10 @@
 {% block baseBody %} {% include 'layout/banner.html' %}
 
 <div class="depDashGrid">
-  <div class="depcol-1">
-    <div class="dropdownYear" >
+  <div class="depcol-1" data-bs-toggle="tooltip" data-bs-placement="right" title="Select a year">
+    <div class="dropdownYear">
       <form method="POST" action="#">
-        <label for="dropdown_year" style="font-size: smaller"><b>SELECT YEAR</b></label
-        ><span class=""> : </span>
+        <label for="dropdown_year" style="font-size: small"><b>SELECT YEAR</b></label><span class=""> : </span>
         <select id="dropdown_year" name="selected_year">
           {% for option in dropdown_year %} {% if option == selected_year %}
           <option value="{{ option }}" selected>{{ option }}</option>
@@ -36,7 +35,8 @@
 <br />
 
 <div class="row">
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Team allocated ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title"><b>QA Team Size (AVG.)</b></h5>
@@ -47,7 +47,8 @@
       </div>
     </div>
   </div>
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Utilized team ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title">
@@ -64,7 +65,8 @@
     </div>
   </div>
 
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Non utilized team ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title">
@@ -80,7 +82,8 @@
       </div>
     </div>
   </div>
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Total effort ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title">
@@ -93,7 +96,8 @@
       </div>
     </div>
   </div>
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Projected budget ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title"><b>PROJECTED BUDGET</b></h5>
@@ -105,14 +109,13 @@
     </div>
   </div>
 
-  <div class="col charts2">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Annual cost ~ {{dropdown_month[0]}} - {{selected_month}}">
     <div class="card">
       <div class="card-body text-center">
         <h5 class="card-title card-header-title">
-          <b
-            >ACTUAL <br />
-            COST</b
-          >
+          <b>ACTUAL <br />
+            COST</b>
         </h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small">
           {{dropdown_month[0]}} - {{selected_month}}
@@ -124,35 +127,45 @@
 </div>
 
 <div class="row">
-  <div class="col charts2">{{getMultiLineChart1 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="QA team allocated, utilized, non utilized by month">{{getMultiLineChart1 | safe}}</div>
 </div>
 <br />
 
 <div class="row">
-  <div class="col charts2">{{getBarChart3 | safe}}</div>
-  <div class="col charts2">{{getColumnChart1 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+    title="Resource summary ~ {{selected_month}}">{{getBarChart3 | safe}}</div>
+  <div class="col charts2"data-toggle="tooltip" data-placement="bottom"
+  title="Effort by month">{{getColumnChart1 | safe}}</div>
 </div>
 <br />
 <div class="row">
-  <div class="col charts2">{{getMultiColumnChart1 | safe}}</div>
-</div>
-<br />
-
-<div class="row">
-  <div class="col charts2">{{getPieChart1 | safe}}</div>
-  <div class="col charts2">{{getBarChart4 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="QA cost projected vs actual">{{getMultiColumnChart1 | safe}}</div>
 </div>
 <br />
 
 <div class="row">
-  <div class="col charts2">{{getBarChart5 | safe}}</div>
-  <div class="col charts2">{{getBarChart6 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Department wise cost summary">{{getPieChart1 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Cost summary for department ~ CLIENTS & MARKETING">{{getBarChart4 | safe}}</div>
 </div>
 <br />
 
 <div class="row">
-  <div class="col charts2">{{getBarChart7 | safe}}</div>
-  <div class="col charts2">{{getBarChart8 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Cost summary for department ~ DATA & ARCHITECTURE">{{getBarChart5 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Cost summary for department ~ FINANCE">{{getBarChart6 | safe}}</div>
+</div>
+<br />
+
+<div class="row">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Cost summary for department ~ INVESTMENT">{{getBarChart7 | safe}}</div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+  title="Cost summary for department ~ IT BUSINESS OPERATIONS">{{getBarChart8 | safe}}</div>
 </div>
 <br />
 {% include 'layout/copyright.html' %} {% endblock %}

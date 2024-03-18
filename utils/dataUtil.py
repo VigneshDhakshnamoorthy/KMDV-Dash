@@ -1,6 +1,7 @@
 import copy
 from datetime import datetime, timedelta
 from functools import partial
+import math
 import openpyxl
 import pandas as pd
 from datetime import datetime as dat
@@ -262,6 +263,65 @@ async def getChartData(filePath, sheetName, set_index):
 
     return chart_data
 
+async def getSinceData2(sheetName, end_month, project_name, project_list):
+    efforts_since_fromsheet = await to_thread(
+        load_data, "dataSources/monthData/dashSummary.xlsx", sheetName, 0, end_month
+    )
+    efforts_since_fromsheet = await efforts_since_fromsheet
+    if project_name == "ALL":
+        efforts_since_fromsheet = efforts_since_fromsheet[efforts_since_fromsheet['Project'].isin(project_list)]
+    else:
+        efforts_since_fromsheet = efforts_since_fromsheet[efforts_since_fromsheet['Project']== project_name]
+    efforts_since_fromsheet = efforts_since_fromsheet.set_index('Project')
+    efforts_since_fromsheet = efforts_since_fromsheet.transpose().to_dict()
+    print(efforts_since_fromsheet)
+    total_sum = 0
+    list_since = []
+    for month_values in efforts_since_fromsheet.values():
+        month_since_list =[value for value in month_values.values() if not pd.isna(value)]
+        if month_since_list:
+            list_since.append(month_since_list)
+        total_sum += sum(month_since_list)
+    return list_since
+
+async def getSinceData(sheetName, end_month, project_name, project_list):
+    efforts_since_fromsheet = await to_thread(
+        load_data, "dataSources/monthData/dashSummary.xlsx", sheetName, 0, end_month
+    )
+    efforts_since_fromsheet = await efforts_since_fromsheet
+    if project_name == "ALL":
+        efforts_since_fromsheet = efforts_since_fromsheet[efforts_since_fromsheet['Project'].isin(project_list)]
+    else:
+        efforts_since_fromsheet = efforts_since_fromsheet[efforts_since_fromsheet['Project']== project_name]
+    efforts_since_fromsheet = efforts_since_fromsheet.set_index('Project')
+    efforts_since_fromsheet = efforts_since_fromsheet.transpose().to_dict()
+    total_sum = 0
+    list_since = []
+    for month_values in efforts_since_fromsheet.values():
+        month_since_list =[value for value in month_values.values() if not pd.isna(value)]
+        if month_since_list:
+            list_since.append(month_since_list)
+        total_sum += sum(month_since_list)
+        
+    monthly_totals = {}
+    for project, values in efforts_since_fromsheet.items():
+            for month, value in values.items():
+                        if not pd.isna(value) and not isinstance(value, str) and not isinstance(value, bool):
+                            if month not in monthly_totals:
+                                monthly_totals[month] = 0
+                            monthly_totals[month] += value
+
+    return monthly_totals.values()
+
+async def getSinceDataSum(sheetName, end_month, project_name, project_list):
+    list_since = await to_thread(getSinceData,sheetName, end_month, project_name, project_list)
+    list_since = await list_since
+    return sum(list_since)
+
+async def getSinceDataAvg(sheetName, end_month, project_name, project_list):
+    list_since = await to_thread(getSinceData,sheetName, end_month, project_name, project_list)
+    list_since = await list_since
+    return sum(list_since)/len(list_since)
 
 async def getChartDataTotal(
     filePath,
@@ -272,6 +332,7 @@ async def getChartDataTotal(
     projects_list=None,
     month=getMonth(),
     year_selection=dat.now().year,
+    all_total = True,
 ):
     summary_fromsheet = await load_data_month_skip(
         filePath, sheetName, 0, month, year_selection
@@ -284,21 +345,22 @@ async def getChartDataTotal(
     summary_fromsheet = summary_fromsheet.loc[
         summary_fromsheet.index.isin(projects_list)
     ]
-    total_row = summary_fromsheet.sum(axis=0)
-    total_row.name = "ALL"
-
-    summary_fromsheet = summary_fromsheet._append(total_row)
+    if all_total:
+        total_row = summary_fromsheet.sum(axis=0)
+        total_row.name = "ALL"
+        summary_fromsheet = summary_fromsheet._append(total_row)
 
     summary_fromsheet = summary_fromsheet.round(decimal_places)
 
     summary_dict = summary_fromsheet.transpose().to_dict()
     sorted_chart_data = sorted(summary_dict.items(), key=lambda x: x[0])
 
-    total_entry = next(
-        entry for entry in sorted_chart_data if entry[0] == total_row.name
-    )
-    sorted_chart_data.remove(total_entry)
-    sorted_chart_data.insert(0, total_entry)
+    if all_total:
+        total_entry = next(
+            entry for entry in sorted_chart_data if entry[0] == total_row.name
+        )
+        sorted_chart_data.remove(total_entry)
+        sorted_chart_data.insert(0, total_entry)
     chart_data = [
         {"name": month, "data": values} for month, values in sorted_chart_data
     ]

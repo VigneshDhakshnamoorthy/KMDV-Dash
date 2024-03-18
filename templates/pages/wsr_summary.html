@@ -8,7 +8,7 @@ include 'layout/searchBanner.html' %}
       <div class="card-body text-center">
         <h5 class="card-title"><b>Total Bugs</b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-        <h2 style="color: var(--utilizedteam)">{{total_efforts}}</h2>
+        <h2 style="color: var(--utilizedteam)">{{total_bug}}</h2>
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@ include 'layout/searchBanner.html' %}
         <h5 class="card-title"><b>Automation % </b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
         <h2 style="color: var(--totaleffort)">
-          {{ "{:.0%}".format(avg_team) }}
+          {{ "{:.0%}".format(automation_percentage) }}
         </h2>
       </div>
     </div>
@@ -28,14 +28,14 @@ include 'layout/searchBanner.html' %}
       <div class="card-body text-center">
         <h5 class="card-title"><b>Tests Conducted</b></h5>
         <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-        <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
+        <h2 style="color: var(--totalcost)">{{total_execution}}</h2>
       </div>
     </div>
   </div>
 </div>
 <div class="row">
-  <div class="col charts2">{{getColumnChart1 | safe}}</div>
-  <div class="col charts2">{{getSplineChart1 | safe}}</div>
+  <div class="col charts2">{{getColumnChart3 | safe}}</div>
+  <div class="col charts2">{{getSplineChart2 | safe}}</div>
 </div>
 {% if monthDatasummary %}
 <br />

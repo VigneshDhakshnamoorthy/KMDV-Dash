@@ -25,6 +25,8 @@ class FileAssociate(Enum):
     SMA = None
     ACCOUNT_MASTER = "dataSources/WSR/ACCOUNT_MASTER.xlsx"
     EVEREST = None
+    OAKTREE_EVENT = None
+    CASH_FORECAST_UPDATE = None
 
 
     @staticmethod
@@ -51,7 +53,10 @@ class ChartData(Enum):
     dataLabels_format_m0f="$ {point.y:,.0f}"
     lineColor_bar = "#e2725b"
     lineColor_column = "#00416a"
+    cost_column = "#00994d"
+    bug_column = "#bd1354"
     lineColor_spline = "#e2725b"
+    spline_effort = "#9900cc"
     lineColor_spline2 = "#bd1354"
     line_clients_marketing = "#45c8ff"
     line_data_architecture = "#544fc5"
