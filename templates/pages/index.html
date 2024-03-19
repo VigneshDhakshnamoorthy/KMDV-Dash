@@ -3,13 +3,8 @@
 
 <div class="row border-bottom banner">
   <div class="col logoImag mb-2 pt-2">
-    <a href="/home"
-      ><img
-        src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
-        alt="oaktreecapital Logo"
-        width="150"
-        height="50"
-    /></a>
+    <a href="/home"><img src="https://www.oaktreecapital.com/docs/oaktreecaplibraries/svgs/logo-white.svg"
+        alt="oaktreecapital Logo" width="150" height="50" /></a>
   </div>
 
   <div class="col">
@@ -19,16 +14,18 @@
   </div>
 
   <div class="col">
-    <div class="pageHeader mt-3">
-      <h6 class=""></h6>
+    <div class="pageHeader mt-2">
+      <h6 class="" style="font-size: smaller">
+        <span style="color: white">Version : 2024.03.05</span>&nbsp;&nbsp;
+      </h6>
     </div>
   </div>
 </div>
 
 <br />
-
+<!-- 
 <div class="d-flex justify-content-center text-center">
-  <div class="card mx-2" style="width: 43rem">
+  <div class="card mx-2" style="width: 50rem">
     <div class="card-body">
       <h4 class="">
         <b>QA DASHBOARDS</b>
@@ -39,79 +36,168 @@
         href="/home/mdash"
         style="color: #fff"
         class="dashboardLink mr-2"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Clcik to View Master Dashboard"
+        data-bs-toggle="tooltip"
+        data-bs-placement="left"
+        title="Click to view Master Dashboard"
         >MASTER</a
       >
       {% endif %}
       <a
-        href="/home/depdash/All/{{year_list[0]}}"
+        href="/home/depmaster"
         style="color: #fff"
-        class="dashboardLink  mr-2"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Clcik to View Department Dashboard"
+        class="dashboardLink mr-2"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Click to view Department Dashboard"
         >DEPARTMENT</a
       >
       {% if current_user.user_type in ['admin', 'master'] %}
       <a
-        href="/Information/Project"
+        href="/Information/Automation"
         style="color: #fff"
         class="dashboardLink mr-2"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Clcik to View Project Information"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Click to view Project Information"
         >PROJECT</a
       >
+      {% endif %}
+      <a
+        href="/Information/Applications"
+        style="color: #fff"
+        class="dashboardLink mr-2"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Click to view QA APPLICATION"
+        >QA APPLICATIONS</a
+      >
+
       <a
         href="/Information/Technology"
         style="color: #fff"
         class="dashboardLink"
-        data-toggle="tooltip"
-        data-placement="left"
-        title="Clcik to View Technology Information"
+        data-bs-toggle="tooltip"
+        data-bs-placement="right"
+        title="Click to view Technology Information"
         >TECHNOLOGY</a
       >
-      {% endif %}
     </div>
   </div>
 </div>
-<h5 class="text-center pb-2"><b>PROJECT SUMMARY REPORTS</b></h5>
-<div class="d-flex justify-content-center">
-  <div
-    class="table-height row border-bottom grey-bg container-fluid"
-    style="overflow-x: auto; width: 45rem"
-  >
-    <table class="table table-sm caption-top table-bordered table-hover">
-      <thead class="sticky-header">
-        <tr>
-          <th style="color: #fff">PROJECT</th>
-          <th style="color: #fff">STATUS</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for index, row in project_table_html.iterrows() %} {% if
-        row['Project'] in projects %}
-        <tr>
-          <td class="">
-            <u style="color: red">
-              <a
-                class="sub-item"
-                href="/wsr/summary/{{ row['Project']}}/{{year_list[0]}}"
-                style="color: black"
-                data-toggle="tooltip"
-                data-placement="left"
-                title="Clcik to View Dashboard : {{ row['Project']|replace('_', ' ') }}"
-                >{{ row['Project']|replace('_', ' ') }}</a
-              ></u
-            >
-          </td>
-          <td>{{ row['Status'] }}</td>
-        </tr>
-        {% endif %} {% endfor %}
-      </tbody>
-    </table>
+
+<br /> -->
+
+<div class="row">
+  {% if current_user.user_type in ['admin', 'master'] %}
+  <div class="col">
+    <div class="card text-center" style="width: 100%; height: 93%;">
+      <div class="card-header" style="background-color: #fff">
+        <img src="../../static/img/logo/dashboard7.jpeg" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">MASTER DASHBOARD</h5>
+        <p class="card-text text-left">
+          The Master Dashboard offers in-depth insights into Quality Assurance
+          (QA) operations throughout the organization. It presents detailed data
+          on team sizes, allocation status, project finances, and overall
+          efforts across departments and projects. Through a variety of
+          visualizations, it showcases performance metrics and key indicators,
+          aiding in informed decision-making and strategic planning.
+        </p><br>
+        <a href="/home/mdash" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View MASTER DASHBOARD">MASTER DASHBOARD</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="col charts2">
+    <div class="card text-center" style="width: 100%; height: 93%;">
+      <div class="card-header" style="background-color: #fff">
+        <img src="../../static/img/logo/dashboard5.jpeg" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">PROJECT'S DASHBOARD</h5>
+        <p class="card-text text-left">
+          The Projects dashboard offers insights into team utilization, testing
+          efforts, project expenses, application defects, and testing activities
+          from project initiation, with customizable filters for detailed
+          analysis. Users can narrow down data by year and project, while also
+          benefiting from weekly status reports for efficient project
+          management, enabling seamless progress monitoring and milestone
+          tracking. Serving as a centralized platform, it provides comprehensive
+          oversight for projects.
+        </p>
+        <a href="/home/depmaster" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View PROJECT'S DASHBOARD">PROJECT'S DASHBOARD</a>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col charts2">
+    <div class="card text-center" style="width: 100%; height: 95%;">
+      <div class="card-header" style="background-color: #fff">
+        <img src="../../static/img/logo/qapp.png" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">QA APPLICATIONS</h5>
+        <p class="card-text text-left">
+          The QA Applications dashboard highlights a set of applications crafted
+          by the Oaktree QA Team, designed to deploy advanced testing
+          methodologies for the organization. Examples of these applications
+          include the Smoke Test Portal and QA Dashboard, representing key
+          components within this group.
+        </p><br><br><br>
+        <a href="/Information/Applications" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View QA APPLICATIONS">QA APPLICATIONS</a>
+      </div>
+    </div>
+  </div>
+  {% if current_user.user_type in ['admin', 'master'] %}
+  <div class="col charts2">
+    <div class="card text-center" style="width: 100%; height: 95%;">
+      <div class="card-header" style="background-color: #fff">
+        <img src="../../static/img/logo/automation4.png" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">AUTOMATION METRICS</h5>
+        <p class="card-text text-left">
+          The Automation Metrics dashboard offers a comprehensive overview of
+          various metrics about test automation. These metrics encompass total
+          test cases, manual versus automated tests, identified bugs, and
+          automation coverage percentages across diverse projects. This
+          dashboard furnishes valuable insights into the status and advancement
+          of test automation initiatives across the organization.
+        </p>
+        <a href="/Information/Automation" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View AUTOMATION METRICS">AUTOMATION METRICS</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="col charts2">
+    <div class="card text-center" style="width: 100%; height: 95%;">
+      <div class="card-header" style="background-color: #fff">
+        <img src="../../static/img/logo/techno.png" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">QA TECHNOLOGY</h5>
+        <p class="card-text text-left">
+          The QA Technology dashboard provides a comprehensive summary of the
+          automation tools utilized across different applications within the
+          organization. It outlines the supported programming languages and
+          distinguishes between open-source and licensed tools. This dashboard
+          aids teams in comprehending the automation ecosystem and in selecting
+          the most appropriate tools for their respective projects.
+        </p>{% if not current_user.user_type in ['admin', 'master'] %}<br><br>{% endif %}
+        <a href="/Information/Technology" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View QA TECHNOLOGY">QA TECHNOLOGY</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% include 'layout/copyright.html' %} {% endblock %}

@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
   grid-template-rows: 1fr;
-  gap: 0px 10px;
+  gap: 0px 0px;
   margin: 0px 0px;
   grid-auto-flow: row;
   justify-content: space-evenly;
@@ -13,6 +13,7 @@
     "depcol-1 depcol-1 depcol-2 depcol-2 depcol-2 depcol-3 depcol-4 depcol-5 "
   
 }
+
 
 .depcol-1 {
   grid-area: depcol-1;
@@ -33,11 +34,60 @@
 
 .depcol-4 {
   grid-area: depcol-4;
-  justify-self: center;
-  margin-left: 30px;
+  justify-self: start;
 }
 
 .depcol-5 {
   grid-area: depcol-5;
   justify-self:end;
+}
+
+
+.depinfoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  text-align: center;
+  gap: 0px 0px;
+  margin: 0px 0px;
+  padding: 1% 1% 0% 1%;
+  margin: 0% 0% 1.5% 0%;
+  grid-auto-flow: row;
+  justify-content: space-evenly;
+  justify-items:stretch;
+  align-content: space-evenly;
+  align-items: center;
+  align-self: center;
+  border: 1px solid black;
+  grid-template-areas:
+    "depinfocol-1 depinfocol-2 depinfocol-3 depinfocol-4 depinfocol-5 "
+  
+}
+
+
+.depinfocol-1 {
+  grid-area: depinfocol-1;
+  justify-self: start;
+}
+
+.depinfocol-2 {
+  grid-area: depinfocol-2;
+  justify-self: center;
+
+}
+
+.depinfocol-3 {
+  grid-area: depinfocol-3;
+  justify-self: center;
+
+}
+
+.depinfocol-4 {
+  grid-area: depinfocol-4;
+  justify-self: center;
+}
+
+.depinfocol-5 {
+  grid-area: depinfocol-5;
+  justify-self: end;
 }

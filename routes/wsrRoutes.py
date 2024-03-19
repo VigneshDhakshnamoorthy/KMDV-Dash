@@ -71,7 +71,7 @@ async def summary(project_name, project_year):
                 )
             )
 
-        efforts_chart_data = await asyncio.to_thread(
+        Bug_chart_data = await asyncio.to_thread(
             lambda: getChartDataTotal(
                 filePath="dataSources/monthData/dashSummary.xlsx",
                 sheetName="Bug",
@@ -84,7 +84,7 @@ async def summary(project_name, project_year):
                 year_selection=int(selected_option_year),
             )
         )
-        resource_chart_data = await asyncio.to_thread(
+        execution_chart_data = await asyncio.to_thread(
             lambda: getChartDataTotal(
                 filePath="dataSources/monthData/dashSummary.xlsx",
                 sheetName="Execution",
@@ -97,48 +97,38 @@ async def summary(project_name, project_year):
                 year_selection=int(selected_option_year),
             )
         )
-        efforts_chart_data = await efforts_chart_data
-        resource_chart_data = await resource_chart_data
-        options_project = [entry["name"] for entry in efforts_chart_data]
+        Bug_chart_data = await Bug_chart_data
+        execution_chart_data = await execution_chart_data
+        options_project = [entry["name"] for entry in Bug_chart_data]
         if not project_name in options_project:
             return render_template(
                 "accounts/projectKickStart.html", template=project_name
             )
 
-        filtered_data_efforts = await asyncio.to_thread(
-            lambda: filterDataSummary(efforts_chart_data, selected_option_project)
+        filtered_data_Bug = await asyncio.to_thread(
+            lambda: filterDataSummary(Bug_chart_data, selected_option_project)
         )
-        month_current = list(filtered_data_efforts[0]["data"].keys())[-1].split()[0]
-        eff_data = add_missing_dates_project(filtered_data_efforts[0])
+        month_current = list(filtered_data_Bug[0]["data"].keys())[-1].split()[0]
+        bug_data = add_missing_dates_project(filtered_data_Bug[0])
 
-        filtered_resource_cost = await asyncio.to_thread(
-            lambda: filterDataSummary(resource_chart_data, selected_option_project)
+        filtered_execution = await asyncio.to_thread(
+            lambda: filterDataSummary(execution_chart_data, selected_option_project)
         )
-        res_data = add_missing_dates_project(filtered_resource_cost[0])
+        execution_data = add_missing_dates_project(filtered_execution[0])
 
-        total_efforts = [
+        total_bug = [
             value
-            for value in list(filtered_data_efforts[0]["data"].values())
+            for value in list(filtered_data_Bug[0]["data"].values())
             if isinstance(value, (int, float)) and not math.isnan(value)
         ]
-        total_cost = [
+        total_execution = [
             value
-            for value in list(filtered_resource_cost[0]["data"].values())
+            for value in list(filtered_execution[0]["data"].values())
             if isinstance(value, (int, float)) and not math.isnan(value)
         ]
-        avg_team = [
-            value
-            for value in list(filtered_resource_cost[0]["data"].values())
-            if isinstance(value, (int, float))
-            and not math.isnan(float(value))
-            and value > 0
-        ]
-        total_efforts = "{:0,.0f}".format(math.ceil(sum(total_efforts)))
-        total_cost = "{:0,.0f}".format(math.ceil(sum(total_cost)))
-        if len(avg_team) > 0:
-            avg_team = "{:0,.0f}".format(sum(avg_team) / len(avg_team))
-        else:
-            avg_team = 0
+
+        total_bug = "{:0,.0f}".format(math.ceil(sum(total_bug)))
+        total_execution = "{:0,.0f}".format(math.ceil(sum(total_execution)))
 
         options_week = (
             await to_thread(getSheetNames, FileAssociate.get_value(project_name))
@@ -189,12 +179,12 @@ async def summary(project_name, project_year):
             selected_project=selected_option_project,
             selected_year=int(selected_option_year),
             userName=getUserName(current_user),
-            total_efforts=total_efforts,
-            total_cost=total_cost,
-            avg_team=await automation_percentage,
+            total_bug=total_bug,
+            total_execution=total_execution,
+            automation_percentage=await automation_percentage,
             wsr_bool=wsr_bool,
             weekdays=weekdays,
-            getColumnChart1=await ColumnChart(
+            getColumnChart3=await ColumnChart(
                 chartName="ColumnChart1",
                 title="MONTHLY BUG REPORTS",
                 subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
@@ -206,9 +196,9 @@ async def summary(project_name, project_year):
                 lineColor=ChartData.lineColor_column.value,
                 colorByPoint="false",
                 xAxisTitle="",
-                xAxisData=list(eff_data["data"].keys()),
+                xAxisData=list(bug_data["data"].keys()),
                 yAxisTitle="BUGS",
-                yAxisData=list(eff_data["data"].values()),
+                yAxisData=list(bug_data["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
                 dataLabels_Color="black",
@@ -218,7 +208,7 @@ async def summary(project_name, project_year):
                 dataLabels_padding=0,
                 gridLineWidth=ChartData.gridLineWidth.value,
             ),
-            getSplineChart1=await SplineChart(
+            getSplineChart2=await SplineChart(
                 chartName="SplineChart1",
                 title="MONTHLY TESTS CONDUCTED",
                 subtitle=f"PROJECT : {selected_option_project.replace('_',' ')} / {int(selected_option_year)}",
@@ -229,9 +219,9 @@ async def summary(project_name, project_year):
                 borderColor=ChartData.borderColor.value,
                 lineColor=ChartData.lineColor_spline.value,
                 xAxisTitle="",
-                xAxisData=list(res_data["data"].keys()),
+                xAxisData=list(execution_data["data"].keys()),
                 yAxisTitle="NO OF TESTS",
-                yAxisData=list(res_data["data"].values()),
+                yAxisData=list(execution_data["data"].values()),
                 dataLabels_enabled="true",
                 dataLabels_format=ChartData.dataLabels_format_0f.value,
                 dataLabels_Color="black",

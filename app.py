@@ -45,10 +45,7 @@ def not_found(e):
 @login_required
 async def index():
     if current_user.is_authenticated:
-        tables_fromsheet = await asyncio.to_thread(
-            load_data, "dataSources/monthData/dashSummary.xlsx", "Status",0,2
-        )
-        tables_fromsheet = await tables_fromsheet
+
         project_list = sorted(await asyncio.to_thread(current_user.get_projects_list))
         filtered_projects = [
             project
@@ -61,10 +58,6 @@ async def index():
             projects=project_list,
             filtered_project=filtered_projects,
             year_list=year_list,
-            project_table = tables_fromsheet.to_html(
-                    classes="table caption-top table-bordered table-hover", index=False
-                ),
-            project_table_html = tables_fromsheet
         )
 
 

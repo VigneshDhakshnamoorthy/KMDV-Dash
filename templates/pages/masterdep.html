@@ -1,0 +1,425 @@
+{% extends 'layout/base.html' %} {% block title %}BOARD :
+{{selected_project|replace('_', ' ')}}{% endblock %} {% block baseBody %} {%
+include 'layout/searchBanner.html' %}
+{% set total_bug_prod_1 = total_bug_prod.replace(',', '') | int %}
+{% set total_bug_uat_1 = total_bug_uat.replace(',', '') | int %}
+{% set total_bug_qa_1 = total_bug_qa.replace(',', '') | int %}
+
+{% set total_bug_prod_inception_1 = total_bug_prod_inception.replace(',', '') | int %}
+{% set total_bug_uat_inception_1 = total_bug_uat_inception.replace(',', '') | int %}
+{% set total_bug_qa_inception_1 = total_bug_qa_inception.replace(',', '') | int %}
+
+{% set total_bugs_sum = total_bug_prod_1 + total_bug_uat_1 + total_bug_qa_1 %}
+{% set total_bugs_inception_sum = total_bug_prod_inception_1 + total_bug_uat_inception_1 + total_bug_qa_inception_1 %}
+
+{% if total_bugs_sum != 0 %}
+{% set percentage_prod = (total_bug_prod_1 / total_bugs_sum) * 100 %}
+{% set percentage_uat = (total_bug_uat_1 / total_bugs_sum) * 100 %}
+{% set percentage_qa = (total_bug_qa_1 / total_bugs_sum) * 100 %}
+{% else %}
+{% set percentage_prod = 0 %}
+{% set percentage_uat = 0 %}
+{% set percentage_qa = 0 %}
+{% endif %}
+
+
+{% if total_bugs_inception_sum != 0 %}
+{% set percentage_inception_prod = (total_bug_prod_inception_1 / total_bugs_inception_sum) * 100 %}
+{% set percentage_inception_uat = (total_bug_uat_inception_1 / total_bugs_inception_sum) * 100 %}
+{% set percentage_inception_qa = (total_bug_qa_inception_1/ total_bugs_inception_sum) * 100 %}
+{% else %}
+{% set percentage_inception_prod = 0 %}
+{% set percentage_inception_uat = 0 %}
+{% set percentage_inception_qa = 0 %}
+{% endif %}
+
+{% if start_date %}
+
+
+<div class="depinfoGrid" id="collapseContent">
+  <div class="depinfocol-1">
+    <h6 style="font-size: small">
+      PROJECT STATUS<br>
+      <span style="color: var(--nonutilizedteam)">{{project_status | upper}}
+      </span>
+    </h6>
+  </div>
+  <div class="depinfocol-2">
+    <h6 style="font-size: small">
+      DEPARTMENT<br>
+      <span style="color: var(--nonutilizedteam)">{{department | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-3">
+    <h6 style="font-size: small">
+      IT MANAGER<br>
+      <span style="color: var(--nonutilizedteam)">{{it_manager | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-4">
+    <h6 style="font-size: small">
+      QA POC<br>
+      <span style="color: var(--nonutilizedteam)">{{qa_spoc | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-5">
+    <h6 style="font-size: small">
+      START DATE<br>
+      <span style="color: var(--nonutilizedteam)">{{start_date | upper}}</span>
+    </h6>
+  </div>
+</div>
+
+{% endif %}
+<div class="row">
+  <div class="col">
+    <div class="card justify-content-center" style="padding: 1% 1% 0% 1%">
+      <h5 class="card-title card-header-title text-center">
+        {% if selected_project == 'ALL' %}
+        <b>Qa Metrics : {{time_duration}}</b>
+        {% else %}
+        <b>Qa Metrics : {{selected_project|replace('_', ' ')|upper}} ( {{time_duration}} )</b>
+        {% endif %}
+        <br />
+      </h5>
+      <div class="row">
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Bugs found in PRODUCTION ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>PROD<br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">{{total_bug_prod}}
+                <span style="font-size: large">({{percentage_prod| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Bugs found in UAT ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>UAT<br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">{{total_bug_uat}}
+                <span style="font-size: large">({{percentage_uat| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Bugs found in QA ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>QA<br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">{{total_bug_qa}}
+                <span style="font-size: large">({{percentage_qa| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript created ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>New Scripts <br>Created</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: medium"></p>
+              <h2 style="color: var(--totaltestcase)">
+                {{total_manual_testcase}}
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript automated ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>New Scripts <br>Automated</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--automatedtestcase)">
+                {{total_automation_testcase}}
+              </h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript automation % ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Net Automation <br>Increase</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--automation)">
+                {{total_automation_percentage}}
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Test conducted ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>New Tests <br>Conducted</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--totaleffort)">{{total_execution}}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Utilized team average ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>UTILIZED TEAM <br>(AVG.)</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--utilizedteam)">{{avg_team}}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Total effort ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>ANNUAL Effort <br>(Hrs.)</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--teamsize)">{{total_efforts}}</h2>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Total cost ~ {{time_duration}}">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>ANNUAL <br>COST</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--totalcost)">{{total_cost}}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col">
+    <div class="card justify-content-center" style="padding: 1% 1% 0% 1%">
+      <h5 class="card-title card-header-title text-center">
+        {% if selected_project == 'ALL' %}
+        <b>Qa Metrics : SINCE INCEPTION</b>
+        {% else %}
+        <b>Qa Metrics : {{selected_project|replace('_', ' ')|upper}} ( SINCE INCEPTION )</b>
+        {% endif %}
+      </h5>
+      <div class="row">
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Bugs found in PRODUCTION since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total PROD <br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">
+                {{total_bug_prod_inception}}
+                <span style="font-size: large">({{percentage_inception_prod| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Bugs found in UAT since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total UAT <br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">
+                {{total_bug_uat_inception}}
+                <span style="font-size: large">({{percentage_inception_uat| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Bugs found in QA since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total QA <br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">
+                {{total_bug_qa_inception}}
+                <span style="font-size: large">({{percentage_inception_qa| int }}%)</span>
+              </h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript created since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total <br>Scripts</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--totaltestcase)">
+                {{total_manual_testcase_inception}}
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript automated since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total Scripts <br>Automated</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--automatedtestcase)">
+                {{total_automation_testcase_inception}}
+              </h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Testscript automation % since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total <br>Automation %</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--automation)">
+                {{total_automation_percentage_inception}}
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Test conducted since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total <br>Tests Conducted</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--totaleffort)">
+                {{total_execution_inception}}
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
+          title="Utilized team average since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>UTILIZED TEAM <br>(AVG.)</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--utilizedteam)">{{resource_since}}</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Total effort since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total Effort <br>(Hrs.)</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--teamsize)">{{efforts_since}}</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Total cost since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>TOTAL<br>COST</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--totalcost)">{{cost_since}}</h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Utilization of the team by month.">
+    {{getSplineChart1 | safe}}
+  </div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Effort of the team by month.">
+    {{getColumnChart1 | safe}}
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Bugs reported in QA">
+    {{getColumnChart3 | safe}}
+  </div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Test conducted by month.">
+    {{getSplineChart2 | safe}}
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Cost summary of the projects">
+    {{getPieChart2 | safe}}
+  </div>
+  <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Cost of QA by month">
+    {{getColumnChart2 | safe}}
+  </div>
+</div>
+<!-- <br />
+<div class="row">
+  <div class="col">
+    <h4 class="subHeader" style="color: var(--oaklogocolour)">
+      PROJECT'S METRICS - SINCE INCEPTION
+    </h4>
+  </div>
+</div>
+<div class="row border-bottom grey-bg">
+  <div class="col">{{wsr_info_fromsheet|safe}}</div>
+</div> -->
+<br />
+{% include 'layout/copyright.html' %} {% endblock %}

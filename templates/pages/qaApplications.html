@@ -1,0 +1,64 @@
+{% extends 'layout/base.html' %} {% block title %}QA-Dash : Applications{%
+endblock %} {% block baseBody %} {% include 'layout/banner.html' %}
+
+<br />
+
+<div class="row">
+  <div class="col charts2">
+    <div class="card" style="width: 100%">
+      <img src="../../static/img/logo/stp4.png" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      <div class="card-body">
+        <h5 class="card-title">SMOKE TEST PORTAL</h5>
+        <p class="card-text">
+          The STP is a unified platform for handling automation projects,
+          executing smoke and regression tests across various environments
+          including development, QA, UAT, and production to identify key issues.
+          It maintains historical data and trends, and offers flexible test
+          scheduling for prompt issue detection, thereby improving software
+          quality and reliability.
+        </p>
+        <a href="http://la-d-uftqa-2:8080/" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View SMOKE TEST PORTAL">SMOKE TEST PORTAL</a>
+      </div>
+    </div>
+  </div>
+  <div class="col charts2">
+    <div class="card" style="width: 100%">
+      <img src="../../static/img/logo/arap2.png" class="ml-1 mt-2" alt="oaktree" width="50" height="50" />
+      <div class="card-body">
+        <h5 class="card-title">AR/AP DASHBOARD</h5>
+        <p class="card-text">
+          The Dashboard streamlines issue identification and resolution by
+          monitoring system flows and data between various applications like
+          Workday, vEMS, Geneva & Navision. It retrieves and compares data,
+          highlighting discrepancies, and provides a centralized location for
+          support teams to monitor application health, enabling faster issue
+          resolution.
+        </p>
+        <a href="http://la-d-uftqa-2:6999/" style="color: #fff" class="dashboardLink mr-2" data-bs-toggle="tooltip"
+          data-bs-placement="right" title="Click to View AR/AP DASHBOARD">AR/AP DASHBOARD</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <iframe
+  src="https://ceslimited01.sharepoint.com/_layouts/15/Doc.aspx?sourcedoc={9cbc3584-3a73-4711-88f2-903158126ff1}&amp;action=embedview&amp;wdAr=1.7777777777777777"
+  width="100%"
+  height="75%"
+  frameborder="0"
+  >This is an embedded
+  <a target="_blank" href="https://office.com">Microsoft Office</a>
+  presentation, powered by
+  <a target="_blank" href="https://office.com/webapps">Office</a>.</iframe
+> -->
+
+<!-- <iframe
+  width="100%"
+  height="75%"
+  frameborder="0"
+  scrolling="no"
+  src="https://ceslimited01-my.sharepoint.com/personal/vignesh_dhakshnamoorthy_cesltd_com/_layouts/15/Doc.aspx?sourcedoc={039081ae-99a8-42e7-8b8a-73cb9f57afc7}&action=embedview&AllowTyping=True&wdInConfigurator=True&wdInConfigurator=True"
+></iframe> -->
+<br /><br />
+{% include 'layout/copyright.html' %} {% endblock %}
