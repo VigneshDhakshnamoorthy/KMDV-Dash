@@ -24,9 +24,9 @@ class FileAssociate(Enum):
     CORNERSTONE = None
     SMA = None
     ACCOUNT_MASTER = "dataSources/WSR/ACCOUNT_MASTER.xlsx"
-    EVEREST = None
+    EVEREST = "dataSources/WSR/EVEREST.xlsx"
     OAKTREE_EVENT = None
-    CASH_FORECAST_UPDATE = None
+    CASH_FORECAST_UPDATE = "dataSources/WSR/CASH_FORECAST_UPDATE.xlsx"
 
 
     @staticmethod
