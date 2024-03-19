@@ -45,20 +45,22 @@
 
 .depinfoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   text-align: center;
   gap: 0px 0px;
   margin: 0px 0px;
-  padding: 0% 1% 0% 1%;
+  padding: 1% 1% 0% 1%;
+  margin: 0% 0% 1.5% 0%;
   grid-auto-flow: row;
   justify-content: space-evenly;
   justify-items:stretch;
   align-content: space-evenly;
   align-items: center;
   align-self: center;
+  border: 1px solid black;
   grid-template-areas:
-    "depinfocol-1 depinfocol-2 depinfocol-2 depinfocol-3 depinfocol-4 depinfocol-5 "
+    "depinfocol-1 depinfocol-2 depinfocol-3 depinfocol-4 depinfocol-5 "
   
 }
 

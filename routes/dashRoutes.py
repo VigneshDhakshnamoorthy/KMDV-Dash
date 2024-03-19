@@ -1384,7 +1384,7 @@ async def depmaster(project_name, project_year):
         ),
         getColumnChart1=await ColumnChart(
             chartName="ColumnChart1",
-            title="EFFORT (HRS.)",
+            title="ANNUAL EFFORT (HRS.)",
             subtitle=f"{selected_option_project.replace('_', ' ') + ' / ' if selected_option_project != 'ALL' else ''}{int(selected_option_year)}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -1475,7 +1475,7 @@ async def depmaster(project_name, project_year):
         ),
         getSplineChart2=await SplineChart(
             chartName="SplineChart2",
-            title="TESTS CONDUCTED",
+            title="NEW TESTS CONDUCTED",
             subtitle=f"{selected_option_project.replace('_', ' ') + ' / ' if selected_option_project != 'ALL' else ''}{int(selected_option_year)}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
@@ -1494,8 +1494,8 @@ async def depmaster(project_name, project_year):
         ),
         getPieChart2=await PieChart(
             chartName="pie3",
-            title="COST SUMMARY",
-            subtitle=f"{selected_option_project.replace('_', ' ') + ' / ' if selected_option_project != 'ALL' else ''}{int(selected_option_year)}",
+            title=f"COST SUMMARY ~ {period[0]} - {period[-1]}",
+            subtitle=f"{selected_option_project.replace('_', ' ') + '' if selected_option_project != 'ALL' else ''}",
             max_width=ChartData.max_width.value,
             min_width=ChartData.min_width.value,
             height=ChartData.height.value,

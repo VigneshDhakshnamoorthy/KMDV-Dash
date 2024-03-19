@@ -1,21 +1,21 @@
 {% extends 'layout/base.html' %} {% block title %}BOARD :
 {{selected_project|replace('_', ' ')}}{% endblock %} {% block baseBody %} {%
 include 'layout/searchBanner.html' %}
-{% set total_bug_prod = total_bug_prod.replace(',', '') | int %}
-{% set total_bug_uat = total_bug_uat.replace(',', '') | int %}
-{% set total_bug_qa = total_bug_qa.replace(',', '') | int %}
+{% set total_bug_prod_1 = total_bug_prod.replace(',', '') | int %}
+{% set total_bug_uat_1 = total_bug_uat.replace(',', '') | int %}
+{% set total_bug_qa_1 = total_bug_qa.replace(',', '') | int %}
 
-{% set total_bug_prod_inception = total_bug_prod_inception.replace(',', '') | int %}
-{% set total_bug_uat_inception = total_bug_uat_inception.replace(',', '') | int %}
-{% set total_bug_qa_inception = total_bug_qa_inception.replace(',', '') | int %}
+{% set total_bug_prod_inception_1 = total_bug_prod_inception.replace(',', '') | int %}
+{% set total_bug_uat_inception_1 = total_bug_uat_inception.replace(',', '') | int %}
+{% set total_bug_qa_inception_1 = total_bug_qa_inception.replace(',', '') | int %}
 
-{% set total_bugs_sum = total_bug_prod + total_bug_uat + total_bug_qa %}
-{% set total_bugs_inception_sum = total_bug_prod_inception + total_bug_uat_inception + total_bug_qa_inception %}
+{% set total_bugs_sum = total_bug_prod_1 + total_bug_uat_1 + total_bug_qa_1 %}
+{% set total_bugs_inception_sum = total_bug_prod_inception_1 + total_bug_uat_inception_1 + total_bug_qa_inception_1 %}
 
 {% if total_bugs_sum != 0 %}
-{% set percentage_prod = (total_bug_prod / total_bugs_sum) * 100 %}
-{% set percentage_uat = (total_bug_uat / total_bugs_sum) * 100 %}
-{% set percentage_qa = (total_bug_qa / total_bugs_sum) * 100 %}
+{% set percentage_prod = (total_bug_prod_1 / total_bugs_sum) * 100 %}
+{% set percentage_uat = (total_bug_uat_1 / total_bugs_sum) * 100 %}
+{% set percentage_qa = (total_bug_qa_1 / total_bugs_sum) * 100 %}
 {% else %}
 {% set percentage_prod = 0 %}
 {% set percentage_uat = 0 %}
@@ -24,9 +24,9 @@ include 'layout/searchBanner.html' %}
 
 
 {% if total_bugs_inception_sum != 0 %}
-{% set percentage_inception_prod = (total_bug_prod_inception / total_bugs_inception_sum) * 100 %}
-{% set percentage_inception_uat = (total_bug_uat_inception / total_bugs_inception_sum) * 100 %}
-{% set percentage_inception_qa = (total_bug_qa_inception / total_bugs_inception_sum) * 100 %}
+{% set percentage_inception_prod = (total_bug_prod_inception_1 / total_bugs_inception_sum) * 100 %}
+{% set percentage_inception_uat = (total_bug_uat_inception_1 / total_bugs_inception_sum) * 100 %}
+{% set percentage_inception_qa = (total_bug_qa_inception_1/ total_bugs_inception_sum) * 100 %}
 {% else %}
 {% set percentage_inception_prod = 0 %}
 {% set percentage_inception_uat = 0 %}
@@ -35,40 +35,38 @@ include 'layout/searchBanner.html' %}
 
 {% if start_date %}
 
-<div class="card" style="padding: 1% 0% 0% 0%">
 
-  <div class="depinfoGrid" id="collapseContent">
-    <div class="depinfocol-1">
-      <h6 style="font-size: small">
-        PROJECT STATUS :
-        <span style="color: var(--nonutilizedteam)">{{project_status | upper}}
-        </span>
-      </h6>
-    </div>
-    <div class="depinfocol-2">
-      <h6 style="font-size: small">
-        DEPARTMENT :
-        <span style="color: var(--nonutilizedteam)">{{department | upper}}</span>
-      </h6>
-    </div>
-    <div class="depinfocol-3">
-      <h6 style="font-size: small">
-        IT MANAGER :
-        <span style="color: var(--nonutilizedteam)">{{it_manager | upper}}</span>
-      </h6>
-    </div>
-    <div class="depinfocol-4">
-      <h6 style="font-size: small">
-        QA POC :
-        <span style="color: var(--nonutilizedteam)">{{qa_spoc | upper}}</span>
-      </h6>
-    </div>
-    <div class="depinfocol-5">
-      <h6 style="font-size: small">
-        START DATE :
-        <span style="color: var(--nonutilizedteam)">{{start_date | upper}}</span>
-      </h6>
-    </div>
+<div class="depinfoGrid" id="collapseContent">
+  <div class="depinfocol-1">
+    <h6 style="font-size: small">
+      PROJECT STATUS<br>
+      <span style="color: var(--nonutilizedteam)">{{project_status | upper}}
+      </span>
+    </h6>
+  </div>
+  <div class="depinfocol-2">
+    <h6 style="font-size: small">
+      DEPARTMENT<br>
+      <span style="color: var(--nonutilizedteam)">{{department | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-3">
+    <h6 style="font-size: small">
+      IT MANAGER<br>
+      <span style="color: var(--nonutilizedteam)">{{it_manager | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-4">
+    <h6 style="font-size: small">
+      QA POC<br>
+      <span style="color: var(--nonutilizedteam)">{{qa_spoc | upper}}</span>
+    </h6>
+  </div>
+  <div class="depinfocol-5">
+    <h6 style="font-size: small">
+      START DATE<br>
+      <span style="color: var(--nonutilizedteam)">{{start_date | upper}}</span>
+    </h6>
   </div>
 </div>
 
@@ -270,21 +268,20 @@ include 'layout/searchBanner.html' %}
             </div>
           </div>
         </div>
-        <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
-        title="Bugs found in QA since inception">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title card-header-title">
-              <b>Total QA <br>Bugs</b>
-            </h5>
-            <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
-            <h2 style="color: var(--nonutilizedteam)">
-              {{total_bug_qa_inception}}
-              <span style="font-size: large">({{percentage_inception_qa| int }}%)</span>
-            </h2>
+        <div class="col charts2" data-toggle="tooltip" data-placement="bottom" title="Bugs found in QA since inception">
+          <div class="card">
+            <div class="card-body text-center">
+              <h5 class="card-title card-header-title">
+                <b>Total QA <br>Bugs</b>
+              </h5>
+              <p class="card-subtitle mb-2 text-muted" style="font-size: small"></p>
+              <h2 style="color: var(--nonutilizedteam)">
+                {{total_bug_qa_inception}}
+                <span style="font-size: large">({{percentage_inception_qa| int }}%)</span>
+              </h2>
+            </div>
           </div>
         </div>
-      </div>
 
         <div class="col charts2" data-toggle="tooltip" data-placement="bottom"
           title="Testscript created since inception">
