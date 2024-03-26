@@ -238,7 +238,7 @@ async def load_tables(excel_file_path, sheet_name) -> list[DataFrame]:
     'Manual test cases created': 'New Scripts Created',
     'Automation test cases created': 'New Scripts Automated'
     }
-    weekDatasummary[week_table_header] = weekDatasummary[week_table_header].replace(replace_weekDatasummary_dict)
+    # weekDatasummary[week_table_header] = weekDatasummary[week_table_header].replace(replace_weekDatasummary_dict)
 
     monthDatasummary: DataFrame = await load_data(excel_file_path, sheet_name, 27, 29)
     monthDatasummary = await removeDot(monthDatasummary)
@@ -248,8 +248,8 @@ async def load_tables(excel_file_path, sheet_name) -> list[DataFrame]:
         'Automation test cases created': 'Total Scripts Automated',
         'Bugs identified':'Total Bugs'
         }
-    monthDatasummary[month_table_header] = monthDatasummary[month_table_header].replace(replace_monthDatasummary_dict)
-    monthDatasummary.loc[monthDatasummary[month_table_header] == 'Automation coverage', 'Count'] = (monthDatasummary['Count'] * 100).astype(int).astype(str) + '%'
+    # monthDatasummary[month_table_header] = monthDatasummary[month_table_header].replace(replace_monthDatasummary_dict)
+    # monthDatasummary.loc[monthDatasummary[month_table_header] == 'Automation coverage', 'Count'] = (monthDatasummary['Count'] * 100).astype(int).astype(str) + '%'
 
     dfs: list[DataFrame] = [
         utilization_task_wise,
@@ -336,7 +336,7 @@ async def getSinceDataSum(sheetName, end_month, project_name, project_list) -> i
 async def getSinceDataAvg(sheetName, end_month, project_name, project_list) -> float:
     list_since:Coroutine[dict_values] = await to_thread(getSinceData,sheetName, end_month, project_name, project_list)
     list_since:dict_values = await list_since
-    return sum(list_since)/len(list_since)
+    return 0 if len(list_since) == 0 else sum(list_since)/len(list_since)
 
 async def getChartDataTotal(
     filePath,

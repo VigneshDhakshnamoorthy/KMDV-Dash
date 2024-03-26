@@ -1177,7 +1177,7 @@ async def depmaster(project_name:str, project_year:str):
     resource_since_fromsheet = await asyncio.to_thread(
         getSinceDataAvg,"Resource",end_month,project_name, user_project_list
     )
-    resource_since = "{:0,.1f}".format(await resource_since_fromsheet)
+    resource_since: str = "{:0,.1f}".format(await resource_since_fromsheet)
     
     project_info_fromsheet = await asyncio.to_thread(
         load_full_data, "dataSources/monthData/dashSummary.xlsx", "Department"
