@@ -1,8 +1,8 @@
 from datetime import datetime
 import math
+from typing import Coroutine
 from flask import (
     Blueprint,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -936,10 +936,10 @@ async def depmaster_land():
     "/depmaster/<project_name>/<project_year>", methods=["GET", "POST"]
 )
 @login_required
-async def depmaster(project_name, project_year):
+async def depmaster(project_name:str, project_year:str):
     project_name = project_name.upper()
-    project_year = int(project_year)
-    filtered_years = year_list
+    project_year:int = int(project_year)
+    filtered_years: list[int] = year_list
     if not project_name == "ALL":
         filtered_years = await to_thread(
             filter_active_years,
@@ -953,11 +953,11 @@ async def depmaster(project_name, project_year):
     project_year = (
         filtered_years[0] if project_year not in filtered_years else project_year
     )
-    selected_option_year = project_year
+    selected_option_year:int = project_year
     user_project_list = await to_thread(current_user.get_projects_list)
     project_list = user_project_list
 
-    project_list = await to_thread(
+    project_list:Coroutine[list] = await to_thread(
         filter_active_projects,
         project_list,
         project_year,
@@ -965,13 +965,13 @@ async def depmaster(project_name, project_year):
         sheet_name="ActiveHistory",
     )
 
-    project_list = await project_list
+    project_list:list[str] = await project_list
     project_list.append("All")
     if not project_name in project_list and project_name != "ALL":
         return render_template("accounts/wsrAuth.html")
 
     if request.method == "GET":
-        selected_option_project = project_name
+        selected_option_project: str = project_name
         session["selected_project"] = project_name
         selected_option_year = selected_option_year
         session["selected_year"] = selected_option_year
@@ -1001,7 +1001,7 @@ async def depmaster(project_name, project_year):
             )
         )
 
-    efforts_chart_data = await to_thread(
+    efforts_chart_data:Coroutine[list[dict]] = await to_thread(
         lambda: getChartDataTotal(
             filePath="dataSources/monthData/dashSummary.xlsx",
             sheetName="Efforts",
@@ -1014,7 +1014,7 @@ async def depmaster(project_name, project_year):
             year_selection=int(selected_option_year),
         )
     )
-    cost_chart_data = await to_thread(
+    cost_chart_data:Coroutine[list[dict]] = await to_thread(
         lambda: getChartDataTotal(
             filePath="dataSources/monthData/dashSummary.xlsx",
             sheetName="Cost",
@@ -1029,7 +1029,7 @@ async def depmaster(project_name, project_year):
         )
     )
 
-    resource_chart_data = await to_thread(
+    resource_chart_data:Coroutine[list[dict]] = await to_thread(
         lambda: getChartDataTotal(
             filePath="dataSources/monthData/dashSummary.xlsx",
             sheetName="Resource",
@@ -1043,7 +1043,7 @@ async def depmaster(project_name, project_year):
             year_selection=int(selected_option_year),
         )
     )
-    bug_chart_data = await to_thread(
+    bug_chart_data:Coroutine[list[dict]] = await to_thread(
         lambda: getChartDataTotal(
             filePath="dataSources/monthData/dashSummary.xlsx",
             sheetName="Bug",
@@ -1056,7 +1056,7 @@ async def depmaster(project_name, project_year):
             year_selection=int(selected_option_year),
         )
     )
-    execution_chart_data = await to_thread(
+    execution_chart_data:Coroutine[list[dict]] = await to_thread(
         lambda: getChartDataTotal(
             filePath="dataSources/monthData/dashSummary.xlsx",
             sheetName="Execution",
@@ -1069,18 +1069,18 @@ async def depmaster(project_name, project_year):
             year_selection=int(selected_option_year),
         )
     )
-    efforts_chart_data = await efforts_chart_data
+    efforts_chart_data:list[dict] = await efforts_chart_data
     period = list(efforts_chart_data[0]['data'].keys())
-    cost_chart_data = await cost_chart_data
-    resource_chart_data = await resource_chart_data
-    bug_chart_data = await bug_chart_data
-    execution_chart_data = await execution_chart_data
-    options_cost = [
+    cost_chart_data:list[dict] = await cost_chart_data
+    resource_chart_data:list[dict] = await resource_chart_data
+    bug_chart_data:list[dict] = await bug_chart_data
+    execution_chart_data:list[dict] = await execution_chart_data
+    options_cost:list = [
         entry["name"] for entry in cost_chart_data if entry["name"] != "Project"
     ]
 
-    selected_option_month = options_cost[-1]
-    totals = {}
+    selected_option_month:str = options_cost[-1]
+    totals:dict = {}
     for entry in cost_chart_data:
         name = entry["name"]
         data = entry["data"]

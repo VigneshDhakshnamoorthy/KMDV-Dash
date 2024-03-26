@@ -28,10 +28,10 @@ WSRPage = Blueprint("WSRPage", __name__, template_folder="templates")
 
 @WSRPage.route("/summary/<project_name>/<project_year>", methods=["GET", "POST"])
 @login_required
-async def summary(project_name, project_year):
+async def summary(project_name:str, project_year:str):
     project_name = project_name.upper()
-    project_year = int(project_year)
-    filtered_years = year_list
+    project_year:int = int(project_year)
+    filtered_years:list[int] = year_list
     if not project_name == "ALL":
         filtered_years = await asyncio.to_thread(
             filter_active_years,

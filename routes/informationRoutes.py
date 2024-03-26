@@ -1,4 +1,7 @@
 import asyncio
+from typing import Coroutine
+
+from pandas.core.frame import DataFrame
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 from routes.enumLinks import getUserName
@@ -11,11 +14,11 @@ InformationPage = Blueprint("InformationPage", __name__, template_folder="templa
 
 @InformationPage.route("/Automation", methods=["GET", "POST"])
 @login_required
-async def Automation():
-    tables_fromsheet = await asyncio.to_thread(
+async def Automation() -> str:
+    tables_fromsheet:Coroutine[DataFrame] = await asyncio.to_thread(
         load_data, "dataSources/monthData/dashSummary.xlsx", "Metrics", 0, 11
     )
-    tables_fromsheet = await tables_fromsheet
+    tables_fromsheet: DataFrame = await tables_fromsheet
     return render_template(
         "tables/automationInformation.html",
         userName=getUserName(current_user),
@@ -28,15 +31,15 @@ async def Automation():
 
 @InformationPage.route("/Technology", methods=["GET", "POST"])
 @login_required
-async def Technology():
-    tech1 = await asyncio.to_thread(
+async def Technology() -> str:
+    tech1:Coroutine[DataFrame] = await asyncio.to_thread(
         load_data, "dataSources/monthData/dashSummary.xlsx", "Technology", 0, 9
     )
-    tech2 = await asyncio.to_thread(
+    tech2:Coroutine[DataFrame] = await asyncio.to_thread(
         load_data, "dataSources/monthData/dashSummary.xlsx", "Technology", 10, 17
     )
-    tech1 = await tech1
-    tech2 = await tech2
+    tech1:DataFrame = await tech1
+    tech2:DataFrame = await tech2
     return render_template(
         "tables/technologyInformation.html",
         userName=getUserName(current_user),
@@ -54,11 +57,11 @@ async def Technology():
 
 @InformationPage.route("/Applications", methods=["GET", "POST"])
 @login_required
-async def Applications():
-    tables_fromsheet = await asyncio.to_thread(
+async def Applications() -> str:
+    tables_fromsheet:Coroutine[DataFrame] = await asyncio.to_thread(
         load_data, "dataSources/monthData/dashSummary.xlsx", "Metrics", 0, 11
     )
-    tables_fromsheet = await tables_fromsheet
+    tables_fromsheet: DataFrame = await tables_fromsheet
     return render_template(
         "pages/qaApplications.html",
         userName=getUserName(current_user),
