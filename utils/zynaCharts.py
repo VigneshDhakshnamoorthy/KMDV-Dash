@@ -18,8 +18,8 @@ async def PieChart(
     series_name,
     series_data,
     chart_type="pie",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
     #{chartName} {{
         min-width: {min_width};
@@ -118,8 +118,8 @@ async def LineChart(
     dataLabels_Color,
     gridLineWidth=1,
     chart_type="line",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -208,8 +208,8 @@ async def SplineChart(
     dataLabels_Color,
     gridLineWidth=0,
     chart_type="spline",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -305,8 +305,8 @@ async def MultiLineChart(
     legend_H_align = 'center',
     legend_V_align = 'bottom',
     chart_type="line",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -415,8 +415,8 @@ async def MultiSplineChart(
     legend_H_align = 'center',
     legend_V_align = 'bottom',
     chart_type="spline",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -529,8 +529,8 @@ async def MultiSplineChart3(
     legend_H_align = 'center',
     legend_V_align = 'bottom',
     chart_type="spline",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -647,8 +647,8 @@ async def BarChart(
     dataLabels_font_size,
     gridLineWidth=1,
     chart_type="bar",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -744,8 +744,8 @@ async def ColumnChart(
     dataLabels_padding,
     gridLineWidth=1,
     chart_type="column",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
@@ -851,8 +851,8 @@ async def MultiColumnChart(
     legend_H_align = 'center',
     legend_V_align = 'bottom',
     chart_type="column",
-):
-    template = f"""
+) -> str:
+    template: str = f"""
     <style>
         #{chartName} {{
             min-width: {min_width};
